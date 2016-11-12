@@ -1,0 +1,28 @@
+{
+  "name": "shoppinglist",
+  "version": "1.0.0",
+  "description": "Shopping list application manage the family's shopping",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sikisuti/ShoppingList.git"
+  },
+  "keywords": [
+    "shopping",
+    "list"
+  ],
+  "author": "Tamás Siklósi",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sikisuti/ShoppingList/issues"
+  },
+  "homepage": "https://github.com/sikisuti/ShoppingList#readme",
+  "dependencies": {
+    "body-parser": "^1.15.2",
+    "ejs": "^2.5.2",
+    "express": "^4.14.0"
+  }
+}

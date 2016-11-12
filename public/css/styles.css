@@ -1,0 +1,37 @@
+body{
+    background: black;
+}
+
+#page-header{
+    background-color: #400;
+    border-radius: 20px 20px 0px 0px;
+}
+
+#page-header-title h1{
+    font-size: 24px;
+    color: khaki;    
+    margin: 10px;
+}
+
+#app-chooser a{
+    display: inline-block;
+    color: white;
+    text-decoration: none;
+    padding: 10px;
+    border: 1px solid white;
+    margin: 10px;
+}
+
+#app-chooser a:hover{
+    background: #400;
+}
+
+#page-footer{
+    background: #400;
+    border-radius: 0px 0px 20px 20px;
+}
+
+#page-footer p{
+    color: khaki;  
+    margin: 10px;
+}

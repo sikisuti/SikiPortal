@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+    <header>
+        <title>Car info</title>
+    </header>
+    <body>
+        <h1>Car info</h1>
+        <select>
+          <% data.cars.forEach(function(car){ %>
+            <option value="<%= car %>"><%= car %></option>
+          <% }); %>          
+        </select>
+    </body>
+</html>
