@@ -16,7 +16,7 @@ app.use(express.static(__dirname + '/public'));
 
 // Routes
 app.get('/', function(req, res) {
-	res.render('index');
+	res.render('index.ejs');
 });
 app.use('/car', carInfo);
 app.use('/shop', shoppingList);
