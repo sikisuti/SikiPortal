@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
     <header>
+      <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Car info</title>
     </header>
     <body>
@@ -8,7 +9,7 @@
         <select>
           <% data.cars.forEach(function(car){ %>
             <option value="<%= car %>"><%= car %></option>
-          <% }); %>          
+          <% }); %>
         </select>
     </body>
 </html>
