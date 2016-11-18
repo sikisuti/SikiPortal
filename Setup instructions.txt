@@ -1,0 +1,24 @@
+Raspberry PI installation for Webserver
+
+Install standard Raspbian via Noobs. (Should try Raspbian light later !)
+	sudo apt-get update
+	sudo apt-get upgrade
+	
+Change pi password
+	
+Set static IP
+
+Set dynamic DNS
+	
+Upgrade NodeJS
+	It has already installed but it is an old version.
+	
+Get code from git repo
+	git clone <url>
+
+Install dependencies
+	npm install
+	
+Install Forever node runner
+
+Run program at startup

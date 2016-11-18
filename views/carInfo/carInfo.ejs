@@ -3,13 +3,48 @@
     <header>
       <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Car info</title>
+
+
+        <script>
+
+        $(function() {
+          $( "#datepicker" ).datepicker({
+          firstDay: 1,
+          dateFormat: "yy-mm-dd"
+            });
+          $( "#datepicker" ).val($.datepicker.formatDate('yy-mm-dd', new Date()))
+        });
+        </script>
     </header>
     <body>
-        <h1>Car info</h1>
-        <select>
-          <% data.cars.forEach(function(car){ %>
-            <option value="<%= car %>"><%= car %></option>
-          <% }); %>
-        </select>
+      <h1>Car info</h1>
+      <section>
+      <form>
+        <div id="typeChooser">
+          <input type="radio" name="rbAction" value="optRefuel" checked>Tankolás</input>
+          <input type="radio" name="rbAction" value="optService">Szervíz</input>
+        </div>
+
+        <div id="commonAtrubutes">
+          <table>
+            <tr>
+              <td><label for="regNumberSelector">Autó:</label></td>
+              <td>
+                <select name="regNumberSelector">
+                  <% data.forEach(function(car){ %>
+                    <option value="<%= car.id %>"><%= car.regNumber %></option>
+                  <% }); %>
+                </select>
+              </td>
+            </tr>
+            <tr>
+              <td><label for="txtDate">Dátum:</label></td>
+              <td><input id="datepicker" name="txtDate" type="text"/></td>
+            </tr>
+          </table>
+        </div>
+      </form>
+      </section>
+
     </body>
 </html>
