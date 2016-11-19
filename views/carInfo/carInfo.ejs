@@ -2,14 +2,49 @@
 <html>
     <header>
       <meta name="viewport" content="width=device-width, initial-scale=1">
-      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
       <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes/south-street/jquery-ui.min.css">
-      <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+      <link rel="stylesheet" href="/css/carInfo/carInfoStyles.css">
         <title>Car info</title>
 
 
-        <script>
+    </header>
+    <body>
+      <h1>Car info</h1>
+      <div id="actionSelector">
+        <button id="btnRefuel" class="selected">Tankolás</button>
+        <button id="btnService">Szervíz</button>
+      </div>
 
+      <div id="form">
+        <form>
+          <input id="actionType" type="hidden" name="actionType" value="1"/>
+          <label for="regNumberSelector">Autó:</label>
+          <select id="regNumberSelector" name="regNumberSelector">
+            <% data.forEach(function(car){ %>
+              <option value="<%= car.id %>"><%= car.regNumber %></option>
+            <% }); %>
+          </select>
+          <label for="datepicker">Dátum:</label>
+          <input id="datepicker" name="txtDate" type="text" readonly/>
+          <label for="km">Km óra:</label>
+          <input id="km" name="km" type="number"/>
+					<div id="refuelInputs">
+						<label for="fuelAmountField">Tankolt üzemanyag:</label>
+						<input id="fuelAmountField" name="txtfuelAmount" type="number" min="0" step="any"/>
+						<label for="fuelCostField">Üzemanyag ár:</label>
+						<input id="fuelCostField" name="txtfuelCost" type="number" min="0" step="any"/>
+					</div>
+					<div id="serviceInputs" class="hidden">
+						<label for="fixCostField">Javítás ára:</label>
+						<input id="fixCostField" name="txtFixCost" type="number" min="0" step="any"/>
+					</div>
+        </form>
+      </div>
+
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+      <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+      <script>
+        // onLoad
         $(function() {
           $( "#datepicker" ).datepicker({
           firstDay: 1,
@@ -17,37 +52,22 @@
             });
           $( "#datepicker" ).val($.datepicker.formatDate('yy-mm-dd', new Date()))
         });
-        </script>
-    </header>
-    <body>
-      <h1>Car info</h1>
-      <section>
-      <form>
-        <div id="typeChooser">
-          <input type="radio" name="rbAction" value="optRefuel" checked>Tankolás</input>
-          <input type="radio" name="rbAction" value="optService">Szervíz</input>
-        </div>
 
-        <div id="commonAtrubutes">
-          <table>
-            <tr>
-              <td><label for="regNumberSelector">Autó:</label></td>
-              <td>
-                <select name="regNumberSelector">
-                  <% data.forEach(function(car){ %>
-                    <option value="<%= car.id %>"><%= car.regNumber %></option>
-                  <% }); %>
-                </select>
-              </td>
-            </tr>
-            <tr>
-              <td><label for="txtDate">Dátum:</label></td>
-              <td><input id="datepicker" name="txtDate" type="text" readonly/></td>
-            </tr>
-          </table>
-        </div>
-      </form>
-      </section>
+        // Service or refuel
+        $("#actionSelector button").click(function(e){
+          if (!$(this).hasClass("selected")) {
+            $("#actionSelector button").toggleClass("selected");
+            $("#form div").toggleClass("hidden");
 
+            if ($(this).attr("id") == "btnRefuel") {
+              $("#actionType").val("1");
+            } else if ($(this).attr("id") == "btnService") {
+              $("#actionType").val("2");
+            }
+          }
+        });
+
+
+      </script>
     </body>
 </html>

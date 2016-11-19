@@ -1,0 +1,58 @@
+#actionSelector button {
+  margin:         0px;
+  border:         1px solid gray;
+  padding:        0px;
+  width:          49%;
+  height:         30px;
+  background:     none;
+}
+
+#actionSelector button.selected {
+  background:     lightgray;
+}
+
+#form {
+  background:     lightgray;
+  width: 50%;
+  margin: 10px auto;
+  border: 1px solid gray;
+  border-radius: 20px;
+  box-shadow: 5px 5px 10px #888888;
+}
+
+#form div {
+  display: block;
+}
+
+#form div.hidden {
+  display: none;
+}
+
+#form label, #form input {
+  display: inline-block;
+}
+
+#form label {
+    width: 45%;
+    /* positions the label text beside the input */
+    text-align: right;
+}
+
+#form label + input, #form label + select {
+    width: 30%;
+    /* large margin-right to force the next element to the new-line
+       and margin-left to create a gutter between the label and input */
+    margin: 7px 15% 7px 4%;
+}
+
+/* only the submit button is matched by this selector,
+   but to be sure you could use an id or class for that button */
+input + input {
+    float: right;
+}
+
+@media (max-width: 600px) {
+  #form {
+    width: 90%;
+  }
+}
