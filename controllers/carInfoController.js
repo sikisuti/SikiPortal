@@ -4,6 +4,9 @@ module.exports = function(app){
 
 	app.get("/car", function(req, res){
 
+		var cars;
+		var serviceItems;
+
     var connection = mysql.createConnection({
        host     : 'localhost',
        user     : 'root',
@@ -19,14 +22,24 @@ module.exports = function(app){
 			}
 		});
 
-		connection.query('SELECT * FROM cars', function(err, rows, fields){
+		connection.query('SELECT * FROM cars', function(err, carRows, fields){
 			if (err) {
 				console.log("Getting cars failed");
 			} else {
-				console.log(rows);
-        res.render("carInfo/carInfo", {data: rows});
+				cars = carRows;
+				connection.query('SELECT * FROM serviceItems', function(err, serviceItemRows, fields){
+					if (err) {
+						console.log("Getting serviceItems failed");
+					} else {
+						serviceItems = serviceItemRows;
+						console.log(serviceItems);
+						connection.end();
+						res.render("carInfo/carInfo", {data: { cars: cars, serviceItems: serviceItems } });
+					}
+				});
 			}
-      connection.end();
+
 		});
+
 	});
 };

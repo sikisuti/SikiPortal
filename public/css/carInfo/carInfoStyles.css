@@ -33,16 +33,21 @@
 }
 
 #form label {
-    width: 45%;
+    width: 30%;
     /* positions the label text beside the input */
     text-align: right;
 }
 
-#form label + input, #form label + select {
-    width: 30%;
+#form label + input,
+#form label + select,
+#form label + ul {
+    display: inline-block;
+    list-style-type: none;
+    padding: 0px;
+    width: 50%;
     /* large margin-right to force the next element to the new-line
        and margin-left to create a gutter between the label and input */
-    margin: 7px 15% 7px 4%;
+    margin: 7px 5% 7px 4%;
 }
 
 /* only the submit button is matched by this selector,

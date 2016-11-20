@@ -9,7 +9,6 @@
 
     </header>
     <body>
-      <h1>Car info</h1>
       <div id="actionSelector">
         <button id="btnRefuel" class="selected">Tankolás</button>
         <button id="btnService">Szervíz</button>
@@ -20,7 +19,7 @@
           <input id="actionType" type="hidden" name="actionType" value="1"/>
           <label for="regNumberSelector">Autó:</label>
           <select id="regNumberSelector" name="regNumberSelector">
-            <% data.forEach(function(car){ %>
+            <% data.cars.forEach(function(car){ %>
               <option value="<%= car.id %>"><%= car.regNumber %></option>
             <% }); %>
           </select>
@@ -37,6 +36,12 @@
 					<div id="serviceInputs" class="hidden">
 						<label for="fixCostField">Javítás ára:</label>
 						<input id="fixCostField" name="txtFixCost" type="number" min="0" step="any"/>
+            <label for="serviceItems">Szervíz elemek:</label>
+            <ul>
+              <% data.serviceItems.forEach(function(serviceItem){ %>
+                <li><input type="checkbox" name="serviceItems" value="<%= serviceItem.id %>"><%= serviceItem.serviceName %></input></li>
+              <% }); %>
+            </ul>
 					</div>
         </form>
       </div>
