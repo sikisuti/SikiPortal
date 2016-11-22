@@ -15,13 +15,10 @@
       </div>
 
       <div id="form">
-        <form>
+        <form method="post">
           <input id="actionType" type="hidden" name="actionType" value="1"/>
           <label for="regNumberSelector">Autó:</label>
           <select id="regNumberSelector" name="regNumberSelector">
-            <% data.cars.forEach(function(car){ %>
-              <option value="<%= car.id %>"><%= car.regNumber %></option>
-            <% }); %>
           </select>
           <label for="datepicker">Dátum:</label>
           <input id="datepicker" name="txtDate" type="text" readonly/>
@@ -37,12 +34,13 @@
 						<label for="fixCostField">Javítás ára:</label>
 						<input id="fixCostField" name="txtFixCost" type="number" min="0" step="any"/>
             <label for="serviceItems">Szervíz elemek:</label>
-            <ul>
+            <ul id="serviceItems">
               <% data.serviceItems.forEach(function(serviceItem){ %>
                 <li><input type="checkbox" name="serviceItems" value="<%= serviceItem.id %>"><%= serviceItem.serviceName %></input></li>
               <% }); %>
             </ul>
 					</div>
+          <input id="btnSubmit" type="submit" value="Elküld" />
         </form>
       </div>
 
@@ -55,7 +53,34 @@
           firstDay: 1,
           dateFormat: "yy-mm-dd"
             });
-          $( "#datepicker" ).val($.datepicker.formatDate('yy-mm-dd', new Date()))
+          $( "#datepicker" ).val($.datepicker.formatDate('yy-mm-dd', new Date()));
+
+          $.ajax({
+            url: '/api/carInfo/cars',
+            type: 'get',
+            success: function(data){
+              $.each(data, function(i, car){
+                $("#regNumberSelector").append($("<option></option>").attr("value",car.id).text(car.regNumber));})
+            }
+          });
+          /*
+          $.ajax({
+            url: '/api/carInfo/serviceItems',
+            type: 'get',
+            success: function(data){
+              $.each(data, function(i, serviceItem){
+                $("#serviceItems")
+                  .append($("<li></li>")
+                    .append($("<input/>")
+                      .attr("type","checkbox")
+                      .attr("name", "serviceItems")
+                      .attr("value", serviceItem.id)
+                    )
+                    .append($("<label/>").attr("text", serviceItem.serviceName))
+                  );
+                });
+            }
+          });*/
         });
 
         // Service or refuel
