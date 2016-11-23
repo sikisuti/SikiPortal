@@ -35,9 +35,6 @@
 						<input id="fixCostField" name="txtFixCost" type="number" min="0" step="any"/>
             <label for="serviceItems">Szervíz elemek:</label>
             <ul id="serviceItems">
-              <% data.serviceItems.forEach(function(serviceItem){ %>
-                <li><input type="checkbox" name="serviceItems" value="<%= serviceItem.id %>"><%= serviceItem.serviceName %></input></li>
-              <% }); %>
             </ul>
 					</div>
           <input id="btnSubmit" type="submit" value="Elküld" />
@@ -63,7 +60,7 @@
                 $("#regNumberSelector").append($("<option></option>").attr("value",car.id).text(car.regNumber));})
             }
           });
-          /*
+
           $.ajax({
             url: '/api/carInfo/serviceItems',
             type: 'get',
@@ -71,16 +68,11 @@
               $.each(data, function(i, serviceItem){
                 $("#serviceItems")
                   .append($("<li></li>")
-                    .append($("<input/>")
-                      .attr("type","checkbox")
-                      .attr("name", "serviceItems")
-                      .attr("value", serviceItem.id)
-                    )
-                    .append($("<label/>").attr("text", serviceItem.serviceName))
+                    .append($('<input type="checkbox" name="serviceItems" value="' + serviceItem.id + '" ><span>' + serviceItem.serviceName + '</span>'))
                   );
                 });
             }
-          });*/
+          });
         });
 
         // Service or refuel

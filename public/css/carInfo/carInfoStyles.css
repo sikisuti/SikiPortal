@@ -1,3 +1,7 @@
+body {
+  background: darkseagreen;
+}
+
 #actionSelector button {
   margin:         0px;
   border:         1px solid gray;
@@ -8,11 +12,11 @@
 }
 
 #actionSelector button.selected {
-  background:     lightgray;
+  background:     mediumseagreen;
 }
 
 #form {
-  background:     lightgray;
+  background:     mediumseagreen;
   width: 50%;
   margin: 10px auto;
   border: 1px solid gray;
@@ -37,6 +41,8 @@
     width: 30%;
     /* positions the label text beside the input */
     text-align: right;
+    vertical-align: top;
+    padding: 7px 0px 0px 0px;
 }
 
 #form label + input,
