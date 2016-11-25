@@ -29,3 +29,42 @@ insert into serviceItems(id, serviceName) values (1, "olajcsere");
 insert into serviceItems(id, serviceName) values (2, "műszaki vizsga");
 insert into serviceItems(id, serviceName) values (3, "légszűrő csere");
 insert into serviceItems(id, serviceName) values (4, "olajszűrő csere");
+
+-- Create commonActionData table
+create table commonActionData (
+	id bigint not null auto_increment,
+	carId bigint not null,
+	actionDate date not null,
+	km int not null,
+	primary key (id),
+	foreign key (carId) references cars(id)
+) default character set utf8 collate utf8_unicode_ci;
+
+-- Create refuelData table
+create table refuelData (
+	id bigint not null auto_increment,
+	commonId bigint not null,
+	fuelAmount decimal not null,
+	fuelCost decimal,
+	primary key (id),
+	foreign key (commonId) references commonActionData(id)
+) default character set utf8 collate utf8_unicode_ci;
+
+-- Create serviceData table
+create table serviceData (
+	id bigint not null auto_increment,
+	commonId bigint not null,
+	serviceCost int not null,
+	primary key (id),
+	foreign key (commonId) references commonActionData(id)
+) default character set utf8 collate utf8_unicode_ci;
+
+-- Create serviceData table
+create table serviceWorks (
+	id bigint not null auto_increment,
+	serviceDataId bigint not null,
+	serviceItemId bigint not null,
+	primary key (id),
+	foreign key (serviceDataId) references serviceData(id),
+	foreign key (serviceItemId) references serviceItems(id)
+) default character set utf8 collate utf8_unicode_ci;

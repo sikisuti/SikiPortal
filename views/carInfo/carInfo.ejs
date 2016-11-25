@@ -18,25 +18,26 @@
         <form method="post">
           <input id="actionType" type="hidden" name="actionType" value="1"/>
           <label for="regNumberSelector">Autó:</label>
-          <select id="regNumberSelector" name="regNumberSelector">
+          <select id="regNumberSelector" name="carId">
           </select>
           <label for="datepicker">Dátum:</label>
-          <input id="datepicker" name="txtDate" type="text" readonly/>
+          <input id="datepicker" name="actionDate" type="text" readonly />
           <label for="km">Km óra:</label>
-          <input id="km" name="km" type="number"/>
+          <input id="km" name="km" type="number" />
 					<div id="refuelInputs">
 						<label for="fuelAmountField">Tankolt üzemanyag:</label>
-						<input id="fuelAmountField" name="txtfuelAmount" type="number" min="0" step="any"/>
+						<input id="fuelAmountField" name="fuelAmount" type="number" min="0" step="any"/>
 						<label for="fuelCostField">Üzemanyag ár:</label>
-						<input id="fuelCostField" name="txtfuelCost" type="number" min="0" step="any"/>
+						<input id="fuelCostField" name="fuelCost" type="number" min="0" step="any"/>
 					</div>
 					<div id="serviceInputs" class="hidden">
 						<label for="fixCostField">Javítás ára:</label>
-						<input id="fixCostField" name="txtFixCost" type="number" min="0" step="any"/>
+						<input id="fixCostField" name="serviceCost" type="number" min="0" step="any"/>
             <label for="serviceItems">Szervíz elemek:</label>
             <ul id="serviceItems">
             </ul>
 					</div>
+          <span id="resultMessage"></span>
           <input id="btnSubmit" type="submit" value="Elküld" />
         </form>
       </div>
@@ -89,6 +90,39 @@
           }
         });
 
+        $("#form form").submit(function(e){
+          if (!formValid()) { e.preventDefault(); return; }
+          $.ajax({
+            url: '/api/carInfo/refuelData',
+            type: 'post',
+            data: $("#form form").serializeArray(),
+            success: function(data){
+              if (data.message == "Success"){
+                $("#resultMessage").text("Mentés sikeres!").attr("class", "success");
+              } else {
+                $("#resultMessage").text("Hiba: " + data.message).attr("class", "failure");
+              }
+              setTimeout(function(){
+                $("#resultMessage").attr("class", "");
+              }, 10000);
+            }
+          });
+          e.preventDefault();
+        });
+
+        function formValid(){
+          var valid = true;
+          if (!$("#km").val()) { $("#km").attr("class", "notValid"); valid = false; }
+          else { $("#km").attr("class", ""); }
+          if ($("#actionType").val() == 1) {
+            if (!$("#fuelAmountField").val()) { $("#fuelAmountField").attr("class", "notValid"); valid = false; }
+            else { $("#fuelAmountField").attr("class", ""); }
+          } else {
+            if (!$("#fixCostField").val()) { $("#fixCostField").attr("class", "notValid"); valid = false; }
+            else { $("#fixCostField").attr("class", ""); }
+          }
+          return valid;
+        };
 
       </script>
     </body>

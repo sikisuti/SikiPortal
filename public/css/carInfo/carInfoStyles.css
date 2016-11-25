@@ -1,3 +1,7 @@
+*.notValid {
+  border: 2px solid red;
+}
+
 body {
   background: darkseagreen;
 }
@@ -62,6 +66,32 @@ body {
 #btnSubmit {
     float: right;
     margin: 10px 10%;
+}
+
+#resultMessage {
+  visibility: hidden;
+}
+
+#resultMessage.success {
+  visibility: visible;
+  color: yellow;
+  background: rgba(0, 0, 0, 0.2);
+  padding: 5px 10px;
+  margin: 5px 10px;
+  width: 60%;
+  text-align: center;
+  display: inline-block;
+}
+
+#resultMessage.failure {
+  visibility: visible;
+  color: yellow;
+  background: rgba(200, 0, 0, 0.8);
+  padding: 5px 10px;
+  margin: 5px 10px;
+  width: 60%;
+  text-align: center;
+  display: inline-block;
 }
 
 @media (max-width: 600px) {
