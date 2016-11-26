@@ -42,6 +42,10 @@
         </form>
       </div>
 
+      <div id="refuelData">
+        <table id="refuelTable"></table>
+      </div>
+
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
       <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
       <script>
@@ -74,6 +78,20 @@
                 });
             }
           });
+
+          $.ajax({
+            url: '/api/carInfo/refuelData',
+            type: 'get',
+            success: function(data){
+              console.log(data);
+              $.each(data, function(i, refuelData){
+                $("#refuelTable")
+                  .append($("<tr></tr>")
+                    .append($('<td>' + refuelData.actionDate + '</td><td>' + refuelData.regNumber + '</td><td>' + refuelData.fuelAmount + '</td>'))
+                  );
+                });
+            }
+          });
         });
 
         // Service or refuel
@@ -92,8 +110,11 @@
 
         $("#form form").submit(function(e){
           if (!formValid()) { e.preventDefault(); return; }
+          var url;
+          if ($("#actionType").val() == 1) { url = '/api/carInfo/refuelData'; }
+          else { url = '/api/carInfo/serviceData'; }
           $.ajax({
-            url: '/api/carInfo/refuelData',
+            url: url,
             type: 'post',
             data: $("#form form").serializeArray(),
             success: function(data){
