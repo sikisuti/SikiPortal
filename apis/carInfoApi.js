@@ -49,17 +49,33 @@ module.exports = function(app, pool){
     pool.getConnection(function(err, connection){
       if (err) { console.log(err); res.json({ message: err }); }
 
-      var commonActionDataQuery = connection.query('INSERT INTO commonActionData set ?',
-          { carId: req.body.carId, actionDate: req.body.actionDate, km: req.body.km }, function(err, commonResult){
-        if (err) { console.log(commonActionDataQuery.sql); console.log(err); connection.release(); res.json({ message: err }) }
+      connection.beginTransaction(function(err){
+        if (err) { res.json({ message: err }); }
 
-        var refuelDataQuery = connection.query('INSERT INTO refuelData set ?', { commonId: commonResult.insertId, fuelAmount: req.body.fuelAmount, fuelCost: req.body.fuelCost }, function(err, result){
-          if (err) { console.log(commonActionDataQuery.sql); console.log(refuelDataQuery.sql); console.log(err); connection.release(); res.json({ message: err }) }
+        var commonActionDataQuery = connection.query('INSERT INTO commonActionData set ?',
+            { carId: req.body.carId, actionDate: req.body.actionDate, km: req.body.km }, function(err, commonResult){
+          if (err) { connection.rollback(function(){
+            console.log(commonActionDataQuery.sql); console.log(err); connection.release(); res.json({ message: err });
+            });
+          }
 
-          console.log(commonActionDataQuery.sql);
-          console.log(refuelDataQuery.sql);
-          connection.release();
-          res.json({ message: "Success" });
+          var refuelDataQuery = connection.query('INSERT INTO refuelData set ?', { commonId: commonResult.insertId, fuelAmount: req.body.fuelAmount, fuelCost: req.body.fuelCost }, function(err, result){
+            if (err) { connection.rollback(function(){
+              console.log(commonActionDataQuery.sql); console.log(refuelDataQuery.sql); console.log(err); connection.release(); res.json({ message: err });
+              });
+            }
+
+            console.log(commonActionDataQuery.sql);
+            console.log(refuelDataQuery.sql);
+            connection.commit(function(err){
+              if (err) { connection.rollback(function(){
+                  res.json({ message: err });
+                });
+              }
+            });
+            connection.release();
+            res.json({ message: "Success" });
+          });
         });
       });
     });
@@ -70,28 +86,46 @@ module.exports = function(app, pool){
     pool.getConnection(function(err, connection){
       if (err) { console.log(err); res.json({ message: err }); }
 
-      var commonActionDataQuery = connection.query('INSERT INTO commonActionData set ?',
-          { carId: req.body.carId, actionDate: req.body.actionDate, km: req.body.km }, function(err, commonResult){
-        if (err) { console.log(commonActionDataQuery.sql); console.log(err); connection.release(); res.json({ message: err }) }
+      connection.beginTransaction(function(err){
+        if (err) { res.json({ message: err }); }
 
-        var serviceDataQuery = connection.query('INSERT INTO serviceData set ?',
-            { commonId: commonResult.insertId, serviceCost: req.body.serviceCost }, function(err, serviceResult){
-          if (err) { console.log(commonActionDataQuery.sql); console.log(refuelDataQuery.sql); console.log(err); connection.release(); res.json({ message: err }) }
-
-          req.body.serviceItems.forEach(function(serviceItem){
-            var serviceItemQuery = connection.query('INSERT INTO serviceWorks set ?',
-                { serviceDataId: serviceResult.insertId, serviceItemId: serviceItem }, function(err, result){
-              if (err) { console.log(commonActionDataQuery.sql);
-                          console.log(refuelDataQuery.sql);
-                          console.log(serviceItemQuery.sql); console.log(err); connection.release(); res.json({ message: err }); }
-
+        var commonActionDataQuery = connection.query('INSERT INTO commonActionData set ?',
+            { carId: req.body.carId, actionDate: req.body.actionDate, km: req.body.km }, function(err, commonResult){
+          if (err) { connection.rollback(function(){
+            console.log(commonActionDataQuery.sql); console.log(err); connection.release(); res.json({ message: err })
             });
-          });
+          }
 
-          console.log(commonActionDataQuery.sql);
-          console.log(serviceDataQuery.sql);
-          connection.release();
-          res.json({ message: "Success" });
+          var serviceDataQuery = connection.query('INSERT INTO serviceData set ?',
+              { commonId: commonResult.insertId, serviceCost: req.body.serviceCost }, function(err, serviceResult){
+            if (err) { connection.rollback(function(){
+              console.log(commonActionDataQuery.sql); console.log(refuelDataQuery.sql); console.log(err); connection.release(); res.json({ message: err })
+              });
+            }
+
+            req.body.serviceItems.forEach(function(serviceItem){
+              var serviceItemQuery = connection.query('INSERT INTO serviceWorks set ?',
+                  { serviceDataId: serviceResult.insertId, serviceItemId: serviceItem }, function(err, result){
+                if (err) { connection.rollback(function(){ console.log(commonActionDataQuery.sql);
+                            console.log(refuelDataQuery.sql);
+                            console.log(serviceItemQuery.sql); console.log(err); connection.release(); res.json({ message: err });
+                  });
+                }
+
+              });
+            });
+
+            console.log(commonActionDataQuery.sql);
+            console.log(serviceDataQuery.sql);
+            connection.commit(function(err){
+              if (err) { connection.rollback(function(){
+                  res.json({ message: err });
+                });
+              }
+            });
+            connection.release();
+            res.json({ message: "Success" });
+          });
         });
       });
     });

@@ -5,7 +5,6 @@ module.exports = function(app, pool){
 	});
 
 	app.post("/car", function(req, res){
-		console.log(req.body);
-		res.end();
+		res.render("carInfo/carInfo");
 	});
 };
