@@ -44,8 +44,8 @@ create table commonActionData (
 create table refuelData (
 	id bigint not null auto_increment,
 	commonId bigint not null,
-	fuelAmount decimal not null,
-	fuelCost decimal,
+	fuelAmount float not null,
+	fuelCost float,
 	primary key (id),
 	foreign key (commonId) references commonActionData(id)
 ) default character set utf8 collate utf8_unicode_ci;
