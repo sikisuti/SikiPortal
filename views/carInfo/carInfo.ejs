@@ -79,13 +79,6 @@
             }
           });
 
-          refreshPage();
-
-        });
-
-        function refreshPage(){
-          $("#refuelTable").empty();
-
           $.ajax({
             url: '/api/carInfo/refuelData',
             type: 'get',
@@ -99,7 +92,8 @@
               });
             }
           });
-        }
+
+        });
 
         // Service or refuel
         $("#actionSelector button").click(function(e){
@@ -127,7 +121,7 @@
             success: function(data){
               if (data.message == "Success"){
                 $("#resultMessage").text("Mentés sikeres!").attr("class", "success");
-                refreshPage();
+                location.reload(true);
               } else {
                 $("#resultMessage").text("Hiba: " + data.message).attr("class", "failure");
               }
