@@ -59,7 +59,8 @@ module.exports = function(app, pool){
             });
           }
 
-          var refuelDataQuery = connection.query('INSERT INTO refuelData set ?', { commonId: commonResult.insertId, fuelAmount: req.body.fuelAmount, fuelCost: req.body.fuelCost }, function(err, result){
+          var refuelDataQuery = connection.query('INSERT INTO refuelData set ?',
+            { commonId: commonResult.insertId, fuelAmount: req.body.fuelAmount.replace(",", "."), fuelCost: req.body.fuelCost.replace(",", ".") }, function(err, result){
             if (err) { connection.rollback(function(){
               console.log(commonActionDataQuery.sql); console.log(refuelDataQuery.sql); console.log(err); connection.release(); res.json({ message: err });
               });
