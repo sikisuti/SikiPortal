@@ -3,6 +3,7 @@
     <header>
       <meta name="viewport" content="width=device-width, initial-scale=1">
       <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes/south-street/jquery-ui.min.css">
+      <link rel="stylesheet" href="https://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css">
       <link rel="stylesheet" href="/css/carInfo/carInfoStyles.css">
         <title>Car info</title>
 
@@ -25,9 +26,9 @@
           <label for="km">Km óra:</label>
           <input id="km" name="km" type="number" />
 					<div id="refuelInputs">
-						<label for="fuelAmountField">Tankolt üzemanyag:</label>
+						<label for="fuelAmountField">Tankolt mennyiség:</label>
 						<input id="fuelAmountField" name="fuelAmount" type="number" min="0" step="any"/>
-						<label for="fuelCostField">Üzemanyag ár:</label>
+						<label for="fuelCostField">Literenkénti ár:</label>
 						<input id="fuelCostField" name="fuelCost" type="number" min="0" step="any"/>
 					</div>
 					<div id="serviceInputs" class="hidden">
@@ -42,13 +43,37 @@
         </form>
       </div>
 
-      <div id="refuelData">
-        <table id="refuelTable"></table>
+      <div id="historyData">
+        <table id="historyTable">
+          <thead>
+            <tr id="historyTableHeader">
+              <th>Dátum</th>
+              <th>Mennyiség</th>
+              <th>Ár</th>
+            </tr></thead>
+          <tbody id="historyTableBody"></tbody>
+        </table>
       </div>
 
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
       <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+      <script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
       <script>
+        var historyTable = $("#historyTable").DataTable({
+          "bPaginate" : false,
+          "bLengthChange": false,
+          "bFilter": false,
+          "bSort": false,
+          "bInfo": false,
+          "bAutoWidth": false,
+          "bProcessing" : false,
+          "aoColumns": [
+            { "mData": "actionDate" },
+            { "mData": "fuelAmount" },
+            { "mData": "fuelCost" }
+          ]
+        });
+
         // onLoad
         $(function() {
           $( "#datepicker" ).datepicker({
@@ -76,20 +101,7 @@
                     .append($('<input type="checkbox" name="serviceItems" value="' + serviceItem.id + '" ><span>' + serviceItem.serviceName + '</span>'))
                   );
                 });
-            }
-          });
-
-          $.ajax({
-            url: '/api/carInfo/refuelData',
-            type: 'get',
-            success: function(data){
-              console.log(data);
-              $.each(data, function(i, refuelData){
-                $("#refuelTable")
-                .append($("<tr></tr>")
-                .append($('<td>' + refuelData.actionDate + '</td><td>' + refuelData.regNumber + '</td><td>' + refuelData.fuelAmount + '</td>'))
-                );
-              });
+              historyTable.ajax.url('/api/carInfo/refuelData/1').load(null, false);
             }
           });
 
@@ -111,6 +123,7 @@
 
         $("#form form").submit(function(e){
           if (!formValid()) { e.preventDefault(); return; }
+
           var url;
           if ($("#actionType").val() == 1) { url = '/api/carInfo/refuelData'; }
           else { url = '/api/carInfo/serviceData'; }
@@ -121,6 +134,10 @@
             success: function(data){
               if (data.message == "Success"){
                 $("#resultMessage").text("Mentés sikeres!").attr("class", "success");
+                historyTable.ajax.url('/api/carInfo/refuelData/' + $("#regNumberSelector").val()).load(null, false);
+                $("#km").val('');
+                $("#fuelAmountField").val('');
+                $("#fuelCostField").val('');
               } else {
                 $("#resultMessage").text("Hiba: " + data.message).attr("class", "failure");
               }
@@ -130,6 +147,7 @@
             }
           });
           e.preventDefault();
+
         });
 
         function formValid(){
@@ -145,6 +163,10 @@
           }
           return valid;
         };
+
+        $("#regNumberSelector").change(function(e){
+          historyTable.ajax.url('/api/carInfo/refuelData/' + $("#regNumberSelector").val()).load(null, false);
+        });
 
       </script>
     </body>

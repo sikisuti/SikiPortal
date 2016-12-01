@@ -42,11 +42,12 @@ body {
 }
 
 #form label {
-    width: 30%;
+    width: 47%;
     /* positions the label text beside the input */
     text-align: right;
     vertical-align: top;
     padding: 7px 0px 0px 0px;
+    font-size: 1.2em;
 }
 
 #form label + input,
@@ -55,10 +56,11 @@ body {
     display: inline-block;
     list-style-type: none;
     padding: 0px;
-    width: 50%;
+    width: 40%;
     /* large margin-right to force the next element to the new-line
        and margin-left to create a gutter between the label and input */
-    margin: 7px 5% 7px 4%;
+    margin: 7px 2% 7px 1%;
+    font-size: 1.2em;
 }
 
 /* only the submit button is matched by this selector,
@@ -96,6 +98,6 @@ body {
 
 @media (max-width: 600px) {
   #form {
-    width: 90%;
+    width: 99%;
   }
 }

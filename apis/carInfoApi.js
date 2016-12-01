@@ -26,21 +26,22 @@ module.exports = function(app, pool){
     });
   });
 
-  app.get("/api/carInfo/refuelData", function(req, res){
+  app.get("/api/carInfo/refuelData/:carId", function(req, res){
     pool.getConnection(function(err, connection){
       if (err) { console.log(err); res.json({ message: err }); }
 
       var query = connection.query(
-        'SELECT DATE_FORMAT(ca.actionDate, "%Y-%m-%d") AS actionDate , c.regNumber, r.fuelAmount ' +
+        'SELECT DATE_FORMAT(ca.actionDate, "%Y.%m.%d") AS actionDate, concat(r.fuelAmount, " l") as fuelAmount, concat(r.fuelCost, " Ft/l") as fuelCost ' +
         'FROM cars c ' +
-        'INNER JOIN commonActionData ca ON ca.carId = c.id ' +
-        'INNER JOIN refuelData r ON r.commonId = ca.id', function(err, result){
+          'INNER JOIN commonActionData ca ON ca.carId = c.id ' +
+          'INNER JOIN refuelData r ON r.commonId = ca.id ' +
+        'WHERE c.id = ' + req.params.carId, function(err, result){
           if (err) { console.log(query.sql); console.log(err); connection.release(); res.json({ message: err }) }
 
           console.log(query.sql);
           console.log(result);
           connection.release();
-          res.json(result);
+          res.json({ "aaData" : result });
         });
     });
   });

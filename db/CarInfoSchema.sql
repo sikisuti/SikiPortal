@@ -36,6 +36,7 @@ create table commonActionData (
 	carId bigint not null,
 	actionDate date not null,
 	km int not null,
+	created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	primary key (id),
 	foreign key (carId) references cars(id)
 ) default character set utf8 collate utf8_unicode_ci;
