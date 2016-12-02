@@ -42,7 +42,7 @@ body {
 }
 
 #form label {
-    width: 47%;
+    width: 48%;
     /* positions the label text beside the input */
     text-align: right;
     vertical-align: top;
@@ -70,30 +70,9 @@ body {
     margin: 10px 10%;
 }
 
-#resultMessage {
-  visibility: hidden;
-}
-
-#resultMessage.success {
-  visibility: visible;
-  color: yellow;
-  background: rgba(0, 0, 0, 0.2);
-  padding: 5px 10px;
-  margin: 5px 10px;
-  width: 60%;
-  text-align: center;
-  display: inline-block;
-}
-
-#resultMessage.failure {
-  visibility: visible;
-  color: yellow;
-  background: rgba(200, 0, 0, 0.8);
-  padding: 5px 10px;
-  margin: 5px 10px;
-  width: 60%;
-  text-align: center;
-  display: inline-block;
+#historyTable td.hidden_column,
+#historyTable th.hidden_column {
+  display: none;
 }
 
 @media (max-width: 600px) {

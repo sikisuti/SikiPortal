@@ -2,8 +2,9 @@
 <html>
     <header>
       <meta name="viewport" content="width=device-width, initial-scale=1">
-      <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes/south-street/jquery-ui.min.css">
-      <link rel="stylesheet" href="https://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css">
+      <link rel="stylesheet" href="/css/jquery-ui-1.10.3-south-street.min.css">
+      <link rel="stylesheet" href="/css/jquery.dataTables-1.10.12.min.css">
+      <link rel="stylesheet" href="/css/sweetalert.css">
       <link rel="stylesheet" href="/css/carInfo/carInfoStyles.css">
         <title>Car info</title>
 
@@ -26,7 +27,7 @@
           <label for="km">Km óra:</label>
           <input id="km" name="km" type="number" />
 					<div id="refuelInputs">
-						<label for="fuelAmountField">Tankolt mennyiség:</label>
+						<label for="fuelAmountField">Tankolt menny.:</label>
 						<input id="fuelAmountField" name="fuelAmount" type="number" min="0" step="any"/>
 						<label for="fuelCostField">Literenkénti ár:</label>
 						<input id="fuelCostField" name="fuelCost" type="number" min="0" step="any"/>
@@ -38,7 +39,6 @@
             <ul id="serviceItems">
             </ul>
 					</div>
-          <span id="resultMessage"></span>
           <input id="btnSubmit" type="submit" value="Elküld" />
         </form>
       </div>
@@ -47,6 +47,7 @@
         <table id="historyTable">
           <thead>
             <tr id="historyTableHeader">
+              <th class="hidden_column">id</th>
               <th>Dátum</th>
               <th>Mennyiség</th>
               <th>Ár</th>
@@ -55,9 +56,10 @@
         </table>
       </div>
 
-      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-      <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
-      <script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
+      <script src="/js/jquery-3.1.1.min.js"></script>
+      <script src="/js/jquery-ui-1.12.1.min.js"></script>
+      <script src="/js/jquery.dataTables-1.10.12.min.js"></script>
+      <script src="/js/sweetalert.min.js"></script>
       <script>
         var historyTable = $("#historyTable").DataTable({
           "bPaginate" : false,
@@ -66,12 +68,19 @@
           "bSort": false,
           "bInfo": false,
           "bAutoWidth": false,
-          "bProcessing" : false,
+          "bProcessing" : true,
           "aoColumns": [
+            { "mData": "id" },
             { "mData": "actionDate" },
             { "mData": "fuelAmount" },
             { "mData": "fuelCost" }
-          ]
+          ],
+          "columnDefs": [
+            {
+                "targets": [ 0 ],
+                "className": "hidden_column"
+            }
+        ]
         });
 
         // onLoad
@@ -131,19 +140,18 @@
             url: url,
             type: 'post',
             data: $("#form form").serializeArray(),
-            success: function(data){
-              if (data.message == "Success"){
-                $("#resultMessage").text("Mentés sikeres!").attr("class", "success");
+            statusCode: {
+              200: function() {
+                swal("Végrehajtva", "Mentés sikeres", "success");
                 historyTable.ajax.url('/api/carInfo/refuelData/' + $("#regNumberSelector").val()).load(null, false);
                 $("#km").val('');
                 $("#fuelAmountField").val('');
                 $("#fuelCostField").val('');
-              } else {
-                $("#resultMessage").text("Hiba: " + data.message).attr("class", "failure");
+              },
+
+              503: function() {
+                swal("Hiba", "Mentés nem sikerült", "error");
               }
-              setTimeout(function(){
-                $("#resultMessage").attr("class", "");
-              }, 10000);
             }
           });
           e.preventDefault();
@@ -166,6 +174,10 @@
 
         $("#regNumberSelector").change(function(e){
           historyTable.ajax.url('/api/carInfo/refuelData/' + $("#regNumberSelector").val()).load(null, false);
+        });
+
+        $('#historyTable tbody').on( 'click', 'tr', function (e) {
+          console.log(e.currentTarget.firstChild.innerText);
         });
 
       </script>

@@ -31,7 +31,7 @@ module.exports = function(app, pool){
       if (err) { console.log(err); res.json({ message: err }); }
 
       var query = connection.query(
-        'SELECT DATE_FORMAT(ca.actionDate, "%Y.%m.%d") AS actionDate, concat(r.fuelAmount, " l") as fuelAmount, concat(r.fuelCost, " Ft/l") as fuelCost ' +
+        'SELECT r.id, DATE_FORMAT(ca.actionDate, "%Y.%m.%d") AS actionDate, r.fuelAmount, r.fuelCost ' +
         'FROM cars c ' +
           'INNER JOIN commonActionData ca ON ca.carId = c.id ' +
           'INNER JOIN refuelData r ON r.commonId = ca.id ' +
@@ -48,22 +48,22 @@ module.exports = function(app, pool){
 
   app.post("/api/carInfo/refuelData", function(req, res){
     pool.getConnection(function(err, connection){
-      if (err) { console.log(err); res.json({ message: err }); }
+      if (err) { console.log(err); res.sendStatus(503); }
 
       connection.beginTransaction(function(err){
-        if (err) { res.json({ message: err }); }
+        if (err) { res.sendStatus(503); }
 
         var commonActionDataQuery = connection.query('INSERT INTO commonActionData set ?',
             { carId: req.body.carId, actionDate: req.body.actionDate, km: req.body.km }, function(err, commonResult){
           if (err) { connection.rollback(function(){
-            console.log(commonActionDataQuery.sql); console.log(err); connection.release(); res.json({ message: err });
+            console.log(commonActionDataQuery.sql); console.log(err); connection.release(); res.sendStatus(503);
             });
           }
 
           var refuelDataQuery = connection.query('INSERT INTO refuelData set ?',
             { commonId: commonResult.insertId, fuelAmount: req.body.fuelAmount.replace(",", "."), fuelCost: req.body.fuelCost.replace(",", ".") }, function(err, result){
             if (err) { connection.rollback(function(){
-              console.log(commonActionDataQuery.sql); console.log(refuelDataQuery.sql); console.log(err); connection.release(); res.json({ message: err });
+              console.log(commonActionDataQuery.sql); console.log(refuelDataQuery.sql); console.log(err); connection.release(); res.sendStatus(503);
               });
             }
 
@@ -71,12 +71,12 @@ module.exports = function(app, pool){
             console.log(refuelDataQuery.sql);
             connection.commit(function(err){
               if (err) { connection.rollback(function(){
-                  res.json({ message: err });
+                  res.sendStatus(503);
                 });
               }
             });
             connection.release();
-            res.json({ message: "Success" });
+            res.sendStatus(200);
           });
         });
       });
