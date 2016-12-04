@@ -19,6 +19,7 @@
       <div id="form">
         <form method="post">
           <input id="actionType" type="hidden" name="actionType" value="1"/>
+          <input id="id" type="hidden" name="id"/>
           <label for="regNumberSelector">Autó:</label>
           <select id="regNumberSelector" name="carId">
           </select>
@@ -39,6 +40,7 @@
             <ul id="serviceItems">
             </ul>
 					</div>
+          <input id="btnCancel" type="button" value="Mégse" class="hidden" />
           <input id="btnSubmit" type="submit" value="Elküld" />
         </form>
       </div>
@@ -49,6 +51,7 @@
             <tr id="historyTableHeader">
               <th class="hidden_column">id</th>
               <th>Dátum</th>
+              <th class="hidden_column">km</th>
               <th>Mennyiség</th>
               <th>Ár</th>
             </tr></thead>
@@ -72,6 +75,7 @@
           "aoColumns": [
             { "mData": "id" },
             { "mData": "actionDate" },
+            { "mData": "km" },
             { "mData": "fuelAmount" },
             { "mData": "fuelCost" }
           ],
@@ -79,7 +83,11 @@
             {
                 "targets": [ 0 ],
                 "className": "hidden_column"
-            }
+            },
+              {
+                  "targets": [ 2 ],
+                  "className": "hidden_column"
+              }
         ]
         });
 
@@ -177,7 +185,39 @@
         });
 
         $('#historyTable tbody').on( 'click', 'tr', function (e) {
-          console.log(e.currentTarget.firstChild.innerText);
+          if ($("#historyTable").attr("disabled") != "disabled") {
+            if ( !$(this).hasClass('selected') ) {
+              historyTable.$('tr.selected').removeClass('selected');
+              $(this).addClass('selected');
+            }
+          }
+        });
+
+        $('#historyTable tbody').on( 'dblclick', 'tr', function (e) {
+          if ($("#historyTable").attr("disabled") != "disabled") {
+            $("#id").val($(this).children()[0].innerHTML);
+            $("#datepicker").val($(this).children()[1].innerHTML);
+            $("#km").val($(this).children()[2].innerHTML);
+            $("#fuelAmountField").val($(this).children()[3].innerHTML);
+            $("#fuelCostField").val($(this).children()[4].innerHTML);
+            $("#btnCancel").removeClass("hidden");
+            $("#btnSubmit").val("Módosít");
+            $("#historyTable").attr("disabled", "disabled");
+            $("#btnService").attr("disabled", "disabled");
+            console.log($(this));
+          }
+        });
+
+        $("#btnCancel").click(function(e){
+          $("#id").val(null);
+          $( "#datepicker" ).val($.datepicker.formatDate('yy-mm-dd', new Date()));
+          $("#km").val(null);
+          $("#fuelAmountField").val(null);
+          $("#fuelCostField").val(null);
+          $("#btnService").attr("disabled", false);
+          $("#historyTable").attr("disabled", false);
+          $("#btnCancel").addClass("hidden");
+          $("#btnSubmit").val("Elküld");
         });
 
       </script>

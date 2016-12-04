@@ -31,7 +31,7 @@ module.exports = function(app, pool){
       if (err) { console.log(err); res.json({ message: err }); }
 
       var query = connection.query(
-        'SELECT r.id, DATE_FORMAT(ca.actionDate, "%Y.%m.%d") AS actionDate, r.fuelAmount, r.fuelCost ' +
+        'SELECT r.id, DATE_FORMAT(ca.actionDate, "%Y-%m-%d") AS actionDate, ca.km, r.fuelAmount, r.fuelCost ' +
         'FROM cars c ' +
           'INNER JOIN commonActionData ca ON ca.carId = c.id ' +
           'INNER JOIN refuelData r ON r.commonId = ca.id ' +

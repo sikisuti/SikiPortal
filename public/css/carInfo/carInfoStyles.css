@@ -65,9 +65,22 @@ body {
 
 /* only the submit button is matched by this selector,
    but to be sure you could use an id or class for that button*/
-#btnSubmit {
+#btnSubmit,
+#btnCancel {
     float: right;
-    margin: 10px 10%;
+    margin: 10px 5% 10px 0%;
+}
+
+#btnCancel {
+  background-color: lightcoral;
+}
+
+#btnCancel.hidden {
+  display: none;
+}
+
+#historyTable {
+  width: 50%;
 }
 
 #historyTable td.hidden_column,
@@ -77,6 +90,10 @@ body {
 
 @media (max-width: 600px) {
   #form {
+    width: 99%;
+  }
+
+  #historyTable {
     width: 99%;
   }
 }
