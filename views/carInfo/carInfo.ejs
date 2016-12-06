@@ -57,6 +57,7 @@
             </tr></thead>
           <tbody id="historyTableBody"></tbody>
         </table>
+        <button id="btnModifyHistoryItem" disabled="disabled">Módosít</button>
       </div>
 
       <script src="/js/jquery-3.1.1.min.js"></script>
@@ -144,17 +145,18 @@
           var url;
           if ($("#actionType").val() == 1) { url = '/api/carInfo/refuelData'; }
           else { url = '/api/carInfo/serviceData'; }
+          var type;
+          if ($("#id").val == null) { type = 'post'; }
+          else { type = 'put'; }
           $.ajax({
             url: url,
-            type: 'post',
+            type: type,
             data: $("#form form").serializeArray(),
             statusCode: {
               200: function() {
                 swal("Végrehajtva", "Mentés sikeres", "success");
                 historyTable.ajax.url('/api/carInfo/refuelData/' + $("#regNumberSelector").val()).load(null, false);
-                $("#km").val('');
-                $("#fuelAmountField").val('');
-                $("#fuelCostField").val('');
+                formReset();
               },
 
               503: function() {
@@ -189,35 +191,49 @@
             if ( !$(this).hasClass('selected') ) {
               historyTable.$('tr.selected').removeClass('selected');
               $(this).addClass('selected');
+              $("#btnModifyHistoryItem").attr("disabled", false);
             }
           }
         });
 
         $('#historyTable tbody').on( 'dblclick', 'tr', function (e) {
+          fillForm();
+        });
+
+        var fillForm = function(){
           if ($("#historyTable").attr("disabled") != "disabled") {
-            $("#id").val($(this).children()[0].innerHTML);
-            $("#datepicker").val($(this).children()[1].innerHTML);
-            $("#km").val($(this).children()[2].innerHTML);
-            $("#fuelAmountField").val($(this).children()[3].innerHTML);
-            $("#fuelCostField").val($(this).children()[4].innerHTML);
+            $("#id").val(historyTable.$('tr.selected').children()[0].innerHTML);
+            $("#datepicker").val(historyTable.$('tr.selected').children()[1].innerHTML);
+            $("#km").val(historyTable.$('tr.selected').children()[2].innerHTML);
+            $("#fuelAmountField").val(historyTable.$('tr.selected').children()[3].innerHTML);
+            $("#fuelCostField").val(historyTable.$('tr.selected').children()[4].innerHTML);
             $("#btnCancel").removeClass("hidden");
             $("#btnSubmit").val("Módosít");
             $("#historyTable").attr("disabled", "disabled");
             $("#btnService").attr("disabled", "disabled");
-            console.log($(this));
+            $("#btnModifyHistoryItem").attr("disabled", "disabled");
           }
-        });
+        };
 
         $("#btnCancel").click(function(e){
+          formReset();
+        });
+
+        var formReset = function(){
           $("#id").val(null);
           $( "#datepicker" ).val($.datepicker.formatDate('yy-mm-dd', new Date()));
           $("#km").val(null);
           $("#fuelAmountField").val(null);
           $("#fuelCostField").val(null);
           $("#btnService").attr("disabled", false);
+          historyTable.$('tr.selected').removeClass('selected');
           $("#historyTable").attr("disabled", false);
           $("#btnCancel").addClass("hidden");
           $("#btnSubmit").val("Elküld");
+        };
+
+        $("#btnModifyHistoryItem").click(function(e){
+          fillForm();
         });
 
       </script>

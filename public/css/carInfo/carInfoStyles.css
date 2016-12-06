@@ -79,8 +79,13 @@ body {
   display: none;
 }
 
-#historyTable {
+#historyData {
+  margin: 5px auto;
   width: 50%;
+}
+
+#btnModifyHistoryItem{
+  float: right;
 }
 
 #historyTable td.hidden_column,
@@ -93,7 +98,7 @@ body {
     width: 99%;
   }
 
-  #historyTable {
+  #historyData {
     width: 99%;
   }
 }

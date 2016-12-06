@@ -39,7 +39,6 @@ module.exports = function(app, pool){
           if (err) { console.log(query.sql); console.log(err); connection.release(); res.json({ message: err }) }
 
           console.log(query.sql);
-          console.log(result);
           connection.release();
           res.json({ "aaData" : result });
         });
@@ -81,6 +80,53 @@ module.exports = function(app, pool){
         });
       });
     });
+  });
+
+  app.put('/api/carInfo/refuelData', function(req, res) {
+    console.log(req.body.id);
+
+    pool.getConnection(function(err, connection){
+      if (err) { console.log(err); res.sendStatus(503); }
+
+      connection.beginTransaction(function(err){
+        if (err) { res.sendStatus(503); }
+
+        var rfSelectQuery = connection.query("SELECT r.commonId FROM refuelData r WHERE r.id=" + req.body.id, function(err, refuelSelectResult){
+          if (err) { connection.rollback(function(){
+            console.log(rfSelectQuery.sql); console.log(err); connection.release(); res.sendStatus(503);
+            });
+          }
+          console.log(refuelSelectResult);
+          var commonUpdateQuery = connection.query("UPDATE commonActionData SET ? WHERE id=" + refuelSelectResult[0].commonId,
+            {carId: req.body.carId, actionDate: req.body.actionDate, km: req.body.km}, function(err, commonUpdateResult){
+              if (err) { connection.rollback(function(){
+                console.log(commonUpdateQuery.sql); console.log(err); connection.release(); res.sendStatus(503);
+                });
+              }
+
+              var refuelUpdateQuery = connection.query("UPDATE refuelData SET ? WHERE id=" + req.body.id,
+                {fuelAmount: req.body.fuelAmount, fuelCost: req.body.fuelCost}, function(err, refuelUpdateResult){
+                  if (err) { connection.rollback(function(){
+                    console.log(refuelUpdateQuery.sql); console.log(err); connection.release(); res.sendStatus(503);
+                    });
+                  }
+
+                  console.log(commonUpdateQuery.sql);
+                  console.log(refuelUpdateQuery.sql);
+                  connection.commit(function(err){
+                    if (err) { connection.rollback(function(){
+                        res.sendStatus(503);
+                      });
+                    }
+                  });
+                  connection.release();
+                  res.sendStatus(200);
+                });
+            });
+        });
+      });
+    });
+
   });
 
   app.post("/api/carInfo/serviceData", function(req, res){
