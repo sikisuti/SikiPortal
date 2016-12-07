@@ -146,7 +146,7 @@
           if ($("#actionType").val() == 1) { url = '/api/carInfo/refuelData'; }
           else { url = '/api/carInfo/serviceData'; }
           var type;
-          if ($("#id").val == null) { type = 'post'; }
+          if ($("#id").val() == null || $("#id").val() == "") { type = 'post'; }
           else { type = 'put'; }
           $.ajax({
             url: url,
