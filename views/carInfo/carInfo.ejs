@@ -57,7 +57,10 @@
             </tr></thead>
           <tbody id="historyTableBody"></tbody>
         </table>
-        <button id="btnModifyHistoryItem" disabled="disabled">Módosít</button>
+        <div>
+          <button id="btnModifyHistoryItem" disabled="disabled">Módosít</button>
+          <button id="btnDeleteHistoryItem" disabled="disabled">Töröl</button>
+        </div>
       </div>
 
       <script src="/js/jquery-3.1.1.min.js"></script>
@@ -192,6 +195,7 @@
               historyTable.$('tr.selected').removeClass('selected');
               $(this).addClass('selected');
               $("#btnModifyHistoryItem").attr("disabled", false);
+              $("#btnDeleteHistoryItem").attr("disabled", false);
             }
           }
         });
@@ -212,6 +216,7 @@
             $("#historyTable").attr("disabled", "disabled");
             $("#btnService").attr("disabled", "disabled");
             $("#btnModifyHistoryItem").attr("disabled", "disabled");
+            $("#btnDeleteHistoryItem").attr("disabled", "disabled");
           }
         };
 
@@ -234,6 +239,40 @@
 
         $("#btnModifyHistoryItem").click(function(e){
           fillForm();
+        });
+
+        $("#btnDeleteHistoryItem").click(function(e){
+          swal({
+            title: "Biztosan törlöd?",
+            text: "Az elem véglegesen eltávolításra kerül!",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Igen, törlöm!",
+            cancelButtonText: "Mégsem",
+            closeOnConfirm: false
+          },
+          function(){
+            fillForm();
+            $.ajax({
+              url: '/api/carInfo/refuelData',
+              type: 'delete',
+              data: $("#form form").serializeArray(),
+              statusCode: {
+                200: function() {
+                  swal("Végrehajtva", "Törlés sikeres", "success");
+                  historyTable.ajax.url('/api/carInfo/refuelData/' + $("#regNumberSelector").val()).load(null, false);
+                  formReset();
+                },
+
+                503: function() {
+                formReset();
+                  swal("Hiba", "Törlés nem sikerült", "error");
+                }
+              }
+            });
+            e.preventDefault();
+          });
         });
 
       </script>

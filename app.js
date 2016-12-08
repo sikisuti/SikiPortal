@@ -9,6 +9,7 @@ var port = 3000;
 // Controller files
 var carInfoController = require(path.join(__dirname, 'controllers/carInfoController'));
 var carInfoApi = require('./apis/carInfoApi');
+var carInfoRefuelApi = require('./apis/carInfoRefuelApi');
 var shoppingListController = require('./controllers/shoppingListController');
 
 // Create app
@@ -36,6 +37,7 @@ var pool = mysql.createPool({
 // fire controllers
 carInfoController(app, pool);
 carInfoApi(app, pool);
+carInfoRefuelApi(app, pool);
 shoppingListController(app, pool);
 
 app.get("/", function(req, res){
