@@ -9,12 +9,31 @@ module.exports = function(app, pool){
         'FROM cars c ' +
           'INNER JOIN commonActionData ca ON ca.carId = c.id ' +
           'INNER JOIN refuelData r ON r.commonId = ca.id ' +
-        'WHERE c.id = ' + req.params.carId, function(err, result){
+        'WHERE c.id = ' + req.params.carId + " " +
+        "ORDER BY ca.actionDate DESC " +
+        "LIMIT 10", function(err, result){
           if (err) { console.log(query.sql); console.log(err); connection.release(); res.json({ message: err }) }
 
-          console.log(query.sql);
+          var rtnResult = {aaData: []};
+          for (var i = 0; i < result.length; i++){
+            console.log("row:");
+            console.log(result[i]);
+            var jsonData = {};
+            for (var key in result[i]){
+              jsonData[key] = result[i][key];
+            }
+            jsonData["distance"] = null;
+            jsonData["consume"] = null;
+            if (i < result.length - 1) {
+              jsonData["distance"] = result[i].km - result[i+1].km;
+              jsonData["consume"] = Math.round((result[i].fuelAmount * 1000) / jsonData["distance"]) / 10
+            }
+            rtnResult.aaData.push(jsonData);
+          }
+          console.log("rtnResult:");
+          console.log(rtnResult);
           connection.release();
-          res.json({ "aaData" : result });
+          res.json(rtnResult);
         });
     });
   });
@@ -40,8 +59,6 @@ module.exports = function(app, pool){
               });
             }
 
-            console.log(commonActionDataQuery.sql);
-            console.log(refuelDataQuery.sql);
             connection.commit(function(err){
               if (err) { connection.rollback(function(){
                   res.sendStatus(503);
@@ -125,8 +142,6 @@ module.exports = function(app, pool){
                     });
                   }
 
-                  console.log(refuelDeleteQuery.sql);
-                  console.log(commonDeleteQuery.sql);
                   connection.commit(function(err){
                     if (err) { connection.rollback(function(){
                         res.sendStatus(503);
@@ -140,7 +155,39 @@ module.exports = function(app, pool){
         });
       });
     });
+  });
 
+  app.get('/api/carInfo/statistics/:carId', function(req, res){
+    pool.getConnection(function(err, connection){
+      if (err) { console.log(err); res.sendStatus(503); }
+
+      connection.beginTransaction(function(err){
+        if (err) { res.sendStatus(503); }
+
+        var query = connection.query(
+          "SELECT c.km, r.fuelAmount " +
+          "FROM commonActionData c " +
+          "INNER JOIN refuelData r ON r.commonId = c.id " +
+          "WHERE c.carId=" + req.params.carId + " " +
+          "ORDER BY c.actionDate DESC " +
+          "LIMIT 10", function(err, result){
+          if (err) { connection.rollback(function(){
+            console.log(query.sql); console.log(err); connection.release(); res.sendStatus(503);
+            });
+          }
+
+          var totalKm = result[0].km - result[result.length - 1].km;
+          var totalFuelAmount = result.slice(0, result.length - 1).reduce(function(a, b){ return a + b.fuelAmount; }, 0);
+
+          console.log("totalkm: " + totalKm);
+          console.log("totalFuelAmount: " + totalFuelAmount);
+
+          console.log(result);
+          connection.release();
+          res.json({avgConsume: Math.round((totalFuelAmount * 1000) / totalKm) / 10});
+        });
+      });
+    });
   });
 
 };

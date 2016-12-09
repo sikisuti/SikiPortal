@@ -45,14 +45,20 @@
         </form>
       </div>
 
+      <div id="statistics">
+        <label>Átlagos fogyasztás: <span id="avgConsume"></span> l/100Km</label>
+      </div>
+
       <div id="historyData">
         <table id="historyTable">
           <thead>
             <tr id="historyTableHeader">
               <th class="hidden_column">id</th>
+              <th class="hidden_column">totalKm</th>
               <th>Dátum</th>
-              <th class="hidden_column">km</th>
+              <th>km</th>
               <th>Mennyiség</th>
+              <th>Fogyasztás</th>
               <th>Ár</th>
             </tr></thead>
           <tbody id="historyTableBody"></tbody>
@@ -78,9 +84,11 @@
           "bProcessing" : true,
           "aoColumns": [
             { "mData": "id" },
-            { "mData": "actionDate" },
             { "mData": "km" },
+            { "mData": "actionDate" },
+            { "mData": "distance" },
             { "mData": "fuelAmount" },
+            { "mData": "consume" },
             { "mData": "fuelCost" }
           ],
           "columnDefs": [
@@ -89,7 +97,7 @@
                 "className": "hidden_column"
             },
               {
-                  "targets": [ 2 ],
+                  "targets": [ 1 ],
                   "className": "hidden_column"
               }
         ]
@@ -108,7 +116,9 @@
             type: 'get',
             success: function(data){
               $.each(data, function(i, car){
-                $("#regNumberSelector").append($("<option></option>").attr("value",car.id).text(car.regNumber));})
+                $("#regNumberSelector").append($("<option></option>").attr("value",car.id).text(car.regNumber));
+              });
+              refreshStats($("#regNumberSelector").val());
             }
           });
 
@@ -187,6 +197,7 @@
 
         $("#regNumberSelector").change(function(e){
           historyTable.ajax.url('/api/carInfo/refuelData/' + $("#regNumberSelector").val()).load(null, false);
+          refreshStats($("#regNumberSelector").val());
         });
 
         $('#historyTable tbody').on( 'click', 'tr', function (e) {
@@ -200,6 +211,17 @@
           }
         });
 
+        var refreshStats = function(carId){
+          $.ajax({
+            url: '/api/carInfo/statistics/' + carId,
+            type: 'get',
+            success: function(data){
+              $("#avgConsume").html(data.avgConsume);
+              console.log(data);
+            }
+          });
+        };
+
         $('#historyTable tbody').on( 'dblclick', 'tr', function (e) {
           fillForm();
         });
@@ -207,10 +229,10 @@
         var fillForm = function(){
           if ($("#historyTable").attr("disabled") != "disabled") {
             $("#id").val(historyTable.$('tr.selected').children()[0].innerHTML);
-            $("#datepicker").val(historyTable.$('tr.selected').children()[1].innerHTML);
-            $("#km").val(historyTable.$('tr.selected').children()[2].innerHTML);
-            $("#fuelAmountField").val(historyTable.$('tr.selected').children()[3].innerHTML);
-            $("#fuelCostField").val(historyTable.$('tr.selected').children()[4].innerHTML);
+            $("#km").val(historyTable.$('tr.selected').children()[1].innerHTML);
+            $("#datepicker").val(historyTable.$('tr.selected').children()[2].innerHTML);
+            $("#fuelAmountField").val(historyTable.$('tr.selected').children()[4].innerHTML);
+            $("#fuelCostField").val(historyTable.$('tr.selected').children()[6].innerHTML);
             $("#btnCancel").removeClass("hidden");
             $("#btnSubmit").val("Módosít");
             $("#historyTable").attr("disabled", "disabled");

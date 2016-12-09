@@ -93,6 +93,10 @@ body {
   display: none;
 }
 
+#statistics span {
+  font-weight: bold;
+}
+
 @media (max-width: 600px) {
   #form {
     width: 99%;
