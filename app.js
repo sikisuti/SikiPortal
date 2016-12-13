@@ -10,7 +10,6 @@ var port = 3000;
 var carInfoController = require(path.join(__dirname, 'controllers/carInfoController'));
 var carInfoApi = require('./apis/carInfoApi');
 var carInfoRefuelApi = require('./apis/carInfoRefuelApi');
-var shoppingListController = require('./controllers/shoppingListController');
 
 // Create app
 var app = express();
@@ -38,10 +37,17 @@ var pool = mysql.createPool({
 carInfoController(app, pool);
 carInfoApi(app, pool);
 carInfoRefuelApi(app, pool);
-shoppingListController(app, pool);
 
 app.get("/", function(req, res){
   res.render("index");
+});
+
+app.get("/shop", function(req, res){
+  res.sendFile("/public/shoppingList/index.html", {root: __dirname});
+});
+
+app.get("/java", function(req, res){
+  res.sendFile("/public/learnJava/index.html", {root: __dirname});
 });
 
 var server = app.listen(port);
