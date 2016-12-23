@@ -1,0 +1,67 @@
+module.exports = function(app, pool){
+
+  var mixedQuestionIds;
+  var currentQuestionId;
+
+  app.get("/api/learnJava/question", function(req, res){
+
+    mixQuestions(null, function(){
+      if (mixedQuestionIds.length - 1 > currentQuestionId) {
+        currentQuestionId += 1;
+      } else {
+        res.status(400);
+        res.send('end');
+        return;
+      }
+
+      pool.getConnection(function (err, connection){
+        if (err) {console.log(err); return;}
+
+        var result = JSON.parse('{}');
+
+        connection.query(
+          'SELECT * FROM questions q WHERE q.ID = ' + mixedQuestionIds[currentQuestionId].ID, function(err, questionResult, fields){
+  				if (err) { console.log(err); res.send(err); return; }
+
+          result.question = questionResult[0].QUESTION;
+          result.code = questionResult[0].CODE;
+
+          connection.query('SELECT * FROM answers WHERE question_id = ' + questionResult[0].ID, function(err, answerResult, fields){
+            if (err) { console.log(err); res.send(err); return; }
+
+            result.answers = answerResult;
+
+            //console.log(result);
+            connection.release();
+            res.send(result);
+          });
+  			});
+      });
+    });
+  });
+
+  app.delete("/api/learnJava/question", function(req, res){
+    mixedQuestionIds = null;
+    res.sendStatus(200);
+  });
+
+  var mixQuestions = function(noOfQuestions, callback){
+    if (mixedQuestionIds == null) {
+      pool.getConnection(function (err, connection){
+        if (err) {console.log(err); return;}
+
+        connection.query('SELECT ID FROM questions ORDER BY RAND()', function(err, questionResult, fields){
+            if (err) { console.log(err); res.send(err); return; }
+
+            mixedQuestionIds = questionResult;
+            currentQuestionId = -1;
+            connection.release();
+            callback();
+        });
+      });
+    } else {
+      callback();
+    }
+  };
+
+};

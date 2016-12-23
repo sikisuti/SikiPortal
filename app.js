@@ -9,6 +9,7 @@ var port = 3000;
 // Controller files
 var carInfoController = require(path.join(__dirname, 'controllers/carInfoController'));
 var carInfoApi = require('./apis/carInfoApi');
+var learnJavaApi = require('./apis/learnJavaApi');
 var carInfoRefuelApi = require('./apis/carInfoRefuelApi');
 
 // Create app
@@ -24,7 +25,7 @@ app.use(express.static(__dirname + '/public'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true}));
 
-var pool = mysql.createPool({
+var carInfoPool = mysql.createPool({
    host     : 'localhost',
    user     : 'root',
    password : 'Gaboca.1',
@@ -33,10 +34,20 @@ var pool = mysql.createPool({
    supportBigNumbers: true
 });
 
+var javaQuestionsPool = mysql.createPool({
+  host     : 'localhost',
+  user     : 'root',
+  password : 'Gaboca.1',
+  database : 'JavaQuestions',
+  connectionLimit: 10,
+  supportBigNumbers: true
+});
+
 // fire controllers
-carInfoController(app, pool);
-carInfoApi(app, pool);
-carInfoRefuelApi(app, pool);
+carInfoController(app, carInfoPool);
+carInfoApi(app, carInfoPool);
+learnJavaApi(app, javaQuestionsPool);
+carInfoRefuelApi(app, carInfoPool);
 
 app.get("/", function(req, res){
   res.render("index");
