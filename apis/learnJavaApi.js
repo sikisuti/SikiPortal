@@ -24,7 +24,7 @@ module.exports = function(app, pool){
   				if (err) { console.log(err); res.send(err); return; }
 
           result.question = questionResult[0].QUESTION;
-          result.code = questionResult[0].CODE;
+          result.code = formatCode(questionResult[0].CODE);
 
           connection.query('SELECT * FROM answers WHERE question_id = ' + questionResult[0].ID, function(err, answerResult, fields){
             if (err) { console.log(err); res.send(err); return; }
@@ -62,6 +62,28 @@ module.exports = function(app, pool){
     } else {
       callback();
     }
+  };
+
+  var formatCode = function(code){
+    var tmpCode = "";
+
+        var ident = 0;
+        for (var i = 0; i < code.length; i++){
+            tmpCode = tmpCode.concat(code.charAt(i));
+            if (code.charAt(i) == '{'){
+                ident++;
+            }
+            if (i + 1 < code.length && code.charAt(i + 1) == '}') {
+                ident--;
+            }
+            if (code.charAt(i) == '\n'){
+                for (var j = 0; j < ident; j++){
+                    tmpCode =tmpCode.concat('  ');
+                }
+            }
+        }
+
+        return tmpCode;
   };
 
 };

@@ -5,3 +5,9 @@
 .incorrect {
   background-color: red;
 }
+
+#codeArea textarea {
+  width: 99%;
+  resize: none;
+  height: 300px;
+}
