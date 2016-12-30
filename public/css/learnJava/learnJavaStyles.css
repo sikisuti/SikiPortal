@@ -8,6 +8,11 @@
 
 #codeArea textarea {
   width: 99%;
-  resize: none;
-  height: 300px;
+  white-space: pre;
+  overflow-wrap: normal;
+  overflow-x: auto;
+}
+
+#question {
+  font-weight: bold;
 }

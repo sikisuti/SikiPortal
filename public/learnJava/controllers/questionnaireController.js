@@ -4,7 +4,14 @@ learnJavaApp.controller('questionnaireController', ['$scope', '$http', function(
       $http.get('/api/learnJava/question')
         .then(function(response){
           $scope.question = response.data;
+          $scope.codeAreaHeight = getCodeAreaHeight(response.data.code);
         }, function(response){});
+    };
+
+    var getCodeAreaHeight = function(code) {
+      var lineNo = (code.match(new RegExp("\n", "g")) || []).length + 1;
+      if (lineNo > 15) { lineNo = 15; }
+      return (lineNo + 2) * 16;
     };
 
     getQuestion();
