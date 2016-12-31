@@ -50,7 +50,7 @@ module.exports = function(app, pool){
       pool.getConnection(function (err, connection){
         if (err) {console.log(err); return;}
 
-        connection.query('SELECT ID FROM questions ORDER BY RAND()', function(err, questionResult, fields){
+        connection.query('SELECT ID FROM QUESTIONS ORDER BY RAND()', function(err, questionResult, fields){
             if (err) { console.log(err); res.send(err); return; }
 
             mixedQuestionIds = questionResult;
