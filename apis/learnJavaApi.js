@@ -20,7 +20,7 @@ module.exports = function(app, pool){
         var result = JSON.parse('{}');
 
         connection.query(
-          'SELECT * FROM questions q WHERE q.ID = ' + mixedQuestionIds[currentQuestionId].ID, function(err, questionResult, fields){
+          'SELECT * FROM QUESTIONS q WHERE q.ID = ' + mixedQuestionIds[currentQuestionId].ID, function(err, questionResult, fields){
   				if (err) { console.log(err); res.send(err); return; }
 
           result.question = questionResult[0].QUESTION;
