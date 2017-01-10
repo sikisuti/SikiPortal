@@ -158,6 +158,9 @@ module.exports = function(app, pool){
   });
 
   app.get('/api/carInfo/statistics/:carId', function(req, res){
+
+    res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+    
     pool.getConnection(function(err, connection){
       if (err) { console.log(err); res.sendStatus(503); }
 

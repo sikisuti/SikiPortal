@@ -8,13 +8,11 @@
 
   <p id="question">{{question.question}}</p>
 
-  <div id="codeArea" >
-    <textarea style="line-height: 16px; height: {{codeAreaHeight}}px;" wrap="soft">{{question.code}}</textarea>
-  </div>
+  <pre id="codeArea" style="line-height: 16px; height: {{codeAreaHeight}}px;">{{question.code}}</pre>
 
   <div id="answers">
     <div class="answer" ng-repeat="answer in question.answers" ng-class="answer.class">
-      <input type="checkbox" ng-model="answer.selected">{{answer.ANSWER}}
+      <label><input type="checkbox" ng-model="answer.selected">{{answer.ANSWER}}</label>
     </div>
   </div>
 

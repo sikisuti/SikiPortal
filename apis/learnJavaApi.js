@@ -5,6 +5,8 @@ module.exports = function(app, pool){
 
   app.get("/api/learnJava/question", function(req, res){
 
+    res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+
     mixQuestions(null, function(){
       if (mixedQuestionIds.length - 1 > currentQuestionId) {
         currentQuestionId += 1;
