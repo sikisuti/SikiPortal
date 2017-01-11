@@ -1,12 +1,6 @@
-<div>
+<div id="questionaire">
 
-  <div id="actions">
-    <button id="btnCheck" ng-click="checkAnswers()" >Check</button>
-    <button id="btnNext" ng-click="next()" >Next</button>
-    <button id="btnReset" ng-click="reset()" >Reset</button>
-  </div>
-
-  <p id="question">{{question.question}}</p>
+  <p id="question">{{questionNr}}. {{question.question}}</p>
 
   <pre id="codeArea" style="line-height: 16px; height: {{codeAreaHeight}}px;">{{question.code}}</pre>
 
@@ -15,5 +9,12 @@
       <label><input type="checkbox" ng-model="answer.selected">{{answer.ANSWER}}</label>
     </div>
   </div>
+
+    <div id="questionaireHeader">
+      <button id="btnCheck" ng-click="checkAnswers()" ng-class="{'hidden':action == 'next'}">Check</button>
+      <button id="btnNext" ng-click="next()" ng-class="{'hidden':action == 'check'}">Next</button>
+      <button id="btnReset" ng-click="reset()" >Reset</button>
+      <label id="lblPercent">{{percent}}%</labelrs>
+    </div>
 
 </div>

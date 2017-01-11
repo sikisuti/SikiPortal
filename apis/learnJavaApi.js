@@ -33,6 +33,10 @@ module.exports = function(app, pool){
 
             result.answers = answerResult;
 
+            result.answers.forEach(function(answer){
+              if (answer.ISCODE) { answer.ANSWER = formatCode(answer.ANSWER); }
+            });
+
             //console.log(result);
             connection.release();
             res.send(result);

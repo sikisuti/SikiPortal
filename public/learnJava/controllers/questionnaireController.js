@@ -1,11 +1,21 @@
 learnJavaApp.controller('questionnaireController', ['$scope', '$http', function($scope, $http){
 
+    var goodAnswerNr = 0;
+
+    var resetCounters = function() {
+      $scope.questionNr = 0;
+      goodAnswerNr = 0;
+      $scope.percent = 0;
+    }
+
     var getQuestion = function(){
       $http.get('/api/learnJava/question')
         .then(function(response){
           $scope.question = response.data;
           $scope.codeAreaHeight = getCodeAreaHeight(response.data.code);
+          $scope.questionNr += 1;
         }, function(response){});
+      $scope.action = 'check';
     };
 
     var getCodeAreaHeight = function(code) {
@@ -14,17 +24,27 @@ learnJavaApp.controller('questionnaireController', ['$scope', '$http', function(
       return (lineNo + 2) * 16;
     };
 
+    resetCounters();
     getQuestion();
 
     $scope.checkAnswers = function(){
       console.log($scope.question.answers);
+      var madeMistake = false;
       $scope.question.answers.forEach(function(answer){
         if (answer.ISCORRECT == answer.selected || (answer.selected == undefined && !answer.ISCORRECT)){
           answer.class = "correct";
         } else {
           answer.class = "incorrect";
+          madeMistake = true;
         }
       });
+
+      if (!madeMistake) {
+        goodAnswerNr += 1;
+      }
+
+      $scope.percent = Math.round((goodAnswerNr / $scope.questionNr) * 100);
+      $scope.action = 'next';
     };
 
     $scope.next = function(){
@@ -36,6 +56,7 @@ learnJavaApp.controller('questionnaireController', ['$scope', '$http', function(
         .then(function(response){
           getQuestion();
         }, function(response){});
+      resetCounters();
     };
 
 }]);
