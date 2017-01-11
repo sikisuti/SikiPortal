@@ -93,12 +93,21 @@ body {
   display: none;
 }
 
+#statistics {
+  width: 50%;
+  margin: 10px auto;
+}
+
 #statistics span {
   font-weight: bold;
 }
 
 @media (max-width: 600px) {
   #form {
+    width: 99%;
+  }
+
+  #statistics {
     width: 99%;
   }
 

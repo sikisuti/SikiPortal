@@ -1,6 +1,9 @@
 module.exports = function(app, pool){
 
   app.get("/api/carInfo/refuelData/:carId", function(req, res){
+
+    res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+
     pool.getConnection(function(err, connection){
       if (err) { console.log(err); res.json({ message: err }); }
 
@@ -160,7 +163,7 @@ module.exports = function(app, pool){
   app.get('/api/carInfo/statistics/:carId', function(req, res){
 
     res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
-    
+
     pool.getConnection(function(err, connection){
       if (err) { console.log(err); res.sendStatus(503); }
 
@@ -168,7 +171,7 @@ module.exports = function(app, pool){
         if (err) { res.sendStatus(503); }
 
         var query = connection.query(
-          "SELECT c.km, r.fuelAmount " +
+          "SELECT c.km, r.fuelAmount, r.fuelCost " +
           "FROM commonActionData c " +
           "INNER JOIN refuelData r ON r.commonId = c.id " +
           "WHERE c.carId=" + req.params.carId + " " +
@@ -181,13 +184,16 @@ module.exports = function(app, pool){
 
           var totalKm = result[0].km - result[result.length - 1].km;
           var totalFuelAmount = result.slice(0, result.length - 1).reduce(function(a, b){ return a + b.fuelAmount; }, 0);
+          var totalFuelCost = result.slice(0, result.length - 1).reduce(function(a, b){ return a + (b.fuelAmount * b.fuelCost); }, 0);
 
           console.log("totalkm: " + totalKm);
           console.log("totalFuelAmount: " + totalFuelAmount);
+          console.log("totalFuelCost: " + totalFuelCost);
 
           console.log(result);
           connection.release();
-          res.json({avgConsume: Math.round((totalFuelAmount * 1000) / totalKm) / 10});
+          res.json({avgConsume: Math.round((totalFuelAmount * 1000) / totalKm) / 10,
+                    kmCost: Math.round(totalFuelCost / totalKm)});
         });
       });
     });

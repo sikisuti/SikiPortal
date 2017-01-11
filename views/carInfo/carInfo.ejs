@@ -46,7 +46,8 @@
       </div>
 
       <div id="statistics">
-        <label>Átlagos fogyasztás: <span id="avgConsume"></span> l/100Km</label>
+        <label>Átlagos fogyasztás: <span id="avgConsume"></span> l/100Km</label><br>
+        <label>Üzemanyagköltség: <span id="kmCost"></span> Ft/Km</label>
       </div>
 
       <div id="historyData">
@@ -217,7 +218,7 @@
             type: 'get',
             success: function(data){
               $("#avgConsume").html(data.avgConsume);
-              console.log(data);
+              $("#kmCost").html(data.kmCost);
             }
           });
         };
