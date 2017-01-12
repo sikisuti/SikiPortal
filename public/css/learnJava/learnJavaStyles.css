@@ -42,6 +42,10 @@ body {
   font-weight: bold;
 }
 
+#explanation {
+  white-space: pre-line;
+}
+
 @media (max-width: 600px) {
 
   #answers {
