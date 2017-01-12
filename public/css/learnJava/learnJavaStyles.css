@@ -31,7 +31,6 @@ body {
 
 #codeArea {
   background-color: ivory;
-  font-size: 0.8em;
   border: 1px solid black;
   width: 99%;
   white-space: pre;
@@ -43,6 +42,18 @@ body {
   font-weight: bold;
 }
 
-#answers {
-  font-size: 0.8em;
+@media (max-width: 600px) {
+
+  #answers {
+    font-size: 0.8em;
+  }
+
+  #codeArea {
+    font-size: 0.8em;
+  }
+
+  #explanation {
+    font-size: 0.8em;
+  }
+
 }

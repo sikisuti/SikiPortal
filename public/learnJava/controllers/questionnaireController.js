@@ -14,6 +14,7 @@ learnJavaApp.controller('questionnaireController', ['$scope', '$http', function(
           $scope.question = response.data;
           $scope.codeAreaHeight = getCodeAreaHeight(response.data.code);
           $scope.questionNr += 1;
+          console.log(response.data.explanation);
         }, function(response){});
       $scope.action = 'check';
     };

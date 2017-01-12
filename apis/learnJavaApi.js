@@ -27,6 +27,7 @@ module.exports = function(app, pool){
 
           result.question = questionResult[0].QUESTION;
           result.code = formatCode(questionResult[0].CODE);
+          result.explanation = questionResult[0].EXPLANATION;
 
           connection.query('SELECT * FROM ANSWERS WHERE question_id = ' + questionResult[0].ID, function(err, answerResult, fields){
             if (err) { console.log(err); res.send(err); return; }
