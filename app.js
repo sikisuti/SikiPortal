@@ -2,6 +2,7 @@
 var express = require('express');
 var path = require('path');
 var bodyParser = require('body-parser');
+var cookieParser = require('cookie-parser');
 
 var port = 3000;
 
@@ -16,6 +17,9 @@ var authorizationApi = require('./apis/authorizationApi');
 var connections = require('./db/connections');
 var authorization = require('./middlewares/auth');
 
+var auth = require('./authManager');
+setInterval(function() { auth.clearTokenList(); }, 1800000); // 30 min
+
 // Create app
 var app = express();
 
@@ -25,6 +29,8 @@ app.set('view engine', 'ejs');
 
 // Set static folder
 app.use(express.static(__dirname + '/public'));
+
+app.use(cookieParser());
 
 // Authentication middleware
 app.use(authorization.authorize(connections.getAuthPool()));
