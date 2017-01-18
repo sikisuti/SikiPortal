@@ -46,6 +46,47 @@ body {
   white-space: pre-line;
 }
 
+#loginForm {
+  /*background:     mediumseagreen;*/
+  width: 50%;
+  margin: 10px auto;
+  border: 1px solid gray;
+  border-radius: 20px;
+  box-shadow: 5px 5px 10px #888888;
+  overflow: hidden;
+}
+
+#loginForm label, #loginForm input {
+  display: inline-block;
+}
+
+#loginForm label {
+    width: 48%;
+    /* positions the label text beside the input */
+    text-align: right;
+    vertical-align: top;
+    padding: 7px 0px 0px 0px;
+    font-size: 1.2em;
+}
+
+#loginForm label + input {
+    display: inline-block;
+    list-style-type: none;
+    padding: 0px;
+    width: 40%;
+    /* large margin-right to force the next element to the new-line
+       and margin-left to create a gutter between the label and input */
+    margin: 7px 2% 7px 1%;
+    font-size: 1.2em;
+}
+
+/* only the submit button is matched by this selector,
+   but to be sure you could use an id or class for that button*/
+#btnSubmit {
+    float: right;
+    margin: 10px 5% 10px 0%;
+}
+
 @media (max-width: 600px) {
 
   #answers {
@@ -58,6 +99,10 @@ body {
 
   #explanation {
     font-size: 0.8em;
+  }
+
+  #loginForm {
+    width: 99%;
   }
 
 }

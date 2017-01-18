@@ -3,11 +3,15 @@ var learnJavaApp = angular.module('learnJavaApp', ['ngRoute']);
 learnJavaApp.config(function($routeProvider){
   $routeProvider
     .when('/', {
-      templateUrl: 'learnJava/views/home.html',
+      templateUrl: 'views/home.html',
       controller: 'homeController'
     })
     .when('/questionnaire', {
-      templateUrl: 'learnJava/views/questionnaire.html',
+      templateUrl: 'views/questionnaire.html',
       controller: 'questionnaireController'
+    })
+    .when('/login', {
+      templateUrl: 'views/loginPage.html',
+      controller: 'loginPageController'
     });
 });
