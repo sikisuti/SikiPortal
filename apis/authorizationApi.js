@@ -3,8 +3,6 @@ var auth = require('../authManager');
 
 module.exports = function(app, authPool) {
 
-  app.get('/api/authorization/check', function(req, res) {});
-
   app.post('/api/authorization/login', function(req, res) {
     console.log("Login started -> username: " + req.body.username + ", password: " + req.body.password);
     authPool.getConnection(function (err, connection){

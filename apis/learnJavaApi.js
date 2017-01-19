@@ -1,9 +1,20 @@
-module.exports = function(app, pool){
+var express = require('express');
+var router = express.Router();
+
+var auth = require('../middlewares/auth');
+router.use(auth.authorize());
+
+var connections = require('../db/connections');
+var pool = connections.getJavaQuestionsPool();
+
+//module.exports = function(app, pool){
 
   var mixedQuestionIds;
   var currentQuestionId;
 
-  app.get("/api/learnJava/question", function(req, res){
+  router.get('/authorizationCheck', function(req, res) {});
+
+  router.get("/question", function(req, res){
 
     res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
 
@@ -47,7 +58,7 @@ module.exports = function(app, pool){
     });
   });
 
-  app.delete("/api/learnJava/question", function(req, res){
+  router.delete("/question", function(req, res){
     mixedQuestionIds = null;
     res.sendStatus(200);
   });
@@ -93,4 +104,6 @@ module.exports = function(app, pool){
         return tmpCode;
   };
 
-};
+//};
+
+module.exports = router;

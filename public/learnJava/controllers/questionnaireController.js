@@ -9,7 +9,7 @@ learnJavaApp.controller('questionnaireController', ['$scope', '$http', function(
     }
 
     var getQuestion = function(){
-      $http.get('/api/learnJava/question')
+      $http.get('/learnJava/question')
         .then(function(response){
           $scope.question = response.data;
           $scope.codeAreaHeight = getCodeAreaHeight(response.data.code);
@@ -53,7 +53,7 @@ learnJavaApp.controller('questionnaireController', ['$scope', '$http', function(
     };
 
     $scope.reset = function(){
-      $http.delete('/api/learnJava/question')
+      $http.delete('/learnJava/question')
         .then(function(response){
           getQuestion();
         }, function(response){});
