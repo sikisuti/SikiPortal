@@ -4,17 +4,19 @@ module.exports = {
 
   authorize: function(pool) {
     return function(req, res, next) {
-      console.log(req.url + " called");
-      if (req.url == '/learnJava/views/loginPage.html') { next(); return; }
-      if (req.url.startsWith("/learnJava/css/")) { next(); return; }
-      if (req.url.startsWith("/js/")) { next(); return; }
-      if (req.url == '/api/authorization/login') { next(); return; }
+      console.log('Authorization process started');
       if (req.cookies.sikiToken == undefined) {
-        console.log("send response with status 401...");
+        console.log("Not any token sent");
         res.status(401).send('Authorization failed');
         return;
+      } else if (auth.isAuthorized(req.cookies.sikiToken)) {
+        console.log('Authorization finished successfully');
+        next();
+      } else {
+        console.log("Token authorization failed");
+        res.status(401).send('Token authorization failed');
+        return;
       }
-      next();
     };
   }
 

@@ -44,6 +44,22 @@ learnJavaApp.controller('questionnaireController', ['$scope', '$http', function(
         goodAnswerNr += 1;
       }
 
+      var data = {
+        'questionId': $scope.question.id,
+        'isCorrect': !madeMistake
+      };
+
+      var config = {
+                headers : {
+                    'Content-Type': 'application/json'
+                }
+            }
+      $http.post('/learnJava/question', data, config).then(function(result){
+        console.log('Attempt archive successful');
+      }, function(result){
+        console.log('Attempt archive failed');
+      });
+
       $scope.percent = Math.round((goodAnswerNr / $scope.questionNr) * 100);
       $scope.action = 'next';
     };

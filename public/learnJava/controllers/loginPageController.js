@@ -11,7 +11,7 @@ learnJavaApp.controller('loginPageController', ['$scope', '$location', '$http', 
                 }
             }
 
-      $http.post('/api/authorization/login', data, config).then(function(response){
+      $http.post('/authorization/login', data, config).then(function(response){
         $location.path('/');
       }, function(response){
         console.log("Authentication failed");

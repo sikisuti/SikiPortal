@@ -3,7 +3,7 @@ var auth = require('../authManager');
 
 module.exports = function(app, authPool) {
 
-  app.post('/api/authorization/login', function(req, res) {
+  app.post('/authorization/login', function(req, res) {
     console.log("Login started -> username: " + req.body.username + ", password: " + req.body.password);
     authPool.getConnection(function (err, connection){
       if (err) {console.log(err); return;}
@@ -19,8 +19,10 @@ module.exports = function(app, authPool) {
             if (result) {
               console.log('Login success');
               connection.release();
-              auth.generateToken(userResult[0].id);
-              res.cookie('sikiToken', userResult[0].id);
+              var accessToken = auth.generateToken(userResult[0].id);
+              res.cookie('sikiToken', accessToken);
+              // TODO: put token to the header
+              //res.set('Authorization', userResult[0].id);
               res.json({message:"Login success"});
             }
             else {

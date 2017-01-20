@@ -7,6 +7,8 @@ router.use(auth.authorize());
 var connections = require('../db/connections');
 var pool = connections.getJavaQuestionsPool();
 
+var authManager = require('../authManager');
+
 //module.exports = function(app, pool){
 
   var mixedQuestionIds;
@@ -15,7 +17,7 @@ var pool = connections.getJavaQuestionsPool();
   router.get('/authorizationCheck', function(req, res) {});
 
   router.get("/question", function(req, res){
-
+    console.log("/question GET called");
     res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
 
     mixQuestions(null, function(){
@@ -36,6 +38,7 @@ var pool = connections.getJavaQuestionsPool();
           'SELECT * FROM QUESTIONS q WHERE q.ID = ' + mixedQuestionIds[currentQuestionId].ID, function(err, questionResult, fields){
   				if (err) { console.log(err); res.send(err); return; }
 
+          result.id = questionResult[0].ID;
           result.question = questionResult[0].QUESTION;
           result.code = formatCode(questionResult[0].CODE);
           result.explanation = questionResult[0].EXPLANATION;
@@ -61,6 +64,33 @@ var pool = connections.getJavaQuestionsPool();
   router.delete("/question", function(req, res){
     mixedQuestionIds = null;
     res.sendStatus(200);
+  });
+
+  router.post("/question", function(req, res){
+    pool.getConnection(function (err, connection){
+      if (err) {console.log(err); return;}
+
+      connection.beginTransaction(function(err){
+        if (err) { res.sendStatus(503); }
+
+        var insertAttemptQuery = connection.query('INSERT INTO ATTEMPTS set ?',
+            { USER_ID: authManager.getUserId(req.cookies.sikiToken), QUESTION_ID: req.body.questionId, ISCORRECT: req.body.isCorrect }, function(err, attemptResult){
+          if (err) { connection.rollback(function(){
+            console.log(insertAttemptQuery.sql); console.log(err); connection.release(); res.sendStatus(503);
+            });
+          }
+
+          connection.commit(function(err){
+            if (err) { connection.rollback(function(){
+                res.sendStatus(503);
+              });
+            }
+          });
+          connection.release();
+          res.sendStatus(200);
+        });
+      });
+    });
   });
 
   var mixQuestions = function(noOfQuestions, callback){
