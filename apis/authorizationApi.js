@@ -11,8 +11,8 @@ module.exports = function(app, authPool) {
         connection.query("SELECT * FROM Users WHERE username = '" + req.body.username + "'", function(err, userResult, fields){
         	if (err) { console.log(err); res.send(err); return; }
 
-          if (userResult.length == 0) { connection.release(); res.json({message:"Wrong username or password"}); return; }
-
+          if (userResult.length == 0) { console.log('Username not found'); connection.release(); res.json({message:"Wrong username or password"}); return; }
+          console.log('Username found, password check...');
           bcrypt.compare(req.body.password, userResult[0].password, function(err, result) {
             if (err) { console.log(err); res.send(err); return; }
 

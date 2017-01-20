@@ -2,7 +2,7 @@ var bcrypt = require('bcrypt-nodejs');
 
 module.exports = function(app, authPool) {
 
-  app.post('/api/userManagement/user', function(req, res) {
+  app.post('/userManagement/user', function(req, res) {
       authPool.getConnection(function(err, connection){
         if (err) { console.log(err); res.sendStatus(503); }
 
