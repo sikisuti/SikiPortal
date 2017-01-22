@@ -33,5 +33,16 @@ module.exports = {
         connectionLimit: 10,
         supportBigNumbers: true
    });
+ },
+
+ getWordsPool: function() {
+   return mysql.createPool({
+        host     : 'localhost',
+        user     : 'root',
+        password : 'Gaboca.1',
+        database : 'LearnWords',
+        connectionLimit: 10,
+        supportBigNumbers: true
+   });
  }
 }

@@ -94,7 +94,7 @@ var authManager = require('../authManager');
   });
 
   var mixQuestions = function(noOfQuestions, callback){
-    if (mixedQuestionIds == null) {
+    if (mixedQuestionIds == null || currentQuestionId == mixedQuestionIds.length - 1) {
       pool.getConnection(function (err, connection){
         if (err) {console.log(err); return;}
 

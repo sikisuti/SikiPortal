@@ -11,6 +11,7 @@ module.exports = {
         return;
       } else if (auth.isAuthorized(req.cookies.sikiToken)) {
         console.log('Authorization finished successfully');
+        req.userId = auth.getUserId(req.cookies.sikiToken);
         next();
       } else {
         console.log("Token authorization failed");
