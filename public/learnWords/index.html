@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html ng-app="learnWordsApp">
+  <header>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Learn Words</title>
+    <script src="/js/angularjs/1.6.0/angular.min.js"></script>
+    <link rel="stylesheet" href="/css/learnWords/learnWordsStyles.css">
+    <!--<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.0/angular.js"></script>-->
+    <script src="/js/angularjs/1.6.0/angular-route.min.js"></script>
+    <script src="/learnWords/learnWordsApp.js"></script>
+    <script src="/learnWords/controllers/mainCtrl.js"></script>
+    <script src="/learnWords/controllers/homeController.js"></script>
+    <script src="/learnWords/controllers/learnPageController.js"></script>
+    <script src="/learnWords/controllers/newWordController.js"></script>
+    <script src="/learnWords/controllers/loginPageController.js"></script>
+  </header>
+  <body ng-controller="mainCtrl">
+
+    <header id="sl-header">header</header>
+
+    <div ng-view></div>
+
+    <footer id="sl-footer">footer</footer>
+
+  </body>
+</html>

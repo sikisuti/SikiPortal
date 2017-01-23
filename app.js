@@ -59,5 +59,9 @@ app.get("/java", function(req, res){
   res.sendFile("/public/learnJava/index.html", {root: __dirname});
 });
 
+app.get("/words", function(req, res){
+  res.sendFile("/public/learnWords/index.html", {root: __dirname});
+});
+
 var server = app.listen(port);
 console.log("Listening on port " + port);

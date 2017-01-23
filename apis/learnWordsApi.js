@@ -9,6 +9,8 @@ var pool = connections.getWordsPool();
 
 var authManager = require('../authManager');
 
+router.get('/authorizationCheck', function(req, res) {});
+
 router.get('/words', function(req, res) {
   pool.getConnection(function (err, connection){
     if (err) {console.log(err); return;}
@@ -79,6 +81,40 @@ router.post('/words', function(req, res){
         res.sendStatus(200);
       });
     });
+});
+
+router.post('/word', function(req, res){
+  pool.getConnection(function (err, connection){
+    if (err) {console.log(err); return;}
+
+    connection.beginTransaction(function(err){
+      if (err) { res.sendStatus(503); }
+
+      var insertWordQuery = connection.query('INSERT INTO words set ?',
+          { native: req.body.native,
+            foreignWord: req.body.foreignWord,
+            exampleSentence: req.body.exampleSentence,
+            pronunciation: req.body.pronunciation,
+            levelID: req.body.levelID,
+            partID: req.body.partID,
+            hasAudio: req.body.hasAudio
+          }, function(err, updateResult){
+        if (err) { connection.rollback(function(){
+          console.log(insertWordQuery.sql); console.log(err); connection.release(); res.sendStatus(503);
+          });
+        }
+
+        connection.commit(function(err){
+          if (err) { connection.rollback(function(){
+              res.sendStatus(503);
+            });
+          }
+        });
+        connection.release();
+        res.sendStatus(200);
+      });
+    });
+  });
 });
 
 module.exports = router;
