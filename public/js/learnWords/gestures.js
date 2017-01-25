@@ -1,8 +1,8 @@
-var wordCell = document.getElementById('card');
+var card = document.getElementById('card');
 
 // create a simple instance
 // by default, it only adds horizontal recognizers
-var mc = new Hammer(wordCell);
+var mc = new Hammer(card);
 
 // let the pan gesture support all directions.
 // this will block the vertical scrolling on a touch-device while on the element
@@ -10,13 +10,11 @@ mc.get('swipe').set({ direction: Hammer.DIRECTION_ALL });
 
 // listen to events...
 mc.on("swiperight", function(ev) {
-  angular.element($('#learnView')).scope().reviseWord();
-  angular.element($('#learnView')).scope().$apply();
+  reviseWord();
 });
 
 mc.on("swipedown", function(ev) {
-  angular.element($('#learnView')).scope().skipWord();
-  angular.element($('#learnView')).scope().$apply();
+  skipWord();
 });
 
 mc.on("tap", function(ev) {
@@ -43,12 +41,28 @@ function keyPressed(e){
   }
   else if (e.keyCode == '39') {
       // right arrow
-    angular.element($('#learnView')).scope().reviseWord();
-    angular.element($('#learnView')).scope().$apply();
+    reviseWord();
   }
   else if (e.keyCode == '40') {
       // down arrow
+    skipWord();
+  }
+};
+
+var reviseWord = function(){
+  $('#card').animate({right: '-300px'}, {duration: 100, complete: function(){
+    angular.element($('#learnView')).scope().reviseWord();
+    angular.element($('#learnView')).scope().$apply();
+  }});
+  $('#card').animate({visibility: 'hidden'}, 1).animate({right: '300px'}, 1).animate({visibility: 'visible'}, 1)
+  .animate({right: '0px'}, 100);
+};
+
+var skipWord = function(){
+  $('#card').animate({top: '300px'}, {duration: 100, complete: function(){
     angular.element($('#learnView')).scope().skipWord();
     angular.element($('#learnView')).scope().$apply();
-  }
-}
+  }});
+  $('#card').animate({visibility: 'hidden'}, 1).animate({right: '300px', top: '0px'}, 1).animate({visibility: 'visible'}, 1)
+  .animate({right: '0px'}, 100);
+};

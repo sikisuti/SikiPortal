@@ -1,9 +1,8 @@
 <div id="learnView">
   <div id="progressBar" ng-style="{width : progressBarWidth}"></div>
-  <!--<div id="wordCell"><span id="word" ng-bind="word"></span></div>-->
 
   <section class="container">
-    <div id="card" ng-class="isFlipped ? 'flipped' : ''">
+    <div id="card" ng-class="{flipped: isFlipped}">
       <figure class="front"><span class="word" ng-bind="frontWord"></figure>
       <figure class="back"><span class="word" ng-bind="backWord"></figure>
     </div>

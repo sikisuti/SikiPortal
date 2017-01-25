@@ -4,7 +4,7 @@ var auth = require('../authManager');
 module.exports = function(app, authPool) {
 
   app.post('/authorization/login', function(req, res) {
-    console.log("Login started -> username: " + req.body.username + ", password: " + req.body.password);
+    //console.log("Login started -> username: " + req.body.username + ", password: " + req.body.password);
     authPool.getConnection(function (err, connection){
       if (err) {console.log(err); return;}
 
@@ -12,12 +12,12 @@ module.exports = function(app, authPool) {
         	if (err) { console.log(err); res.send(err); return; }
 
           if (userResult.length == 0) { console.log('Username not found'); connection.release(); res.json({message:"Wrong username or password"}); return; }
-          console.log('Username found, password check...');
+          //console.log('Username found, password check...');
           bcrypt.compare(req.body.password, userResult[0].password, function(err, result) {
             if (err) { console.log(err); res.send(err); return; }
 
             if (result) {
-              console.log('Login success');
+              //console.log('Login success');
               connection.release();
               var accessToken = auth.generateToken(userResult[0].id);
               res.cookie('sikiToken', accessToken);

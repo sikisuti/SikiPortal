@@ -22,19 +22,19 @@ module.exports = {
       token.userId = userId;
       token.validFrom = Date.now();
       this.tokenList.push(token);
-      console.log("Token generated:");
-      console.log('accessToken: ' + token.accessToken + ', userId: ' + token.userId + ', validFrom: ' + token.validFrom);
+      //console.log("Token generated:");
+      //console.log('accessToken: ' + token.accessToken + ', userId: ' + token.userId + ', validFrom: ' + token.validFrom);
       return token.accessToken;
     },
 
     isAuthorized: function(accessToken) {
       var token = this.findToken(accessToken);
       if (token == undefined) {
-        console.log("Authorization failed");
+        //console.log("Authorization failed");
         return false;
       }
       else {
-        console.log("Authorization success");
+        //console.log("Authorization success");
         token.validFrom = Date.now();
         return true;
       }
@@ -42,12 +42,12 @@ module.exports = {
 
     findToken: function(accessToken) {
       var returnToken = undefined;
-      console.log("AccessToken to find: " + accessToken);
-      console.log("Valid tokens:");
+      //console.log("AccessToken to find: " + accessToken);
+      //console.log("Valid tokens:");
       for (var i = 0; i < this.tokenList.length; i++) {
-        console.log(this.tokenList[i].accessToken);
+        //console.log(this.tokenList[i].accessToken);
         if (this.tokenList[i].accessToken == accessToken) {
-          console.log("Token found");
+          //console.log("Token found");
           returnToken = this.tokenList[i];
           break;
         }

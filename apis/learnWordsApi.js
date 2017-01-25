@@ -9,7 +9,7 @@ var pool = connections.getWordsPool();
 
 var authManager = require('../authManager');
 
-router.get('/authorizationCheck', function(req, res) {});
+router.get('/authorizationCheck', function(req, res) { res.sendStatus(200)});
 
 router.get('/words', function(req, res) {
   res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
@@ -45,43 +45,58 @@ router.get('/words', function(req, res) {
 });
 
 router.post('/words', function(req, res){
-    pool.getConnection(function (err, connection){
-      if (err) {console.log(err); return;}
+  //console.log('request body: ' + req.body);
+  pool.getConnection(function (err, connection){
+    if (err) {console.log(err); return;}
 
-      connection.beginTransaction(function(err){
-        if (err) { res.sendStatus(503); }
+    connection.beginTransaction(function(err){
+      if (err) { res.sendStatus(503); }
 
-        for (var i = 0; i < req.body.length; i++){
-          if (req.body[i].userWordID == null) {
-            var insertUserWordQuery = connection.query('INSERT INTO userWords set ?',
+      //console.log('body length: ' + req.body.length);
+      for (var i = 0; i < req.body.length; i++){
+        //console.log('userWordID: ' + req.body[i].userWordID);
+        if (req.body[i].userWordID == null) {
+          //console.log('insert, req.userId: ' + req.userId + ', req.body[i].wordID: ' + req.body[i].wordID );
+          var insertUserWordQuery = connection.query('INSERT INTO userWords set ?',
                 { userID: req.userId, wordID: req.body[i].wordID, state: 1 }, function(err, insertResult){
-              if (err) { connection.rollback(function(){
-                console.log(insertUserWordQuery.sql); console.log(err); connection.release(); res.sendStatus(503);
-                });
-              }
-            });
-          } else {
-            if (req.body[i].state > 5) {continue;}
+            if (err) { connection.rollback(function(){
+              console.log(insertUserWordQuery.sql); console.log(err); connection.release(); res.sendStatus(503); return;
+              });
+            }
+
+            //console.log('userWord inserted: wordId: ' + req.body[i].wordID + " " + req.body[i].native);
+          });
+        } else {
+          //console.log('req.body[i].state: ' + req.body[i].state);
+          if (req.body[i].state < 6) {
+            //console.log('update, req.userId: ' + req.userId + ', req.body[i].wordID: ' + req.body[i].wordID );
             var updateUserWordQuery = connection.query('UPDATE userWords set ? WHERE userID = ' + req.userId + ' AND wordID = ' + req.body[i].wordID,
                 { state: req.body[i].state + 1 }, function(err, updateResult){
               if (err) { connection.rollback(function(){
-                console.log(updateUserWordQuery.sql); console.log(err); connection.release(); res.sendStatus(503);
+                console.log(updateUserWordQuery.sql); console.log(err); connection.release(); res.sendStatus(503); return;
                 });
               }
+
+              //console.log('userWord updated: wordId: ' + req.body[i].wordID + " " + req.body[i].native + " new state: " + (req.body[i].state + 1));
             });
           }
         }
+      }
 
-        connection.commit(function(err){
-          if (err) { connection.rollback(function(){
-              res.sendStatus(503);
-            });
-          }
-        });
-        connection.release();
-        res.sendStatus(200);
+      connection.commit(function(err){
+        if (err) {
+          connection.rollback(function(){
+            connection.release();
+            res.sendStatus(503);
+            return;
+          });
+        }
       });
+      connection.release();
+      //console.log('Words updated');
+      res.sendStatus(200);
     });
+  });
 });
 
 router.post('/word', function(req, res){

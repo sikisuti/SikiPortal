@@ -25,6 +25,7 @@ learnWordsApp.controller('learnPageController', ['$scope', '$location', '$http',
 
   function fillContent(){
   	//var audioButton = document.getElementById("audioButton");
+    $scope.isFlipped = false;
 
       if (rndSide[actIndex] == 0){
           $scope.frontWord = actList[actIndex].native;
@@ -79,8 +80,18 @@ learnWordsApp.controller('learnPageController', ['$scope', '$location', '$http',
   }
 
   var sendData = function() {
-    // TODO: Implement
-    console.log("TODO: implement sendData()");
+    var data = JSON.stringify(words);
+    var config = {
+      headers : {
+        'Content-Type': 'application/json'
+      }
+    }
+    console.log('post: ' + data);
+    $http.post('/learnWords/words', data, config).then(function(res){
+      $location.path('/');
+    }, function(err){
+      console.log(err);
+    });
   }
 
   function shuffle(array) {
