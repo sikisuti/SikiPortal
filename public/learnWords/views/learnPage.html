@@ -1,6 +1,13 @@
 <div id="learnView">
-  <div id="progressBar" ng-style="progressBarStyle"></div>
-  <div id="wordCell"><span id="word" ng-bind="word"></span></div>
+  <div id="progressBar" ng-style="{width : progressBarWidth}"></div>
+  <!--<div id="wordCell"><span id="word" ng-bind="word"></span></div>-->
+
+  <section class="container">
+    <div id="card" ng-class="isFlipped ? 'flipped' : ''">
+      <figure class="front"><span class="word" ng-bind="frontWord"></figure>
+      <figure class="back"><span class="word" ng-bind="backWord"></figure>
+    </div>
+  </section>
 
   <script src="/js/learnWords/gestures.js"></script>
 </div>

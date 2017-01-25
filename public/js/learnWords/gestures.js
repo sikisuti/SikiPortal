@@ -1,4 +1,4 @@
-var wordCell = document.getElementById('wordCell');
+var wordCell = document.getElementById('card');
 
 // create a simple instance
 // by default, it only adds horizontal recognizers
@@ -20,7 +20,7 @@ mc.on("swipedown", function(ev) {
 });
 
 mc.on("tap", function(ev) {
-  angular.element($('#learnView')).scope().turnWord();
+  angular.element($('#learnView')).scope().flipCard();
   angular.element($('#learnView')).scope().$apply();
 });
 
@@ -30,7 +30,7 @@ function keyPressed(e){
 
   if (e.keyCode == '32') {
       // space
-    angular.element($('#learnView')).scope().turnWord();
+    angular.element($('#learnView')).scope().flipCard();
   angular.element($('#learnView')).scope().$apply();
   }
 	if (e.keyCode == '37') {

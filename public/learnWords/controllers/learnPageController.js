@@ -10,7 +10,10 @@ learnWordsApp.controller('learnPageController', ['$scope', '$location', '$http',
 
   var words;
 
-  //$scope.progressBarStyle = {"width" : "40%"};
+  $scope.progressBarWidth = "0%";
+  $scope.frontWord = "front";
+  $scope.backWord = "back";
+  $scope.isFlipped = false;
 
   $http.get('/learnWords/words').then(function(response){
     words = response.data;
@@ -24,10 +27,12 @@ learnWordsApp.controller('learnPageController', ['$scope', '$location', '$http',
   	//var audioButton = document.getElementById("audioButton");
 
       if (rndSide[actIndex] == 0){
-          $scope.word = actList[actIndex].native;
+          $scope.frontWord = actList[actIndex].native;
+          $scope.backWord = actList[actIndex].foreignWord;
       }
       else {
-          $scope.word = actList[actIndex].foreignWord;
+          $scope.frontWord = actList[actIndex].foreignWord;
+          $scope.backWord = actList[actIndex].native;
       }
       /*
       if (actList[actIndex].hasAudio == "yes"){
@@ -67,7 +72,7 @@ learnWordsApp.controller('learnPageController', ['$scope', '$location', '$http',
       		rndSide[i] = Math.round(Math.random());
       	}
   		for (var i = 0; i < words.length; i++){
-      		rndSide[i + data.words.length] = Math.abs(rndSide[i] - 1);
+      		rndSide[i + words.length] = Math.abs(rndSide[i] - 1);
       	}
       }
   	return tempList;
@@ -97,9 +102,9 @@ learnWordsApp.controller('learnPageController', ['$scope', '$location', '$http',
   	return array;
   }
 
-	function updateProgressBar(){
+	var updateProgressBar = function(){
 		var percent = (cnt / (12 * words.length)) * 100;
-    //$scope.progressBarStyle = {width : percent.tofixed(1)%};
+    $scope.progressBarWidth = percent.toFixed(1) + "%";
 	}
 
   $scope.reviseWord = function() {
@@ -122,12 +127,15 @@ learnWordsApp.controller('learnPageController', ['$scope', '$location', '$http',
     fillContent();
   };
 
-  $scope.turnWord = function() {
+  $scope.flipCard = function() {
+    $scope.isFlipped = !$scope.isFlipped;
+    /*
 		if ($scope.word.trim() == actList[actIndex].native.trim()){
 			$scope.word = actList[actIndex].foreignWord;
 		}
 		else{
 			$scope.word = actList[actIndex].native;
 		}
+    */
   };
 }]);

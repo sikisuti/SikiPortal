@@ -4,20 +4,54 @@ body {
 	color				: lightgray;
 }
 
-#wordCell {
-  background: lightgray;
-  height:	150px;
-  width:	30%;
-  text-align: center;
-  margin: 5px auto;
-  display: table;
+.container {
+  width: 30%;
+  height: 150px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  perspective: 800px;
 }
 
-#word {
-	color				: 	black;
-	font-weight			:	bold;
+#card {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  transform-style: preserve-3d;
+  text-align: center;
+}
+
+#card figure {
+  color: black;
+  font-weight: bold;
+  margin: 0;
+  display: table;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  transition: transform 0.5s;
+}
+
+#card figure .word {
   display: table-cell;
   vertical-align: middle;
+}
+
+#card .front {
+  background: lightgray;
+}
+#card .back {
+  background: lightgray;
+  transform: rotateY(-180deg);
+}
+
+#card.flipped .front {
+  transform: rotateY(180deg);
+}
+#card.flipped .back {
+  transform: rotateY(0deg);
 }
 
 #progressBar {
@@ -70,17 +104,21 @@ body {
     margin: 10px 5% 10px 0%;
 }
 
+#sl-footer {
+  margin: auto;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
 @media (max-width: 600px) {
 
   #loginForm {
     width: 99%;
   }
 
-  #progressBar {
-    width: 99%;
-  }
-
-  #wordCell {
+  .container {
     width:	80%;
   }
 

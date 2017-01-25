@@ -12,6 +12,7 @@ var authManager = require('../authManager');
 router.get('/authorizationCheck', function(req, res) {});
 
 router.get('/words', function(req, res) {
+  res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
   pool.getConnection(function (err, connection){
     if (err) {console.log(err); return;}
 
