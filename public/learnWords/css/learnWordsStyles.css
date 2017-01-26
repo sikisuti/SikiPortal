@@ -64,6 +64,24 @@ body {
   display: none;
 }
 
+#newWordForm {
+  width: 70%;
+  margin: 5px auto;
+}
+
+#newWordForm label {
+  width: 20%;
+  vertical-align: middle;
+  padding: 7px;
+}
+
+#newWordForm input,
+#newWordForm select {
+  width: 50%;
+  height: 30px;
+  
+}
+
 #loginForm {
   /*background:     mediumseagreen;*/
   width: 50%;
@@ -74,7 +92,7 @@ body {
   overflow: hidden;
 }
 
-#loginForm label, #loginForm input {
+form label, form input {
   display: inline-block;
 }
 

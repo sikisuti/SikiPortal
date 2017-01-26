@@ -1,3 +1,11 @@
-<div>
-  New word "Under construction"
+<div id="newWordView">
+  <form id="newWordForm">
+    <label for="txtForeign">Foreign: </label>
+    <input id="txtForeign" type="text" ng-model="newWord.foreign"/>
+    <button id="search" ng-click="search(newWord.foreign)">Search</button>
+    <label for="nativeSelect">Native: </label>
+    <select ng-model="newWord.native">
+      <<option ng-repeat="native in natives" ng-value="native.name">{{native.name}}</option>
+    </select>
+  </form>
 </div>

@@ -2,4 +2,7 @@ learnWordsApp.controller('homeController', ['$scope', '$location', function($sco
     $scope.onLearn = function(){
       $location.path('/learnPage');
     };
+    $scope.onNew = function(){
+      $location.path('/newWord');
+    };
 }]);

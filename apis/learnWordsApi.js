@@ -9,6 +9,8 @@ var pool = connections.getWordsPool();
 
 var authManager = require('../authManager');
 
+var https = require('https');
+
 router.get('/authorizationCheck', function(req, res) { res.sendStatus(200)});
 
 router.get('/words', function(req, res) {
@@ -129,6 +131,25 @@ router.post('/word', function(req, res){
         connection.release();
         res.sendStatus(200);
       });
+    });
+  });
+});
+
+router.get('/searchNatives', function(req, res){
+  https.get('https://glosbe.com/gapi/translate?from=eng&dest=hun&format=json&phrase=' + req.query.word, (response) => {
+    var data = '';
+    response.on('data', (d) => {
+      data += d;
+    });
+    response.on('end', () => {
+      var collectedData = [];
+      var jData = JSON.parse(data);
+      for (var i = 0; i < jData.tuc.length; i++) {
+        if (jData.tuc[i].phrase != undefined) {
+          collectedData.push({name: jData.tuc[i].phrase.text});
+        }
+      }
+      res.send(collectedData);
     });
   });
 });
