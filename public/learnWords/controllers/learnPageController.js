@@ -6,14 +6,13 @@ learnWordsApp.controller('learnPageController', ['$scope', '$location', '$http',
 	var modifiedWords = new Array();
 	var cnt = 0;
 
-	//var sounds = [];
+	var sounds = [];
 
   var words;
 
   $scope.progressBarWidth = "0%";
-  $scope.frontWord = "front";
-  $scope.backWord = "back";
   $scope.isFlipped = false;
+  $scope.playCachedAudio = function(){playCachedAudio();};
 
   $http.get('/learnWords/words').then(function(response){
     words = response.data;
@@ -24,23 +23,32 @@ learnWordsApp.controller('learnPageController', ['$scope', '$location', '$http',
   });
 
   function fillContent(){
-  	//var audioButton = document.getElementById("audioButton");
-    $scope.isFlipped = false;
+    $scope.word = actList[actIndex];
+    $scope.isFlipped = rndSide[actIndex] == 1;
+    //if ($scope.isFlipped && actList[actIndex].hasAudio == 'yes') {playCachedAudio();}
+  }
 
-      if (rndSide[actIndex] == 0){
-          $scope.frontWord = actList[actIndex].native;
-          $scope.backWord = actList[actIndex].foreignWord;
-      }
-      else {
-          $scope.frontWord = actList[actIndex].foreignWord;
-          $scope.backWord = actList[actIndex].native;
-      }
-      /*
-      if (actList[actIndex].hasAudio == "yes"){
-      	$( "#audioButton" ).show();
-      } else {
-      	$( "#audioButton" ).hide();
-      }*/
+  function playCachedAudio(){
+    var filename = "learnWords/audio/" + actList[actIndex].foreignWord.replace(" ", "_") + ".mp3";
+    var indexOfActSound = indexOfSound(filename);
+    if (indexOfActSound < 0){
+      console.log("sound not found");
+      sounds[sounds.length] = new Howl({ src: [filename] });
+      sounds[sounds.length - 1].play();
+    } else {
+    	console.log("sound found");
+    	sounds[indexOfActSound].play();
+    }
+  }
+
+  function indexOfSound(filename){
+    var rtn = -1;
+    for (i = 0; i < sounds.length; i++){
+      if (sounds[i]._src == filename){
+	       rtn = i;
+       }
+     }
+     return rtn;
   }
 
   function getWords(){
@@ -140,13 +148,6 @@ learnWordsApp.controller('learnPageController', ['$scope', '$location', '$http',
 
   $scope.flipCard = function() {
     $scope.isFlipped = !$scope.isFlipped;
-    /*
-		if ($scope.word.trim() == actList[actIndex].native.trim()){
-			$scope.word = actList[actIndex].foreignWord;
-		}
-		else{
-			$scope.word = actList[actIndex].native;
-		}
-    */
+    //if ($scope.isFlipped && actList[actIndex].hasAudio == 'yes') {playCachedAudio();}
   };
 }]);

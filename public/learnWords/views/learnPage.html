@@ -3,10 +3,12 @@
 
   <section class="container">
     <div id="card" ng-class="{flipped: isFlipped}">
-      <figure class="front"><span class="word" ng-bind="frontWord"></figure>
-      <figure class="back"><span class="word" ng-bind="backWord"></figure>
+      <figure class="front"><span class="word" ng-bind="word.native"></figure>
+      <figure class="back"><span class="word" ng-bind="word.foreignWord"></figure>
     </div>
   </section>
+
+  <button id="audioButton" ng-click="playCachedAudio()" ng-class="{hidden : word.hasAudio == 'no'}"></button>
 
   <script src="/js/learnWords/gestures.js"></script>
 </div>

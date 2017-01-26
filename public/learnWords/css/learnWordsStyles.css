@@ -32,6 +32,7 @@ body {
   height: 100%;
   backface-visibility: hidden;
   transition: transform 0.5s;
+  box-shadow: 5px 5px 10px #888888;
 }
 
 #card figure .word {
@@ -110,6 +111,15 @@ body {
   bottom: 0;
   left: 0;
   right: 0;
+}
+
+#audioButton{
+	background			: url(/learnWords/images/audio_out.jpg) no-repeat;
+  background-size: contain;
+	width: 50px;
+  height: 50px;
+	border				: 0;
+  float: right;
 }
 
 @media (max-width: 600px) {
