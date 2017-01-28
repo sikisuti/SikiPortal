@@ -14,7 +14,7 @@ var https = require('https');
 var path = require('path');
 
 var nconf = require('nconf');
-nconf.argv().env().file({ file: path.normalize(path.join(__dirname, "config.json")) });
+nconf.argv().env().file({ file: path.normalize(path.join(__dirname, "../config.json")) });
 
 router.get('/authorizationCheck', function(req, res) { res.sendStatus(200)});
 

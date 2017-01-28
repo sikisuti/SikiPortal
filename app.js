@@ -5,7 +5,7 @@ var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 
 var nconf = require('nconf');
-nconf.argv().env().file({ file: "config.json" });
+nconf.argv().env().file({ file: path.normalize(path.join(__dirname, "config.json")) });
 
 var port = nconf.get('port');
 
