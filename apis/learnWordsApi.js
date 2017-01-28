@@ -11,6 +11,9 @@ var authManager = require('../authManager');
 
 var https = require('https');
 
+var nconf = require('nconf');
+nconf.argv().env().file({ file: "./config.json" });
+
 router.get('/authorizationCheck', function(req, res) { res.sendStatus(200)});
 
 router.get('/words', function(req, res) {
@@ -136,6 +139,7 @@ router.post('/word', function(req, res){
 });
 
 router.get('/searchNatives', function(req, res){
+  res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
   https.get('https://glosbe.com/gapi/translate?from=eng&dest=hun&format=json&phrase=' + req.query.word, (response) => {
     var data = '';
     response.on('data', (d) => {
@@ -147,6 +151,70 @@ router.get('/searchNatives', function(req, res){
       for (var i = 0; i < jData.tuc.length; i++) {
         if (jData.tuc[i].phrase != undefined) {
           collectedData.push({name: jData.tuc[i].phrase.text});
+        }
+      }
+      res.send(collectedData);
+    });
+  });
+});
+
+router.get('/searchOxford', function(req, res){
+  res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+  console.log('searchOxford started');
+  var options = {
+    hostname: 'od-api.oxforddictionaries.com',
+    port: 443,
+    path: '/api/v1/entries/en/' + req.query.word + '/examples;definitions;pronunciations',
+    method: 'GET',
+    headers: {
+      'Accept': 'application/json',
+      'app_id': nconf.get('app_id'),
+      'app_key': nconf.get('app_key')
+    }
+  };
+  console.log('url: https://' + options.hostname + ':' + options.port + options.path);
+  https.get(options, (response) => {
+    var data = '';
+    response.on('data', (chunk) => {
+      console.log('chunk arrived');
+      data += chunk;
+    });
+    response.on('end', () => {
+      var collectedData = [];
+      try {
+        var jData = JSON.parse(data);
+      } catch(e) {
+        res.sendStatus(200);
+        return;
+      }
+      console.log(jData);
+      if (jData != undefined && jData.results != undefined && jData.results[0].lexicalEntries != undefined){
+        for (var i = 0; i < jData.results[0].lexicalEntries.length; i++) {
+          var pronunciation = '';
+          var audioFile = '';
+          if (jData.results[0].lexicalEntries[i].pronunciations != undefined) {
+            pronunciation = jData.results[0].lexicalEntries[i].pronunciations[0].phoneticSpelling;
+            audioFile = jData.results[0].lexicalEntries[i].pronunciations[0].audioFile;
+          }
+          var lexicalCategory = jData.results[0].lexicalEntries[i].lexicalCategory;
+
+          if (jData.results[0].lexicalEntries[i].entries != undefined && jData.results[0].lexicalEntries[i].entries[0].senses != undefined){
+            for (var j = 0; j < jData.results[0].lexicalEntries[i].entries[0].senses.length; j++) {
+              var definition = jData.results[0].lexicalEntries[i].entries[0].senses[j].definitions[0];
+              var example = '';
+              if (jData.results[0].lexicalEntries[i].entries[0].senses[j].examples != undefined) {
+                example = jData.results[0].lexicalEntries[i].entries[0].senses[j].examples[0].text;
+              }
+              collectedData.push(
+                {
+                  lexicalCategory: lexicalCategory,
+                  definition: definition,
+                  example: example,
+                  pronunciation: pronunciation,
+                  audioFile: audioFile
+                });
+            }
+          }
         }
       }
       res.send(collectedData);

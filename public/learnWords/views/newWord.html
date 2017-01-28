@@ -4,8 +4,16 @@
     <input id="txtForeign" type="text" ng-model="newWord.foreign"/>
     <button id="search" ng-click="search(newWord.foreign)">Search</button>
     <label for="nativeSelect">Native: </label>
-    <select ng-model="newWord.native">
-      <<option ng-repeat="native in natives" ng-value="native.name">{{native.name}}</option>
+    <select id="nativeSelect" ng-model="newWord.native">
+      <option ng-repeat="native in natives" ng-value="native.name">{{native.name}}</option>
     </select>
+    <span>{{natives.length}}</span>
   </form>
+  <md-content>
+    <md-list id="definitionList" ng-model="newWord.definition">
+      <md-list-item ng-repeat="oxford in oxfords" ng-value="oxford.definition">
+        <p><strong>{{oxford.lexicalCategory}}</strong><br />{{oxford.definition}}<br /><i>{{oxford.example}}</i></p>
+      </md-list-item>
+    </md-list>
+  </md-content>
 </div>

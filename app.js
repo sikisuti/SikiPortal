@@ -4,7 +4,10 @@ var path = require('path');
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 
-var port = 3000;
+var nconf = require('nconf');
+nconf.argv().env().file({ file: "config.json" });
+
+var port = nconf.get('port');
 
 // Controller files
 var carInfoController = require(path.join(__dirname, 'controllers/carInfoController'));
