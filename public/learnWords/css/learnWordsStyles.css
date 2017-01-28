@@ -4,6 +4,10 @@ body {
 	color				: lightgray;
 }
 
+input, select {
+  font-size: 20px;
+}
+
 .container {
   width: 30%;
   height: 150px;
@@ -64,33 +68,6 @@ body {
   display: none;
 }
 
-#newWordForm {
-  width: 70%;
-  margin: 5px auto;
-}
-
-#newWordForm label {
-  width: 15%;
-  vertical-align: middle;
-  padding: 7px;
-}
-
-#newWordForm input,
-#newWordForm select {
-  width: 60%;
-  height: 30px;
-}
-
-#newWordForm button,
-#newWordForm span {
-  width: 15%;
-  height: 30px;
-}
-
-#definitionList {
-  font-size: 12px;
-}
-
 #loginForm {
   /*background:     mediumseagreen;*/
   width: 50%;
@@ -144,6 +121,112 @@ form label, form input {
 	border				: 0;
   float: right;
 }
+.smallAudioButton {
+  background			: url(/learnWords/images/audio_out.jpg) no-repeat;
+  background-size: contain;
+	width: 20px;
+  height: 20px;
+	border				: 0;
+}
+
+/* New Word Page */
+
+#newWordSearch{
+	background			: url(/learnWords/images/search_icon.png) no-repeat;
+  background-size: contain;
+	width: 30px;
+  height: 30px;
+	border				: 0;
+}
+
+#newWordForm {
+  width: 70%;
+  margin: 5px auto;
+}
+
+#newWordForm label {
+  width: 15%;
+  vertical-align: middle;
+  padding: 7px;
+}
+
+#txtForeign {
+  width: 60%;
+  height: 30px;
+}
+/*
+#newWordForm input,
+#newWordForm select {
+  width: 60%;
+  height: 30px;
+}
+*/
+/*
+#newWordForm button,
+#newWordForm span {
+  width: 15%;
+  height: 30px;
+}
+*/
+#newWordSubmit {
+  display: block;
+  float: right;
+}
+
+#definitionList {
+  font-size: 12px;
+}
+
+md-list-item div {
+  margin: 8px 0px;
+}
+
+.selected {
+  background-color: #333;
+  font-size: 1.2em;
+  color: wheat;
+}
+
+#lexicalCategory {
+  font-weight: bold;
+}
+#pronunciation {
+  margin: 0px 5px;
+}
+#definition {
+  display: block;
+}
+#example {
+  font-style: italic;
+}
+
+.select-editable {
+    display: inline-block;
+    position:relative;
+    background-color:white;
+    border:solid grey 1px;
+    width: 60%;
+    height: 30px;
+}
+.select-editable select {
+    position:absolute;
+    top:0px;
+    left:0px;
+    border:none;
+    width: 100%;
+    margin:0;
+}
+.select-editable input {
+    position:absolute;
+    top:0px;
+    left:0px;
+    width: 90%;
+    padding:1px;
+    border:none;
+}
+.select-editable select:focus, .select-editable input:focus {
+    outline:none;
+}
 
 @media (max-width: 600px) {
 
@@ -154,6 +237,8 @@ form label, form input {
   .container {
     width:	80%;
   }
+
+  /* New word page */
 
   #newWordForm {
     width: 100%;
@@ -166,16 +251,25 @@ form label, form input {
     padding: 7px;
   }
 
+  #txtForeign {
+    width: 80%;
+    height: 30px;
+  }
+/*
   #newWordForm input,
   #newWordForm select {
     width: 70%;
     height: 30px;
   }
-
+*/
+/*
   #newWordForm button,
   #newWordForm span {
     width: 22%;
     height: 30px;
   }
-
+*/
+  .select-editable {
+      width: 70%;
+  }
 }

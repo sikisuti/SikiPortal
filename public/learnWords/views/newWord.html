@@ -1,18 +1,34 @@
 <div id="newWordView">
   <form id="newWordForm">
     <label for="txtForeign">Foreign: </label>
-    <input id="txtForeign" type="text" ng-model="newWord.foreign"/>
-    <button id="search" ng-click="search(newWord.foreign)">Search</button>
+    <input id="txtForeign" type="text" ng-model="newWord.foreignWord"/>
+    <button id="newWordSearch" ng-click="search(newWord.foreignWord)"></button>
     <label for="nativeSelect">Native: </label>
-    <select id="nativeSelect" ng-model="newWord.native">
+
+    <div class="select-editable">
+      <select id="nativeSelect" ng-model="newWord.native">
+        <option ng-repeat="native in natives" ng-value="native.name">{{native.name}}</option>
+      </select>
+      <input type="text" ng-model="newWord.native">
+    </div>
+
+    <!--<select id="nativeSelect" ng-model="newWord.native">
       <option ng-repeat="native in natives" ng-value="native.name">{{native.name}}</option>
-    </select>
+    </select>-->
     <span>{{natives.length}}</span>
+    <button id="newWordSubmit" ng-click="submit()">Submit</button>
   </form>
   <md-content>
     <md-list id="definitionList" ng-model="newWord.definition">
-      <md-list-item ng-repeat="oxford in oxfords" ng-value="oxford.definition">
-        <p><strong>{{oxford.lexicalCategory}}</strong><br />{{oxford.definition}}<br /><i>{{oxford.example}}</i></p>
+      <md-list-item ng-repeat="oxford in oxfords" ng-value="oxford.definition" ng-click="selectItem(oxford)">
+        <div ng-class="{'selected': newWord.definition == oxford.definition}">
+          <span id="lexicalCategory">{{oxford.lexicalCategory}}</span>
+          <span id="pronunciation">/{{oxford.pronunciation}}/</span>
+          <button class="smallAudioButton" ng-click="play(oxford.audioFile)"/>
+          <span id="definition">{{oxford.definition}}</span>
+          <span id="example">{{oxford.example}}</span>
+          <!--<p><strong>{{oxford.lexicalCategory}}</strong><br />{{oxford.definition}}<br /><i>{{oxford.example}}</i></p>-->
+        </div>
       </md-list-item>
     </md-list>
   </md-content>
