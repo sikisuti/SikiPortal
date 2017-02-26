@@ -52,59 +52,85 @@ router.get('/words', function(req, res) {
 });
 
 router.post('/words', function(req, res){
-  //console.log('request body: ' + req.body);
+  var wordsToUpdate = [];
+  var wordsToInsert = [];
+
+  for (var i = 0; i < req.body.length; i++) {
+    if (req.body[i].userWordID == null) {
+      wordsToInsert.push([req.userId, req.body[i].wordID, 1]);
+    } else {
+      if (req.body[i].state < 6) {
+        wordsToUpdate.push([req.body[i].state + 1, req.userId, req.body[i].wordID]);
+      }
+    }
+  }
+
   pool.getConnection(function (err, connection){
     if (err) {console.log(err); return;}
 
     connection.beginTransaction(function(err){
       if (err) { res.sendStatus(503); }
+      console.log('Update started');
 
-      //console.log('body length: ' + req.body.length);
-      for (var i = 0; i < req.body.length; i++){
-        //console.log('userWordID: ' + req.body[i].userWordID);
-        if (req.body[i].userWordID == null) {
-          //console.log('insert, req.userId: ' + req.userId + ', req.body[i].wordID: ' + req.body[i].wordID );
-          var insertUserWordQuery = connection.query('INSERT INTO userWords set ?',
-                { userID: req.userId, wordID: req.body[i].wordID, state: 1 }, function(err, insertResult){
-            if (err) { connection.rollback(function(){
-              console.log(insertUserWordQuery.sql); console.log(err); connection.release(); res.sendStatus(503); return;
+      insertUserWords(connection, wordsToInsert, function(){
+        updateUserWords(connection, wordsToUpdate, function(){
+          connection.commit(function(err){
+            if (err) {
+              connection.rollback(function(){
+                connection.release();
+                res.sendStatus(503);
+                return;
               });
             }
-
-            //console.log('userWord inserted: wordId: ' + req.body[i].wordID + " " + req.body[i].native);
           });
-        } else {
-          //console.log('req.body[i].state: ' + req.body[i].state);
-          if (req.body[i].state < 6) {
-            //console.log('update, req.userId: ' + req.userId + ', req.body[i].wordID: ' + req.body[i].wordID );
-            var updateUserWordQuery = connection.query('UPDATE userWords set ? WHERE userID = ' + req.userId + ' AND wordID = ' + req.body[i].wordID,
-                { state: req.body[i].state + 1 }, function(err, updateResult){
-              if (err) { connection.rollback(function(){
-                console.log(updateUserWordQuery.sql); console.log(err); connection.release(); res.sendStatus(503); return;
-                });
-              }
-
-              //console.log('userWord updated: wordId: ' + req.body[i].wordID + " " + req.body[i].native + " new state: " + (req.body[i].state + 1));
-            });
-          }
-        }
-      }
-
-      connection.commit(function(err){
-        if (err) {
-          connection.rollback(function(){
-            connection.release();
-            res.sendStatus(503);
-            return;
-          });
-        }
+          connection.release();
+          console.log('Words updated');
+          res.sendStatus(200);
+        });
       });
-      connection.release();
-      //console.log('Words updated');
-      res.sendStatus(200);
     });
   });
 });
+
+var insertUserWords = function(connection, wordsToInsert, callback) {
+  console.log('wordsToInsert: ' + wordsToInsert);
+  if (wordsToInsert.length == 0) {callback();}
+  else {
+
+    var insertUserWordQuery = connection.query('INSERT INTO userWords(userID, wordID, state) values ?',
+          [wordsToInsert], function(err, insertResult){
+      if (err) { connection.rollback(function(){
+        console.log(insertUserWordQuery.sql); console.log(err); connection.release(); res.sendStatus(503); return;
+        });
+      }
+      console.log('Words inserted');
+      callback();
+    });
+  }
+};
+
+var updateUserWords = function(connection, wordsToUpdate, callback) {
+  console.log('wordsToUpdate: ' + wordsToUpdate);
+  if (wordsToUpdate.length == 0) {callback();}
+  else {
+
+    var i = 0;
+    wordsToUpdate.forEach(function(wordToUpdate){
+      var updateUserWordQuery = connection.query('UPDATE userWords set state = ? WHERE userID = ? AND wordID = ?',
+          wordToUpdate, function(err, updateResult){
+        if (err) { connection.rollback(function(){
+          console.log(updateUserWordQuery.sql); console.log(err); connection.release(); res.sendStatus(503); return;
+          });
+        }
+        console.log('word with id: ' + wordToUpdate[2] + ' updated')
+        i++;
+        if (i == wordsToUpdate.length) {
+          callback();
+        }
+      });
+    });
+  }
+};
 
 router.post('/word', function(req, res){
   pool.getConnection(function (err, connection){

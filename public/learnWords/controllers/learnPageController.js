@@ -16,6 +16,7 @@ learnWordsApp.controller('learnPageController', ['$scope', '$location', '$http',
 
   $http.get('/learnWords/words').then(function(response){
     words = response.data;
+    console.log(words);
     actList = getWords();
     fillContent();
   }, function(response){
@@ -85,6 +86,10 @@ learnWordsApp.controller('learnPageController', ['$scope', '$location', '$http',
       	}
       }
   	return tempList;
+  }
+
+  $scope.sendData = function(){
+    sendData();
   }
 
   var sendData = function() {

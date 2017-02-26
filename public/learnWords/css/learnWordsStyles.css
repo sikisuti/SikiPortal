@@ -4,11 +4,15 @@ body {
 	color				: lightgray;
 }
 
-input, select {
-  font-size: 20px;
+input, select, button, md-button {
+  color: black;
 }
 
-.container {
+.knownWord {
+  border: 4px solid green;
+}
+
+.card-container {
   width: 30%;
   height: 150px;
   position: fixed;
@@ -100,6 +104,7 @@ form label, form input {
        and margin-left to create a gutter between the label and input */
     margin: 7px 2% 7px 1%;
     font-size: 1.2em;
+    color: black;
 }
 
 /* only the submit button is matched by this selector,
@@ -107,11 +112,12 @@ form label, form input {
 #btnSubmit {
     float: right;
     margin: 10px 5% 10px 0%;
+    color: black;
 }
 
-#sl-footer {
+/*#sl-footer {
   margin: auto;
-}
+}*/
 
 #audioButton{
 	background			: url(/learnWords/images/audio_out.jpg) no-repeat;
@@ -234,7 +240,7 @@ md-list-item div {
     width: 99%;
   }
 
-  .container {
+  .card-container {
     width:	80%;
   }
 

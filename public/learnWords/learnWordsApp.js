@@ -1,4 +1,4 @@
-var learnWordsApp = angular.module('learnWordsApp', ['ngRoute']);
+var learnWordsApp = angular.module('learnWordsApp', ['ngRoute', 'ngMaterial']);
 
 learnWordsApp.config(function($routeProvider){
   $routeProvider

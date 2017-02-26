@@ -4,7 +4,7 @@ module.exports = {
 
   authorize: function(pool) {
     return function(req, res, next) {
-      //console.log('Authorization process started');
+      console.log('Authorization process started');
       if (req.cookies.sikiToken == undefined) {
         //console.log("Not any token sent");
         res.status(401).send('Authorization failed');

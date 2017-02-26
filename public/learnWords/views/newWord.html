@@ -1,24 +1,29 @@
-<div id="newWordView">
-  <form id="newWordForm">
-    <label for="txtForeign">Foreign: </label>
-    <input id="txtForeign" type="text" ng-model="newWord.foreignWord"/>
-    <button id="newWordSearch" ng-click="search(newWord.foreignWord)"></button>
-    <label for="nativeSelect">Native: </label>
+<div layout="column" flex>
+  <form id="newWordForm" layout="row">
+    <div layout="column" flex>
+      <label for="txtForeign">Foreign: </label>
+      <div layout="row" layout-margin>
+        <input id="txtForeign" type="text" ng-model="newWord.foreignWord" flex/>
+        <button id="newWordSearch" ng-click="search(newWord.foreignWord)"></button>
+      </div>
+      <label for="nativeSelect">Native: </label>
+      <div layout="row" layout-margin>
+        <div class="select-editable" flex>
+          <select id="nativeSelect" ng-model="newWord.native">
+            <option ng-repeat="native in natives" ng-value="native.name">{{native.name}}</option>
+          </select>
+          <input type="text" ng-model="newWord.native">
+        </div>
 
-    <div class="select-editable">
-      <select id="nativeSelect" ng-model="newWord.native">
-        <option ng-repeat="native in natives" ng-value="native.name">{{native.name}}</option>
-      </select>
-      <input type="text" ng-model="newWord.native">
+        <!--<select id="nativeSelect" ng-model="newWord.native">
+          <option ng-repeat="native in natives" ng-value="native.name">{{native.name}}</option>
+        </select>-->
+        <span>{{natives.length}}</span>
+        <button id="newWordSubmit" ng-click="submit()" flex="20">Add</button>
+      </div>
     </div>
-
-    <!--<select id="nativeSelect" ng-model="newWord.native">
-      <option ng-repeat="native in natives" ng-value="native.name">{{native.name}}</option>
-    </select>-->
-    <span>{{natives.length}}</span>
-    <button id="newWordSubmit" ng-click="submit()">Submit</button>
   </form>
-  <md-content>
+  <md-content layout="row" flex>
     <md-list id="definitionList" ng-model="newWord.definition">
       <md-list-item ng-repeat="oxford in oxfords" ng-value="oxford.definition" ng-click="selectItem(oxford)">
         <div ng-class="{'selected': newWord.definition == oxford.definition}">
