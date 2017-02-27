@@ -42,7 +42,12 @@ learnWordsApp.controller('newWordController', ['$scope', '$location', '$http', f
   };
 
   $scope.submit = function() {
-    console.log($scope.newWord);
+    if ($scope.newWord.native == "" || $scope.newWord.foreignWord == "" || ($scope.oxfords != undefined && $scope.oxfords.length > 0 && $scope.newWord.definition == "")) {return;}
+
+    $scope.newWord.levelID = 1;
+    $http.post('/learnWords/word', $scope.newWord).then(function(response){
+      $location.path('/');
+    }, function(err){console.log(err);});
   }
 
   $scope.play = function(audioFile) {

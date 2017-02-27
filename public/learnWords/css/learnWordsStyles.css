@@ -130,6 +130,8 @@ form label, form input {
 .smallAudioButton {
   background			: url(/learnWords/images/audio_out.jpg) no-repeat;
   background-size: contain;
+  min-width: 0px;
+  min-height: 0px;
 	width: 20px;
   height: 20px;
 	border				: 0;
@@ -143,6 +145,7 @@ form label, form input {
 	width: 30px;
   height: 30px;
 	border				: 0;
+  margin: 0px 5px;
 }
 
 #newWordForm {
@@ -177,6 +180,7 @@ form label, form input {
 #newWordSubmit {
   display: block;
   float: right;
+  margin: 0px 5px;
 }
 
 #definitionList {
@@ -184,11 +188,11 @@ form label, form input {
 }
 
 md-list-item div {
-  margin: 8px 0px;
+  margin: 3px 0px;
 }
 
 .selected {
-  background-color: #333;
+  /*background-color: #333;*/
   font-size: 1.2em;
   color: wheat;
 }
