@@ -14,6 +14,10 @@ learnWordsApp.controller('learnPageController', ['$scope', '$location', '$http',
   $scope.isFlipped = false;
   $scope.playCachedAudio = function(){playCachedAudio();};
 
+  $scope.audioNotExists = function(){
+    return $scope.word == undefined || $scope.word.audioFile.indexOf('http://') == -1;
+  }
+
   $http.get('/learnWords/words').then(function(response){
     words = response.data;
     console.log(words);
