@@ -57,7 +57,7 @@ router.post('/words', function(req, res){
 
   for (var i = 0; i < req.body.length; i++) {
     if (req.body[i].userWordID == null) {
-      wordsToInsert.push([req.userId, req.body[i].wordID, 1]);
+      wordsToInsert.push([req.userId, req.body[i].wordID, 2]);
     } else {
       if (req.body[i].state < 6) {
         wordsToUpdate.push([req.body[i].state + 1, req.userId, req.body[i].wordID]);
@@ -139,20 +139,29 @@ router.post('/word', function(req, res){
     connection.beginTransaction(function(err){
       if (err) { res.sendStatus(503); }
 
-      var insertWordQuery = connection.query('INSERT INTO words set ?', req.body, function(err, updateResult){
+      var insertWordQuery = connection.query('INSERT INTO words set ?', req.body, function(err, insertResult){
         if (err) { connection.rollback(function(){
           console.log(insertWordQuery.sql); console.log(err); connection.release(); res.sendStatus(503);
           });
         }
 
-        connection.commit(function(err){
+        var insertUserWordQuery = connection.query('INSERT INTO userWords set ?',
+        {userID: req.userId, wordID: insertResult.insertId, state: 1}, function(err, insertUwResult){
           if (err) { connection.rollback(function(){
-              res.sendStatus(503);
+            console.log(insertUserWordQuery.sql); console.log(err); connection.release(); res.sendStatus(503);
             });
           }
+
+          connection.commit(function(err){
+            if (err) { connection.rollback(function(){
+                res.sendStatus(503);
+              });
+            }
+          });
+          connection.release();
+          res.sendStatus(200);
+
         });
-        connection.release();
-        res.sendStatus(200);
       });
     });
   });
