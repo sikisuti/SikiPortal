@@ -30,14 +30,12 @@ learnWordsApp.controller('learnPageController', ['$scope', '$location', '$http',
   }
 
   function playCachedAudio(){
-    var filename = "learnWords/audio/" + actList[actIndex].foreignWord.replace(" ", "_") + ".mp3";
-    var indexOfActSound = indexOfSound(filename);
+    //var filename = "learnWords/audio/" + actList[actIndex].foreignWord.replace(" ", "_") + ".mp3";
+    var indexOfActSound = indexOfSound(actList[actIndex].audioFile);
     if (indexOfActSound < 0){
-      console.log("sound not found");
-      sounds[sounds.length] = new Howl({ src: [filename] });
+      sounds[sounds.length] = new Howl({ src: [actList[actIndex].audioFile] });
       sounds[sounds.length - 1].play();
     } else {
-    	console.log("sound found");
     	sounds[indexOfActSound].play();
     }
   }

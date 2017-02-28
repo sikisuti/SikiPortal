@@ -7,7 +7,7 @@
   <div layout="row" flex></div>
 
   <div layout="row">
-    <button id="audioButton" ng-click="playCachedAudio()" ng-class="{hidden : word.hasAudio == 'no'}"></button>
+    <button id="audioButton" ng-click="playCachedAudio()" ng-class="{hidden : word.audioFile == ''}"></button>
     <!--<md-button class="md-raised" ng-click="sendData()">Submit</md-button>-->
   </div>
 

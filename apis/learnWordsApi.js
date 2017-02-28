@@ -24,7 +24,7 @@ router.get('/words', function(req, res) {
     if (err) {console.log(err); return;}
 
     connection.query(
-      '(SELECT w.id AS wordID, w.native, w.foreignWord, w.exampleSentence, w.pronunciation, w.levelID, w.partID, uw.state, uw.id AS userWordID, w.hasAudio ' +
+      '(SELECT w.id AS wordID, w.native, w.foreignWord, w.exampleSentence, w.pronunciation, w.levelID, w.lexicalCategory, w.definition, uw.state, uw.id AS userWordID, w.audioFile ' +
 			'FROM words w ' +
 			   'LEFT OUTER JOIN userWords uw ON w.id = uw.wordID ' +
 			'WHERE (uw.userID=' + req.userId + ' or ISNULL(uw.userID)) and ' +
@@ -37,7 +37,7 @@ router.get('/words', function(req, res) {
 			'ORDER BY uw.state DESC, w.levelID ASC ' +
 			'LIMIT 9) ' +
       'UNION ' +
-      '(SELECT w.id AS wordID, w.native, w.foreignWord, w.exampleSentence, w.pronunciation, w.levelID, w.partID, uw.state, uw.id AS userWordID, w.hasAudio ' +
+      '(SELECT w.id AS wordID, w.native, w.foreignWord, w.exampleSentence, w.pronunciation, w.levelID, w.lexicalCategory, w.definition, uw.state, uw.id AS userWordID, w.audioFile ' +
 			'FROM words w ' +
 			   'LEFT OUTER JOIN userWords uw ON w.id = uw.wordID ' +
       'WHERE uw.userID=' + req.userId + ' and uw.state > 5 ' +
