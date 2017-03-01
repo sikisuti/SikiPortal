@@ -16,7 +16,7 @@ var path = require('path');
 var nconf = require('nconf');
 nconf.argv().env().file({ file: path.normalize(path.join(__dirname, "../config.json")) });
 
-router.get('/authorizationCheck', function(req, res) { res.sendStatus(200)});
+router.get('/authorizationCheck', function(req, res) { console.log('authenticated'); res.send('authorizationCheck OK'); });
 
 router.get('/words', function(req, res) {
   res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');

@@ -1,5 +1,4 @@
 <div layout="column" layout-align="center" layout-margin flex>
-  <!--<form id="loginForm" method="post">-->
   <md-input-container>
     <label>Username</label>
     <input type="text" name="username" ng-model="username"/>
@@ -8,9 +7,11 @@
     <label>Password</label>
     <input type="password" name="password" ng-model="password"/>
   </md-input-container>
+  <md-input-container>
+    <label>Confirm password</label>
+    <input type="password" name="confirmPassword" ng-model="passwordConfirmation"/>
+  </md-input-container>
   <div layout="row">
-      <md-button class="md-raised md-primary" ng-click="register()" flex>Register</md-button>
-      <md-button class="md-raised" ng-click="submit()" flex>Login</md-button>
+      <md-button class="md-raised" ng-click="submit()" flex>Register</md-button>
   </div>
-  <!--</form>-->
 </div>

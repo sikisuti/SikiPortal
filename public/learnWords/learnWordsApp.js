@@ -1,4 +1,4 @@
-var learnWordsApp = angular.module('learnWordsApp', ['ngRoute', 'ngMaterial']);
+var learnWordsApp = angular.module('learnWordsApp', ['ngRoute', 'ngMaterial', 'ngCookies']);
 
 learnWordsApp.config(function($routeProvider){
   $routeProvider
@@ -17,5 +17,9 @@ learnWordsApp.config(function($routeProvider){
     .when('/login', {
       templateUrl: 'learnWords/views/loginPage.html',
       controller: 'loginPageController'
+    })
+    .when('/register', {
+      templateUrl: 'learnWords/views/register.html',
+      controller: 'registerController'
     });
 });

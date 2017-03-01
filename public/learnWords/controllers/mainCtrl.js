@@ -1,14 +1,27 @@
-learnWordsApp.controller('mainCtrl', ['$scope', '$location', '$http', function($scope, $location, $http){
+learnWordsApp.controller('mainCtrl', ['$scope', '$location', '$http', '$cookies', function($scope, $location, $http, $cookies){
 
-  $scope.$on('$locationChangeStart', function(event) {
-    console.log('auhorization check...')
-    $http.get('/learnJava/authorizationCheck').then(function(response){
-    }, function(response){
-      if (response.status == 401) {
-        console.log('Redirect to login page...');
-        $location.path('/login');
-      }
+  $scope.username = $cookies.get('sikiUsername');
+
+  $scope.$on('$locationChangeStart', function(event, newUrl) {
+    if (newUrl.indexOf('register') != -1) {return;}
+    console.log('auhorization check...');
+    $http.get('/learnWords/authorizationCheck')
+      .then(function(response){
+        $scope.username = $cookies.get('sikiUsername');
+      }, function(err){
+        if (err.status == 401) {
+          console.log('Redirect to login page...');
+          $scope.username = '';
+          $location.path('/login');
+        }
     });
   });
+
+  $scope.logout = function() {
+    $cookies.remove('sikiToken');
+    $cookies.remove('sikiUsername');
+    $scope.username = '';
+    $location.path('/login');
+  };
 
 }]);

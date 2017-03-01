@@ -11,7 +11,6 @@ learnWordsApp.controller('homeController', ['$scope', '$http', '$location', func
         percent: Math.round((result.data[i].count / (max == 0 ? 1 : max)) * 20) * 5
       });
     }
-    console.log($scope.statistics);
   }, function(err){console.log(err);});
 
     $scope.onLearn = function(){

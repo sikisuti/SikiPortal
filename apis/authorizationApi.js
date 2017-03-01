@@ -23,7 +23,7 @@ module.exports = function(app, authPool) {
               res.cookie('sikiToken', accessToken);
               // TODO: put token to the header
               //res.set('Authorization', userResult[0].id);
-              res.json({message:"Login success"});
+              res.send(req.body.username);
             }
             else {
               console.log('Login failed');

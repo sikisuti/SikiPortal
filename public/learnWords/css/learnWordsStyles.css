@@ -1,11 +1,24 @@
+md-input-container label {
+  color: darkgray;
+}
+
+md-input-container:not(.md-input-invalid).md-input-has-value label {
+  color: darkgray;
+}
+
+md-input-container .md-input {
+  border-color: darkgray;
+  color: white;
+}
+
+.md-button.md-raised[disabled] {
+  background-color: rgba(250, 250, 250, 0.5);
+}
+
 body {
   background-color 	: black;
 	font-size			: 20px;
 	color				: lightgray;
-}
-
-input, select, button, md-button {
-  color: black;
 }
 
 .knownWord {
@@ -77,53 +90,6 @@ input, select, button, md-button {
   display: none;
 }
 
-#loginForm {
-  /*background:     mediumseagreen;*/
-  width: 50%;
-  margin: 10px auto;
-  border: 1px solid gray;
-  border-radius: 20px;
-  box-shadow: 5px 5px 10px #888888;
-  overflow: hidden;
-}
-
-form label, form input {
-  display: inline-block;
-}
-
-#loginForm label {
-    width: 48%;
-    /* positions the label text beside the input */
-    text-align: right;
-    vertical-align: top;
-    padding: 7px 0px 0px 0px;
-    font-size: 1.2em;
-}
-
-#loginForm label + input {
-    display: inline-block;
-    list-style-type: none;
-    padding: 0px;
-    width: 40%;
-    /* large margin-right to force the next element to the new-line
-       and margin-left to create a gutter between the label and input */
-    margin: 7px 2% 7px 1%;
-    font-size: 1.2em;
-    color: black;
-}
-
-/* only the submit button is matched by this selector,
-   but to be sure you could use an id or class for that button*/
-#btnSubmit {
-    float: right;
-    margin: 10px 5% 10px 0%;
-    color: black;
-}
-
-/*#sl-footer {
-  margin: auto;
-}*/
-
 #audioButton{
 	background			: url(/learnWords/images/audio_out.jpg) no-repeat;
   background-size: contain;
@@ -147,10 +113,10 @@ form label, form input {
 #newWordSearch{
 	background			: url(/learnWords/images/search_icon.png) no-repeat;
   background-size: contain;
-	width: 30px;
-  height: 30px;
+	width: 40px;
+  height: 40px;
 	border				: 0;
-  margin: 0px 5px;
+  margin: auto 0px auto 10px;
 }
 
 #newWordForm {
@@ -164,28 +130,14 @@ form label, form input {
   padding: 7px;
 }
 
-#txtForeign {
-  width: 60%;
-  height: 30px;
+#nativeSelect {
+  color: black;
 }
-/*
-#newWordForm input,
-#newWordForm select {
-  width: 60%;
-  height: 30px;
-}
-*/
-/*
-#newWordForm button,
-#newWordForm span {
-  width: 15%;
-  height: 30px;
-}
-*/
+
 #newWordSubmit {
   display: block;
   float: right;
-  margin: 0px 5px;
+  margin: 0px 0px 0px 10px;
 }
 
 #definitionList {
@@ -215,6 +167,11 @@ md-list-item div {
   font-style: italic;
 }
 
+.narrow-input {
+  margin: 18px 0 0 0;
+  height: 35px;
+}
+
 .select-editable {
     display: inline-block;
     position:relative;
@@ -238,6 +195,7 @@ md-list-item div {
     width: 90%;
     padding:1px;
     border:none;
+    color: black;
 }
 .select-editable select:focus, .select-editable input:focus {
     outline:none;

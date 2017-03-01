@@ -9,7 +9,7 @@ module.exports = function(app, authPool) {
         var userSelect = connection.query("SELECT * FROM Users u WHERE u.username = '" + req.body.username + "'", function(err, selectResult) {
           if (err) { console.log(userSelect.sql); console.log(err); connection.release(); res.json({ message: err }) }
 
-          if (selectResult.length != 0) { connection.release(); res.json({ message: "User already exists"}); return;}
+          if (selectResult.length != 0) { connection.release(); res.status(400).send('User already exists'); return;}
           bcrypt.hash(req.body.password, null, null, function(err, hash) {
             if (err) { console.log(err); res.sendStatus(503); }
 
