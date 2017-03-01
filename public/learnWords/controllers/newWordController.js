@@ -15,7 +15,7 @@ learnWordsApp.controller('newWordController', ['$scope', '$location', '$http', f
   var endProcess = function(message){
     processes.splice(processes.indexOf(message), 1);
     if (processes.length > 0){
-      $scope.busy.message = processes[processes.length - 1].message;
+      $scope.busy.message = processes[processes.length - 1];
     } else {
       $scope.busy.state = false;
       $scope.busy.message = "";

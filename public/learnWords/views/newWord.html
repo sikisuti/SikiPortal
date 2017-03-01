@@ -25,7 +25,7 @@
     </div>
   </form>
   <md-content layout="row" style="background-color: black; color: lightgray;" flex>
-    <md-list id="definitionList" ng-model="newWord.definition">
+    <md-list id="definitionList" ng-model="newWord.definition" style="overflow: auto; white-space: normal;">
       <md-list-item ng-repeat="oxford in oxfords" ng-value="oxford.definition" ng-click="selectItem(oxford)">
         <div ng-class="{'selected': newWord.definition == oxford.definition}" style="line-height: normal;">
           <span id="lexicalCategory">{{oxford.lexicalCategory}}</span>
