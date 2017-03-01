@@ -11,6 +11,14 @@ learnWordsApp.controller('learnPageController', ['$scope', '$location', '$http',
   var words;
 
   $scope.progressBarWidth = "0%";
+  $scope.busy = {
+    state: true,
+    message: "Loading..."
+  };
+  var setBusy = function(state, message){
+    $scope.busy = state;
+    $scope.busy.message = state ? message : "";
+  }
   $scope.isFlipped = false;
   $scope.playCachedAudio = function(){playCachedAudio();};
 
@@ -23,6 +31,7 @@ learnWordsApp.controller('learnPageController', ['$scope', '$location', '$http',
     console.log(words);
     actList = getWords();
     fillContent();
+    setBusy(false);
   }, function(response){
     console.log(response);
   });
@@ -90,6 +99,10 @@ learnWordsApp.controller('learnPageController', ['$scope', '$location', '$http',
   	return tempList;
   }
 
+  $scope.roundEnded = function(){
+    return round > 9;
+  };
+
   $scope.sendData = function(){
     sendData();
   }
@@ -101,10 +114,13 @@ learnWordsApp.controller('learnPageController', ['$scope', '$location', '$http',
         'Content-Type': 'application/json'
       }
     }
-    console.log('post: ' + data);
+    //console.log('post: ' + data);
+    setBusy(true, 'Updating words...');
     $http.post('/learnWords/words', data, config).then(function(res){
+      setBusy(false);
       $location.path('/');
     }, function(err){
+      setBusy(false);
       console.log(err);
     });
   }

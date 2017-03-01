@@ -1,4 +1,11 @@
-<div layout="column" layout-align="center" flex>
+<div layout="column" layout-align="end" flex>
   <md-button class="md-raised" style="font-size: 2em; padding: 20px;" ng-click="onLearn()">Learn</md-button>
   <md-button class="md-raised md-primary" style="font-size: 2em; padding: 20px;" ng-click="onNew()">New</md-button>
+  <div layout="row" flex="50" layout-margin>
+    <div layout="column" ng-repeat="stat in statistics" layout-align="end" flex>
+      <div layout="row" layout-align="center">{{stat.count}}</div>
+      <div style="background-color: blue;" flex="{{stat.percent}}"></div>
+      <div layout="row" layout-align="center">{{stat.state}}</div>
+    </div>
+  </div>
 </div>

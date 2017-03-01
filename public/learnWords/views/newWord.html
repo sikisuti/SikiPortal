@@ -38,4 +38,8 @@
       </md-list-item>
     </md-list>
   </md-content>
+  <div ng-show="busy.state" layout="row" flex="10">
+    <md-progress-circular></md-progress-circular>
+    <span style="margin: auto 10px;">{{busy.message}}</span>
+  </div>
 </div>
