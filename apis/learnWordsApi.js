@@ -16,7 +16,7 @@ var path = require('path');
 var nconf = require('nconf');
 nconf.argv().env().file({ file: path.normalize(path.join(__dirname, "../config.json")) });
 
-router.get('/authorizationCheck', function(req, res) { console.log('authenticated'); res.send('authorizationCheck OK'); });
+router.get('/authorizationCheck', function(req, res) { res.send('authorizationCheck OK'); });
 
 router.get('/words', function(req, res) {
   res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
@@ -24,23 +24,32 @@ router.get('/words', function(req, res) {
     if (err) {console.log(err); return;}
 
     connection.query(
-      '(SELECT w.id AS wordID, w.native, w.foreignWord, w.exampleSentence, w.pronunciation, w.levelID, w.lexicalCategory, w.definition, uw.state, uw.id AS userWordID, w.audioFile ' +
-			'FROM words w ' +
-			   'LEFT OUTER JOIN userWords uw ON w.id = uw.wordID ' +
-			'WHERE (uw.userID=' + req.userId + ' or ISNULL(uw.userID)) and ' +
-			   '(ISNULL(uw.state) or ' +
-              'uw.state = 1 or ' +
-							'(uw.state = 2 and uw.lastLearned < curdate() - 4) or ' +
-							'(uw.state = 3 and uw.lastLearned < curdate() - 7) or ' +
-							'(uw.state = 4 and uw.lastLearned < curdate() - 15) or ' +
-							'(uw.state = 5 and uw.lastLearned < curdate() - 30)) ' +
-			'ORDER BY uw.state DESC, w.levelID ASC ' +
-			'LIMIT 9) ' +
+      '(SELECT * ' +
+      'FROM words w ' +
+      	'LEFT OUTER JOIN ( ' +
+      		'SELECT * ' +
+      		'FROM userWords ' +
+      		'WHERE userID = ' + req.userId +
+      ') uwInner ON uwInner.wordID = w.id ' +
+      'WHERE w.id NOT IN ( ' +
+      	'SELECT uw.wordID ' +
+      	'FROM userWords uw ' +
+      	'WHERE uw.userID = ' + req.userId + ' AND ( ' +
+      		'uw.state > 5 OR ( ' +
+      			'(uw.state = 2 and uw.lastLearned > curdate() - 4) OR ' +
+      			'(uw.state = 3 and uw.lastLearned > curdate() - 7) OR ' +
+      			'(uw.state = 4 and uw.lastLearned > curdate() - 15) OR ' +
+      			'(uw.state = 5 and uw.lastLearned > curdate() - 30) ' +
+      		') ' +
+      	') ' +
+      ') AND (NOT ISNULL(uwInner.userID) OR (ISNULL(uwInner.userID) AND w.levelID <> 1)) ' +
+      'ORDER BY uwInner.state DESC, w.levelID ASC ' +
+      'LIMIT 9) ' +
       'UNION ' +
-      '(SELECT w.id AS wordID, w.native, w.foreignWord, w.exampleSentence, w.pronunciation, w.levelID, w.lexicalCategory, w.definition, uw.state, uw.id AS userWordID, w.audioFile ' +
-			'FROM words w ' +
-			   'LEFT OUTER JOIN userWords uw ON w.id = uw.wordID ' +
-      'WHERE uw.userID=' + req.userId + ' and uw.state > 5 ' +
+      '(SELECT * ' +
+      'FROM words w ' +
+      	'LEFT OUTER JOIN userWords uw ON w.id = uw.wordID ' +
+      'WHERE uw.userID = ' + req.userId + ' AND uw.state = 6 ' +
       'ORDER BY RAND() ' +
       'LIMIT 1)', function(err, wordsResult, fields){
       if (err) { console.log(err); res.send(err); return; }

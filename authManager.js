@@ -10,6 +10,8 @@ module.exports = {
       for (var i = this.tokenList.length - 1; i >= 0; i--){
         //console.log("diff: " + (Date.now() - this.tokenList[i].start));
         if (Date.now() - this.tokenList[i].validFrom > 36000000) { // 10 hours
+          console.log('[' + new Date() + '] Removing token:');
+          console.log('accessToken: ' + this.tokenList[i].accessToken + ', userId: ' + this.tokenList[i].userId + ', validFrom: ' + this.tokenList[i].validFrom);
           this.tokenList.splice(i, 1);
           //console.log(this.tokenList + " removed");
         }
@@ -22,8 +24,8 @@ module.exports = {
       token.userId = userId;
       token.validFrom = Date.now();
       this.tokenList.push(token);
-      //console.log("Token generated:");
-      //console.log('accessToken: ' + token.accessToken + ', userId: ' + token.userId + ', validFrom: ' + token.validFrom);
+      console.log('[' + new Date() + "] Token generated:");
+      console.log('accessToken: ' + token.accessToken + ', userId: ' + token.userId + ', validFrom: ' + token.validFrom);
       return token.accessToken;
     },
 

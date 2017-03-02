@@ -67,4 +67,4 @@ app.get("/words", function(req, res){
 });
 
 var server = app.listen(port);
-console.log("Listening on port " + port);
+console.log('[' + new Date() + "] Listening on port " + port);
