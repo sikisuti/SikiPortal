@@ -24,7 +24,7 @@ router.get('/words', function(req, res) {
     if (err) {console.log(err); return;}
 
     connection.query(
-      '(SELECT * ' +
+      '(SELECT w.id AS wordID, w.native, w.foreignWord, w.exampleSentence, w.pronunciation, w.levelID, w.lexicalCategory, w.definition, uwInner.state, uwInner.id AS userWordID, w.audioFile ' +
       'FROM words w ' +
       	'LEFT OUTER JOIN ( ' +
       		'SELECT * ' +
@@ -46,7 +46,7 @@ router.get('/words', function(req, res) {
       'ORDER BY uwInner.state DESC, w.levelID ASC ' +
       'LIMIT 9) ' +
       'UNION ' +
-      '(SELECT * ' +
+      '(SELECT w.id AS wordID, w.native, w.foreignWord, w.exampleSentence, w.pronunciation, w.levelID, w.lexicalCategory, w.definition, uw.state, uw.id AS userWordID, w.audioFile ' +
       'FROM words w ' +
       	'LEFT OUTER JOIN userWords uw ON w.id = uw.wordID ' +
       'WHERE uw.userID = ' + req.userId + ' AND uw.state = 6 ' +
