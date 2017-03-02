@@ -49,11 +49,11 @@ app.use(require('./apis'));
 carInfoRefuelApi(app, connections.getCarInfoPool());
 userManagementApi(app, connections.getAuthPool());
 authorizationApi(app, connections.getAuthPool());
-
+/*
 app.get("/", function(req, res){
   res.render("index");
 });
-
+*/
 app.get("/shop", function(req, res){
   res.sendFile("/public/shoppingList/index.html", {root: __dirname});
 });

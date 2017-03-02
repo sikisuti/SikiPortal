@@ -19,8 +19,8 @@ module.exports = function(app, pool){
 
           var rtnResult = {aaData: []};
           for (var i = 0; i < result.length; i++){
-            console.log("row:");
-            console.log(result[i]);
+            //console.log("row:");
+            //console.log(result[i]);
             var jsonData = {};
             for (var key in result[i]){
               jsonData[key] = result[i][key];
@@ -33,8 +33,8 @@ module.exports = function(app, pool){
             }
             rtnResult.aaData.push(jsonData);
           }
-          console.log("rtnResult:");
-          console.log(rtnResult);
+          //console.log("rtnResult:");
+          //console.log(rtnResult);
           connection.release();
           res.json(rtnResult);
         });
@@ -88,7 +88,7 @@ module.exports = function(app, pool){
             console.log(rfSelectQuery.sql); console.log(err); connection.release(); res.sendStatus(503);
             });
           }
-          console.log(refuelSelectResult);
+          //console.log(refuelSelectResult);
           var commonUpdateQuery = connection.query("UPDATE commonActionData SET ? WHERE id=" + refuelSelectResult[0].commonId,
             {carId: req.body.carId, actionDate: req.body.actionDate, km: req.body.km}, function(err, commonUpdateResult){
               if (err) { connection.rollback(function(){
@@ -103,8 +103,8 @@ module.exports = function(app, pool){
                     });
                   }
 
-                  console.log(commonUpdateQuery.sql);
-                  console.log(refuelUpdateQuery.sql);
+                  //console.log(commonUpdateQuery.sql);
+                  //console.log(refuelUpdateQuery.sql);
                   connection.commit(function(err){
                     if (err) { connection.rollback(function(){
                         res.sendStatus(503);
@@ -186,11 +186,11 @@ module.exports = function(app, pool){
           var totalFuelAmount = result.slice(0, result.length - 1).reduce(function(a, b){ return a + b.fuelAmount; }, 0);
           var totalFuelCost = result.slice(0, result.length - 1).reduce(function(a, b){ return a + (b.fuelAmount * b.fuelCost); }, 0);
 
-          console.log("totalkm: " + totalKm);
-          console.log("totalFuelAmount: " + totalFuelAmount);
-          console.log("totalFuelCost: " + totalFuelCost);
+          //console.log("totalkm: " + totalKm);
+          //console.log("totalFuelAmount: " + totalFuelAmount);
+          //console.log("totalFuelCost: " + totalFuelCost);
 
-          console.log(result);
+          //console.log(result);
           connection.release();
           res.json({avgConsume: Math.round((totalFuelAmount * 1000) / totalKm) / 10,
                     kmCost: Math.round(totalFuelCost / totalKm)});

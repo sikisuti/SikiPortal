@@ -27,7 +27,7 @@ module.exports = function(app, pool){
   });
 
   app.post("/api/carInfo/serviceData", function(req, res){
-    console.log(req.body);
+    //console.log(req.body);
     pool.getConnection(function(err, connection){
       if (err) { console.log(err); res.json({ message: err }); }
 
@@ -60,8 +60,8 @@ module.exports = function(app, pool){
               });
             });
 
-            console.log(commonActionDataQuery.sql);
-            console.log(serviceDataQuery.sql);
+            //console.log(commonActionDataQuery.sql);
+            //console.log(serviceDataQuery.sql);
             connection.commit(function(err){
               if (err) { connection.rollback(function(){
                   res.json({ message: err });
