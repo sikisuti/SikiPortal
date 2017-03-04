@@ -54,11 +54,71 @@ router.get('/words', function(req, res) {
       'LIMIT 1)', function(err, wordsResult, fields){
       if (err) { console.log(err); res.send(err); return; }
 
-      connection.release();
-      res.send(wordsResult);
+      getMissingAudios(wordsResult, 0, connection, function(){
+        connection.release();
+        res.send(wordsResult);
+      });
+
     });
   });
 });
+
+var getMissingAudios = function(words, index, connection, endCallback) {
+  if (index == words.length) { endCallback(); return; }
+
+  if (words[index].audioFile.indexOf('n/a') != -1 ||
+      words[index].audioFile.indexOf('http://') != -1) {
+    getMissingAudios(words, ++index, connection, endCallback);
+    return;
+  }
+
+  getAudio(words[index], function(word, audioUrl){
+    connection.query(
+      "UPDATE words SET audioFile = '" + audioUrl + "' WHERE id = " + word.wordID, function(err, updateResult, fields){
+      if (err) { console.log(err); res.send(err); return; }
+
+      words[index].audioFile = audioUrl;
+      //console.log(word.foreignWord + ' updated. URL: ' + audioUrl);
+      getMissingAudios(words, ++index, connection, endCallback);
+    });
+  });
+};
+
+var getAudio = function(word, callback){
+  var options = {
+    hostname: 'od-api.oxforddictionaries.com',
+    port: 443,
+    path: '/api/v1/entries/en/' + encodeURI(word.foreignWord) + '/examples;definitions;pronunciations',
+    method: 'GET',
+    headers: {
+      'Accept': 'application/json',
+      'app_id': nconf.get('app_id'),
+      'app_key': nconf.get('app_key')
+    }
+  };
+  https.get(options, (response) => {
+    var data = '';
+    response.on('data', (chunk) => {
+      data += chunk;
+    });
+    response.on('end', () => {
+      var collectedData = [];
+      try {
+        var jData = JSON.parse(data);
+      } catch(e) {
+        callback(word, 'n/a');
+        return;
+      }
+      if (jData != undefined && jData.results != undefined &&
+          jData.results[0].lexicalEntries != undefined &&
+          jData.results[0].lexicalEntries[0].pronunciations != undefined &&
+          jData.results[0].lexicalEntries[0].pronunciations[0].audioFile != undefined){
+         var audioFile = jData.results[0].lexicalEntries[0].pronunciations[0].audioFile;
+         callback(word, audioFile);
+      } else { callback(word, 'n/a'); }
+    });
+  });
+};
 
 router.post('/words', function(req, res){
   var wordsToUpdate = [];
@@ -198,7 +258,6 @@ router.get('/searchNatives', function(req, res){
 
 router.get('/searchOxford', function(req, res){
   res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
-  console.log('searchOxford started');
   var options = {
     hostname: 'od-api.oxforddictionaries.com',
     port: 443,
@@ -210,11 +269,9 @@ router.get('/searchOxford', function(req, res){
       'app_key': nconf.get('app_key')
     }
   };
-  console.log('url: https://' + options.hostname + ':' + options.port + options.path);
   https.get(options, (response) => {
     var data = '';
     response.on('data', (chunk) => {
-      console.log('chunk arrived');
       data += chunk;
     });
     response.on('end', () => {
