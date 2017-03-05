@@ -250,6 +250,7 @@ router.put('/userWord/:id', function(req, res){
           });
         }
 
+        console.log(updateUserWordQuery);
         connection.commit(function(err){
           if (err) { connection.rollback(function(){
               res.sendStatus(503);
@@ -278,6 +279,7 @@ router.post('/userWord/:wordID', function(req, res){
           });
         }
 
+        console.log(insertUserWordQuery);
         connection.commit(function(err){
           if (err) { connection.rollback(function(){
               res.sendStatus(503);
