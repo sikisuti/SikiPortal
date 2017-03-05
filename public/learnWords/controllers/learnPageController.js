@@ -71,7 +71,7 @@ learnWordsApp.controller('learnPageController', ['$scope', '$location', '$http',
   	tempList = shuffle(tempList);
   	actIndex = 0;
   	if (round == 10){
-  		//sendData();
+  		sendData();
       }
   	if (round < 4){
   		for (var i = 0; i < words.length; i++){
