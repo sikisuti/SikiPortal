@@ -18,10 +18,12 @@ learnWordsApp.controller('mainCtrl', ['$scope', '$location', '$http', '$cookies'
   });
 
   $scope.logout = function() {
-    $cookies.remove('sikiToken');
-    $cookies.remove('sikiUsername');
-    $scope.username = '';
-    $location.path('/login');
+    $http.get('/authorization/logout').then(function(response){
+      $scope.username = '';
+      $location.path('/login');
+    }, function(err){console.log(err);});
+    //$cookies.remove('sikiToken');
+    //$cookies.remove('sikiUsername');
   };
 
 }]);

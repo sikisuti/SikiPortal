@@ -1,10 +1,9 @@
-learnWordsApp.controller('learnPageController', ['$scope', '$location', '$http', function($scope, $location, $http){
+learnWordsApp.controller('learnPageController', ['$scope', '$location', '$http', '$mdDialog', function($scope, $location, $http, $mdDialog){
   var actList;
 	var actIndex;
 	var round = 1;
 	var rndSide;
 	var modifiedWords = new Array();
-	var cnt = 0;
 
 	var sounds = [];
 
@@ -72,7 +71,7 @@ learnWordsApp.controller('learnPageController', ['$scope', '$location', '$http',
   	tempList = shuffle(tempList);
   	actIndex = 0;
   	if (round == 10){
-  		sendData();
+  		//sendData();
       }
   	if (round < 4){
   		for (var i = 0; i < words.length; i++){
@@ -105,6 +104,37 @@ learnWordsApp.controller('learnPageController', ['$scope', '$location', '$http',
 
   $scope.sendData = function(){
     sendData();
+  }
+
+  $scope.setKnown = function(callback){
+    var confirm = $mdDialog.confirm()
+          .title('Your about to set this word known.')
+          .textContent('Are you sure?')
+          .ariaLabel('Lucky day')
+          //.targetEvent(ev)
+          .ok('Yes')
+          .cancel('No');
+
+    $mdDialog.show(confirm).then(function() {
+      var userWordID = actList[actIndex].userWordID;
+      setBusy(true, 'Updating word...')
+      if (userWordID == null) {
+        $http.post('/learnWords/userWord/' + actList[actIndex].wordID).then(function(response){
+          words.splice(words.map(function(word){return word.userWordID}).indexOf(userWordID), 1);
+          setBusy(false);
+          callback(true);
+        }, function(err){console.log(err);});
+      } else {
+        $http.put('/learnWords/userWord/' + userWordID).then(function(response){
+          words.splice(words.map(function(word){return word.userWordID}).indexOf(userWordID), 1);
+          setBusy(false);
+          callback(true);
+        }, function(err){console.log(err);});
+      }
+    }, function() {
+      callback(false);
+    });
+
   }
 
   var sendData = function() {
@@ -145,7 +175,12 @@ learnWordsApp.controller('learnPageController', ['$scope', '$location', '$http',
   }
 
 	var updateProgressBar = function(){
-		var percent = (cnt / (12 * words.length)) * 100;
+    var pastRounds = round - 1;
+    var multiplyer = 1;
+    if (pastRounds > 5) { multiplyer = 2; }
+    if (pastRounds > 6) { pastRounds += pastRounds - 6 }
+    var pastSteps = (pastRounds * words.length) + ((multiplyer * words.length) - actList.length + 1);
+		var percent = (pastSteps / (12 * words.length)) * 100;
     $scope.progressBarWidth = percent.toFixed(1) + "%";
 	}
 
@@ -155,7 +190,6 @@ learnWordsApp.controller('learnPageController', ['$scope', '$location', '$http',
   };
 
   $scope.skipWord = function() {
-    cnt = cnt + 1;
 		updateProgressBar();
 		actList.splice(actIndex, 1);
 		rndSide.splice(actIndex, 1);

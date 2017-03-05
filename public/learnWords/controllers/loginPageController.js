@@ -12,7 +12,6 @@ learnWordsApp.controller('loginPageController', ['$scope', '$location', '$http',
             }
 
       $http.post('/authorization/login', data, config).then(function(response){
-        $cookies.put('sikiUsername', response.data);
         $location.path('/');
       }, function(response){
         console.log("Authentication failed");

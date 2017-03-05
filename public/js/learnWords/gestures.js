@@ -17,6 +17,10 @@ mc.on("swipedown", function(ev) {
   skipWord();
 });
 
+mc.on("swipeup", function(ev){
+  setKnown();
+});
+
 mc.on("tap", function(ev) {
   angular.element($('#learnView')).scope().flipCard();
   angular.element($('#learnView')).scope().$apply();
@@ -29,7 +33,7 @@ function keyPressed(e){
   if (e.keyCode == '32') {
       // space
     angular.element($('#learnView')).scope().flipCard();
-  angular.element($('#learnView')).scope().$apply();
+    angular.element($('#learnView')).scope().$apply();
   }
 	if (e.keyCode == '37') {
         // left arrow
@@ -37,7 +41,7 @@ function keyPressed(e){
   }
   if (e.keyCode == '38') {
       // up arrow
-
+    setKnown();
   }
   else if (e.keyCode == '39') {
       // right arrow
@@ -65,4 +69,20 @@ var skipWord = function(){
   }});
   $('#card').animate({visibility: 'hidden'}, 1).animate({right: '300px', top: '0px'}, 1).animate({visibility: 'visible'}, 1)
   .animate({right: '0px'}, 100);
+};
+
+var setKnown = function(){
+  angular.element($('#learnView')).scope().setKnown(function(isApproved){
+    if (isApproved) {
+      //angular.element($('#learnView')).scope().$apply();
+      $('#card').animate({top: '-300px'}, {duration: 100, complete: function(){
+        angular.element($('#learnView')).scope().skipWord();
+        angular.element($('#learnView')).scope().$apply();
+        $('#card').animate({visibility: 'hidden'}, 1).animate({right: '300px', top: '0px'}, 1)
+        .animate({visibility: 'visible'}, 1).animate({right: '0px'}, 100);
+      }});
+
+    }
+  });
+
 };

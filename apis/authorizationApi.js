@@ -21,6 +21,7 @@ module.exports = function(app, authPool) {
               connection.release();
               var accessToken = auth.generateToken(userResult[0].id);
               res.cookie('sikiToken', accessToken);
+              res.cookie('sikiUsername', req.body.username);
               // TODO: put token to the header
               //res.set('Authorization', userResult[0].id);
               res.send(req.body.username);
@@ -32,6 +33,15 @@ module.exports = function(app, authPool) {
           });
         });
     });
+  });
+
+  app.get('/authorization/logout', function(req, res){
+    if (req.cookies.sikiToken != undefined) {
+      auth.removeToken(req.cookies.sikiToken);
+      res.clearCookie('sikiToken');
+      res.clearCookie('sikiUsername');
+      res.sendStatus(200);
+    }
   });
 
 };
