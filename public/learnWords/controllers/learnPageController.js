@@ -16,7 +16,7 @@ learnWordsApp.controller('learnPageController', ['$scope', '$location', '$http',
     message: "Loading..."
   };
   var setBusy = function(state, message){
-    $scope.busy = state;
+    $scope.busy.state = state;
     $scope.busy.message = state ? message : "";
   }
   $scope.isFlipped = false;
@@ -46,8 +46,7 @@ learnWordsApp.controller('learnPageController', ['$scope', '$location', '$http',
     //var filename = "learnWords/audio/" + actList[actIndex].foreignWord.replace(" ", "_") + ".mp3";
     var indexOfActSound = indexOfSound(actList[actIndex].audioFile);
     if (indexOfActSound < 0){
-      sounds[sounds.length] = new Howl({ src: [actList[actIndex].audioFile] });
-      sounds[sounds.length - 1].play();
+      sounds[sounds.length] = new Howl({ src: [actList[actIndex].audioFile], autoplay: true });
     } else {
     	sounds[indexOfActSound].play();
     }
@@ -118,7 +117,7 @@ learnWordsApp.controller('learnPageController', ['$scope', '$location', '$http',
 
     $mdDialog.show(confirm).then(function() {
       var userWordID = actList[actIndex].userWordID;
-      setBusy(true, 'Updating word...')
+      setBusy(true, 'Updating word...');
       if (userWordID == null) {
         $http.post('/learnWords/userWord/' + actList[actIndex].wordID).then(function(response){
           words.splice(words.map(function(word){return word.userWordID}).indexOf(userWordID), 1);
