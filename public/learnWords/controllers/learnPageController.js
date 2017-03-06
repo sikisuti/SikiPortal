@@ -10,6 +10,7 @@ learnWordsApp.controller('learnPageController', ['$scope', '$location', '$http',
   var words;
 
   $scope.progressBarWidth = "0%";
+  $scope.autoVoice = false;
   $scope.busy = {
     state: true,
     message: "Loading..."
@@ -38,7 +39,7 @@ learnWordsApp.controller('learnPageController', ['$scope', '$location', '$http',
   function fillContent(){
     $scope.word = actList[actIndex];
     $scope.isFlipped = rndSide[actIndex] == 1;
-    //if ($scope.isFlipped && actList[actIndex].hasAudio == 'yes') {playCachedAudio();}
+    if ($scope.isFlipped && actList[actIndex].audioFile.indexOf('http://') != -1 && $scope.autoVoice) {playCachedAudio();}
   }
 
   function playCachedAudio(){
@@ -205,6 +206,6 @@ learnWordsApp.controller('learnPageController', ['$scope', '$location', '$http',
 
   $scope.flipCard = function() {
     $scope.isFlipped = !$scope.isFlipped;
-    //if ($scope.isFlipped && actList[actIndex].hasAudio == 'yes') {playCachedAudio();}
+    if ($scope.isFlipped && actList[actIndex].audioFile.indexOf('http://') != -1 && $scope.autoVoice) {playCachedAudio();}
   };
 }]);

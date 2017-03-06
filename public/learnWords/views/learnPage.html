@@ -17,9 +17,14 @@
 
   <div layout="row">
     <!--<md-button ng-click="setKnown(word.userWordID)">Known</md-button>-->
-    <md-progress-circular ng-disabled="!busy.state"></md-progress-circular>
-    <span ng-disabled="!busy.state" style="margin: auto 10px;">{{busy.message}}</span>
+    <div layout="column" flex>
+      <md-progress-circular ng-disabled="!busy.state"></md-progress-circular>
+      <span ng-disabled="!busy.state" style="margin: auto 10px;">{{busy.message}}</span>
+    </div>
     <!--<md-button class="md-raised" ng-click="sendData()">Submit</md-button>-->
+    <div layout="column" flex>
+      <md-switch class="md-primary" ng-model="autoVoice" layout-align="center">voice</md-switch>
+    </div>
     <div layout="column" layout-align="center end" flex>
       <md-button id="audioButton" ng-click="playCachedAudio()" ng-class="{hidden : audioNotExists()}"></md-button>
     </div>
