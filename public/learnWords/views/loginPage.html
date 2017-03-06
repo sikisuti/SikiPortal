@@ -12,5 +12,9 @@
       <md-button class="md-raised md-primary" ng-click="register()" flex>Register</md-button>
       <md-button class="md-raised" ng-click="submit()" flex>Login</md-button>
   </div>
+  <div layout="row">
+    <md-progress-circular ng-disabled="!busy.state"></md-progress-circular>
+    <span ng-disabled="!busy.state" style="margin: auto 10px;">{{busy.message}}</span>
+  </div>
   <!--</form>-->
 </div>
