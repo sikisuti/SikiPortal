@@ -23,7 +23,7 @@ learnWordsApp.controller('learnPageController', ['$scope', '$location', '$http',
   $scope.playCachedAudio = function(){playCachedAudio();};
 
   $scope.audioNotExists = function(){
-    return $scope.word == undefined || $scope.word.audioFile.indexOf('http://') == -1;
+    return $scope.word == undefined || $scope.word.audioFile == null || $scope.word.audioFile.indexOf('http://') == -1;
   }
 
   $http.get('/learnWords/words').then(function(response){
