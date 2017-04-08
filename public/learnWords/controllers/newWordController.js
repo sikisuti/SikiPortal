@@ -71,6 +71,7 @@ learnWordsApp.controller('newWordController', ['$scope', '$location', '$http', f
     if ($scope.newWord.native == "" || $scope.newWord.foreignWord == "" || ($scope.oxfords != undefined && $scope.oxfords.length > 0 && $scope.newWord.definition == "")) {return;}
 
     $scope.newWord.levelID = 1;
+    if ($scope.newWord.audioFile == null) { $scope.newWord.audioFile = 'n/a'; }
     startProcess('Saving word...');
     $http.post('/learnWords/word', $scope.newWord).then(function(response){
       endProcess('Saving word...');

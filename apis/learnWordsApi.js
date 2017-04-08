@@ -66,8 +66,9 @@ router.get('/words', function(req, res) {
 var getMissingAudios = function(words, index, connection, endCallback) {
   if (index == words.length) { endCallback(); return; }
 
-  if (words[index].audioFile == null ||
-      words[index].audioFile.indexOf('n/a') != -1 ||
+  if (words[index].audioFile == null) { words[index].audioFile = 'n/a'; }
+
+  if (words[index].audioFile.indexOf('n/a') != -1 ||
       words[index].audioFile.indexOf('http://') != -1) {
     getMissingAudios(words, ++index, connection, endCallback);
     return;
