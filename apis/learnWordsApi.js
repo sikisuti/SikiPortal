@@ -36,10 +36,10 @@ router.get('/words', function(req, res) {
       	'FROM userWords uw ' +
       	'WHERE uw.userID = ' + req.userId + ' AND ( ' +
       		'uw.state > 5 OR ( ' +
-      			'(uw.state = 2 and uw.lastLearned > curdate() - 4) OR ' +
-      			'(uw.state = 3 and uw.lastLearned > curdate() - 7) OR ' +
-      			'(uw.state = 4 and uw.lastLearned > curdate() - 15) OR ' +
-      			'(uw.state = 5 and uw.lastLearned > curdate() - 30) ' +
+      			'(uw.state = 2 and uw.lastLearned > DATE_ADD(CURDATE(), INTERVAL -4 DAY)) OR ' +
+      			'(uw.state = 3 and uw.lastLearned > DATE_ADD(CURDATE(), INTERVAL -7 DAY)) OR ' +
+      			'(uw.state = 4 and uw.lastLearned > DATE_ADD(CURDATE(), INTERVAL -15 DAY)) OR ' +
+      			'(uw.state = 5 and uw.lastLearned > DATE_ADD(CURDATE(), INTERVAL -30 DAY)) ' +
       		') ' +
       	') ' +
       ') AND (NOT ISNULL(uwInner.userID) OR (ISNULL(uwInner.userID) AND w.levelID <> 1)) ' +
