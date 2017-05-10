@@ -22,3 +22,10 @@ Install dependencies
 Install Forever node runner
 
 Run program at startup
+
+Backup database
+	install gdrive 			https://github.com/prasmussen/gdrive
+
+	crontab -e		-- set crontab
+	0 1 * * * mysqldump -uroot -pGaboca.1 --all-databases --add-drop-database > /home/pi/gdrive/sqlDump/dump_$(date '+\%d').sql
+	0 2 * * * gdrive sync upload /home/pi/gdrive/sqlDump <fileid>
