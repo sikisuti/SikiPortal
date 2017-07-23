@@ -44,7 +44,7 @@ router.get('/words', function(req, res) {
       	') ' +
       ') AND (NOT ISNULL(uwInner.userID) OR (ISNULL(uwInner.userID) AND w.levelID <> 1)) ' +
       'ORDER BY uwInner.state DESC, w.levelID ASC ' +
-      'LIMIT 9) ' +
+      'LIMIT 8) ' +
       'UNION ' +
       '(SELECT w.id AS wordID, w.native, w.foreignWord, w.exampleSentence, w.pronunciation, w.levelID, w.lexicalCategory, w.definition, uw.state, uw.id AS userWordID, w.audioFile ' +
       'FROM words w ' +
@@ -60,6 +60,21 @@ router.get('/words', function(req, res) {
       });
 
     });
+  });
+});
+
+router.get('/sentence', function(req, res) {
+  res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+  pool.getConnection(function (err, connection){
+    if (err) {console.log(err); return;}
+
+        connection.query('SELECT * FROM sentences ORDER BY RAND() LIMIT 1', function(err, sentencesResult, fields){
+        if (err) { console.log(err); res.send(err); return; }
+
+          connection.release();
+          sentencesResult[0].audioFile = '';
+          res.send(sentencesResult[0]);
+        });
   });
 });
 

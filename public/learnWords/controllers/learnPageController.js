@@ -29,9 +29,11 @@ learnWordsApp.controller('learnPageController', ['$scope', '$location', '$http',
   $http.get('/learnWords/words').then(function(response){
     words = response.data;
     console.log(words);
-    actList = getWords();
-    fillContent();
-    setBusy(false);
+    getWords(function(tempList){
+      actList = tempList;
+      fillContent();
+      setBusy(false);
+    });
   }, function(response){
     console.log(response);
   });
@@ -62,7 +64,7 @@ learnWordsApp.controller('learnPageController', ['$scope', '$location', '$http',
      return rtn;
   }
 
-  function getWords(){
+  function getWords(callback){
   	var tempList = new Array();
   	rndSide = new Array();
   	for (var i = 0; i < words.length; i++){
@@ -72,30 +74,49 @@ learnWordsApp.controller('learnPageController', ['$scope', '$location', '$http',
   	actIndex = 0;
   	if (round == 10){
   		sendData();
-      }
+    }
   	if (round < 4){
   		for (var i = 0; i < words.length; i++){
-      		rndSide[i] = 0;
-      	}
+      	rndSide[i] = 0;
       }
-  	else if (round < 7){
+      getSentence(tempList, function(listWithSentence){
+        rndSide.push(0);
+        callback(listWithSentence);
+      });
+    }	else if (round < 7){
   		for (var i = 0; i < words.length; i++){
-      		rndSide[i] = 1;
-      	}
+      	rndSide[i] = 1;
       }
-  	else {
-  		for (var i = 0; i < words.length; i++){
-      		tempList[i + words.length] = tempList[i];
-      	}
-      	rndSide = new Array();
-  		for (var i = 0; i < words.length; i++){
-      		rndSide[i] = Math.round(Math.random());
-      	}
-  		for (var i = 0; i < words.length; i++){
-      		rndSide[i + words.length] = Math.abs(rndSide[i] - 1);
-      	}
-      }
-  	return tempList;
+      getSentence(tempList, function(listWithSentence){
+        rndSide.push(0);
+        callback(listWithSentence);
+      });
+    }	else {
+      getSentence(tempList, function(firstListWithSentence){
+    		for (var i = 0; i < words.length; i++){
+        	firstListWithSentence[i + words.length + 1] = firstListWithSentence[i];
+        }
+        rndSide = new Array();
+    		for (var i = 0; i < words.length; i++){
+        	rndSide[i] = Math.round(Math.random());
+        }
+        rndSide.push(0);
+        getSentence(firstListWithSentence, function(secondListWithSentence){
+      		for (var i = 0; i < words.length; i++){
+          	rndSide[i + words.length + 1] = Math.abs(rndSide[i] - 1);
+          }
+          rndSide.push(0);
+          callback(secondListWithSentence);
+        });
+      });
+    }
+  }
+
+  function getSentence(tempList, callback){
+    $http.get('/learnWords/sentence').then(function(response){
+      tempList.push(response.data);
+      callback(tempList);
+    }, function(err){});
   }
 
   $scope.roundEnded = function(){
@@ -195,12 +216,15 @@ learnWordsApp.controller('learnPageController', ['$scope', '$location', '$http',
 		rndSide.splice(actIndex, 1);
     if (actList.length == 0){
 			round = round + 1;
-			actList = getWords();
+			getWords(function(tempList){
+        actList = tempList;
+        fillContent();
+      });
     }
     else{
       actIndex = actIndex % actList.length;
+      fillContent();
     }
-    fillContent();
   };
 
   $scope.flipCard = function() {
