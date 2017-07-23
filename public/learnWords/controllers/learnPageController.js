@@ -113,8 +113,10 @@ learnWordsApp.controller('learnPageController', ['$scope', '$location', '$http',
   }
 
   function getSentence(tempList, callback){
+    setBusy(true, 'Getting sentence...');
     $http.get('/learnWords/sentence').then(function(response){
       tempList.push(response.data);
+      setBusy(false);
       callback(tempList);
     }, function(err){});
   }
