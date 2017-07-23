@@ -216,6 +216,7 @@ learnWordsApp.controller('learnPageController', ['$scope', '$location', '$http',
 		rndSide.splice(actIndex, 1);
     if (actList.length == 0){
 			round = round + 1;
+      $scope.word = undefined;
 			getWords(function(tempList){
         actList = tempList;
         fillContent();
