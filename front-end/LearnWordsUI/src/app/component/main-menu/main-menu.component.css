@@ -1,0 +1,9 @@
+.menu-container {
+    width: 60%;
+    height: 200px;
+    background-color: green;
+    margin: auto auto;
+    position: absolute;
+    left: 0;
+    right: 0;
+}

@@ -1,0 +1,12 @@
+<div fxLayout="column" fxLayoutAlign="center center">
+  <mat-form-field>
+    <input matInput placeholder="username">
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput placeholder="password" type="password">
+  </mat-form-field>
+</div>
+<p>
+  <button (click)="login()"  *ngIf="!authService.isLoggedIn">Login</button>
+  <button (click)="logout()" *ngIf="authService.isLoggedIn">Logout</button>
+</p>

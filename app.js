@@ -66,5 +66,9 @@ app.get("/words", function(req, res){
   res.sendFile("/public/learnWords/index.html", {root: __dirname});
 });
 
+app.get("/experiment/**", function(req, res){
+  res.sendFile("/public/experiment/index.html", {root: __dirname});
+});
+
 var server = app.listen(port);
 console.log('[' + new Date() + "] Listening on port " + port);

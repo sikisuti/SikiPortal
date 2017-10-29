@@ -1,0 +1,10 @@
+<div>
+  <div class="flip-card" 
+    (click)="onClick()" 
+    (swiperight)="onSwipeRight($event)" 
+    [@reviseWord]='reviseWordStarter'
+    (@reviseWord.done)='reviseWordDone($event)'
+    [@newWord]='word?.id'>
+    <span>{{word?.native}}</span>
+  </div>
+</div>

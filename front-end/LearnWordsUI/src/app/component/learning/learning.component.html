@@ -1,0 +1,11 @@
+<ul>
+  <li *ngFor="let word of words">
+    <span>{{word.native}} - {{word.foreign}}</span> 
+  </li>
+</ul>
+<div class="content">
+  <app-flip-card 
+    [word]="words[actIndex]" 
+    (sendResult)="onSendResult($event)">
+  </app-flip-card>
+</div>

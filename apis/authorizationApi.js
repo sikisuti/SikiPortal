@@ -24,7 +24,7 @@ module.exports = function(app, authPool) {
               res.cookie('sikiUsername', req.body.username);
               // TODO: put token to the header
               //res.set('Authorization', userResult[0].id);
-              res.send(req.body.username);
+              res.send({ 'username': req.body.username });
             }
             else {
               console.log('Login failed');
@@ -43,5 +43,15 @@ module.exports = function(app, authPool) {
       res.sendStatus(200);
     }
   });
+
+  app.get('/authorization/check', function(req, res){
+    if (req.cookies.sikiToken != undefined && auth.isAuthorized(req.cookies.sikiToken)) {
+      //console.log("Authenticated");
+      res.json({ Authorized: true });
+    } else {
+      //console.log("Not authenticated");
+      res.json({ Authorized: false });
+    }    
+  })
 
 };
