@@ -12,4 +12,12 @@ export class HomeComponent implements OnInit {
   ngOnInit() {
   }
 
+  goLearn(): void {
+
+  }
+
+  goNew(): void {
+
+  }
+
 }

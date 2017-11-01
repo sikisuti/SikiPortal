@@ -8,25 +8,18 @@ import { Router } from '@angular/router';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
-
-  message: string;
+  username: string = null;
+  password: string = null;
 
   constructor(public authService: AuthService, public router: Router) {
-    this.setMessage();
   }
 
   ngOnInit() {
   }
 
-  setMessage() {
-    this.message = 'Logged ' + (this.authService.isLoggedIn ? 'in' : 'out');
-  }
-
   login() {
-    this.message = 'Trying to log in ...';
-
-    this.authService.login().subscribe(res => {
-      console.log('After login: ');
+    // console.log('username: ' + this.username + ' password: ' + this.password);
+    this.authService.login(this.username, this.password).subscribe(res => {
         if (this.authService.isLoggedIn) {
           // Get the redirect URL from our auth service
           // If no redirect has been set, use the default
@@ -36,12 +29,14 @@ export class LoginComponent implements OnInit {
           this.router.navigate([redirect]);
         }
 
+    },
+    err => {
+      console.log(err);
     });
   }
 
   logout() {
     this.authService.logout();
-    this.setMessage();
   }
 
 }

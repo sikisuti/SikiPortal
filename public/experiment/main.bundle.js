@@ -75,7 +75,7 @@ exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-b
 
 
 // module
-exports.push([module.i, ".main-content html body {\r\n    height: 100%;\r\n    min-height: 100%;\r\n}", ""]);
+exports.push([module.i, ".content {\r\n    height: 100%;\r\n}", ""]);
 
 // exports
 
@@ -88,7 +88,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/app.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div fxLayout=\"column\" class=\"main-content\">\n  <nav fxFlex=\"10%\">\n    <a routerLink=\"/home\" routerLinkActive=\"active\">home</a>\n    <a routerLink=\"/learn\" routerLinkActive=\"active\">learn</a>\n  </nav>\n  <div fxFlex>\n    <router-outlet></router-outlet>\n  </div>\n  <div fxFlex=\"20%\">\n    Footer\n  </div>\n</div>\n\n\n"
+module.exports = "<div class=\"content\">\n      <router-outlet></router-outlet>\n</div>\n\n\n"
 
 /***/ }),
 
@@ -140,27 +140,29 @@ AppComponent = __decorate([
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_material__ = __webpack_require__("../../../material/esm5/material.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__angular_common_http__ = __webpack_require__("../../../common/@angular/common/http.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__angular_flex_layout__ = __webpack_require__("../../../flex-layout/@angular/flex-layout.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__service_word_service__ = __webpack_require__("../../../../../src/app/service/word.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__service_auth_guard_service__ = __webpack_require__("../../../../../src/app/service/auth-guard.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__service_auth_service__ = __webpack_require__("../../../../../src/app/service/auth.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__app_routing_module__ = __webpack_require__("../../../../../src/app/app-routing.module.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__app_component__ = __webpack_require__("../../../../../src/app/app.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__component_flip_card_flip_card_component__ = __webpack_require__("../../../../../src/app/component/flip-card/flip-card.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__component_learning_learning_component__ = __webpack_require__("../../../../../src/app/component/learning/learning.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13_hammerjs__ = __webpack_require__("../../../../hammerjs/hammer.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13_hammerjs___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_13_hammerjs__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_14_hammer_timejs__ = __webpack_require__("../../../../hammer-timejs/hammer-time.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_14_hammer_timejs___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_14_hammer_timejs__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__component_main_menu_main_menu_component__ = __webpack_require__("../../../../../src/app/component/main-menu/main-menu.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_16__component_login_login_component__ = __webpack_require__("../../../../../src/app/component/login/login.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_17__component_home_home_component__ = __webpack_require__("../../../../../src/app/component/home/home.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__angular_forms__ = __webpack_require__("../../../forms/@angular/forms.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__angular_flex_layout__ = __webpack_require__("../../../flex-layout/@angular/flex-layout.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__service_word_service__ = __webpack_require__("../../../../../src/app/service/word.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__service_auth_guard_service__ = __webpack_require__("../../../../../src/app/service/auth-guard.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__service_auth_service__ = __webpack_require__("../../../../../src/app/service/auth.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__app_routing_module__ = __webpack_require__("../../../../../src/app/app-routing.module.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__app_component__ = __webpack_require__("../../../../../src/app/app.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__component_flip_card_flip_card_component__ = __webpack_require__("../../../../../src/app/component/flip-card/flip-card.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__component_learning_learning_component__ = __webpack_require__("../../../../../src/app/component/learning/learning.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_14_hammerjs__ = __webpack_require__("../../../../hammerjs/hammer.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_14_hammerjs___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_14_hammerjs__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_15_hammer_timejs__ = __webpack_require__("../../../../hammer-timejs/hammer-time.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_15_hammer_timejs___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_15_hammer_timejs__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_16__component_main_menu_main_menu_component__ = __webpack_require__("../../../../../src/app/component/main-menu/main-menu.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_17__component_login_login_component__ = __webpack_require__("../../../../../src/app/component/login/login.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_18__component_home_home_component__ = __webpack_require__("../../../../../src/app/component/home/home.component.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+
 
 
 
@@ -187,24 +189,25 @@ var AppModule = (function () {
 AppModule = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_2__angular_core__["M" /* NgModule */])({
         declarations: [
-            __WEBPACK_IMPORTED_MODULE_10__app_component__["a" /* AppComponent */],
-            __WEBPACK_IMPORTED_MODULE_11__component_flip_card_flip_card_component__["a" /* FlipCardComponent */],
-            __WEBPACK_IMPORTED_MODULE_12__component_learning_learning_component__["a" /* LearningComponent */],
-            __WEBPACK_IMPORTED_MODULE_15__component_main_menu_main_menu_component__["a" /* MainMenuComponent */],
-            __WEBPACK_IMPORTED_MODULE_16__component_login_login_component__["a" /* LoginComponent */],
-            __WEBPACK_IMPORTED_MODULE_17__component_home_home_component__["a" /* HomeComponent */]
+            __WEBPACK_IMPORTED_MODULE_11__app_component__["a" /* AppComponent */],
+            __WEBPACK_IMPORTED_MODULE_12__component_flip_card_flip_card_component__["a" /* FlipCardComponent */],
+            __WEBPACK_IMPORTED_MODULE_13__component_learning_learning_component__["a" /* LearningComponent */],
+            __WEBPACK_IMPORTED_MODULE_16__component_main_menu_main_menu_component__["a" /* MainMenuComponent */],
+            __WEBPACK_IMPORTED_MODULE_17__component_login_login_component__["a" /* LoginComponent */],
+            __WEBPACK_IMPORTED_MODULE_18__component_home_home_component__["a" /* HomeComponent */]
         ],
         imports: [
             __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser__["a" /* BrowserModule */],
             __WEBPACK_IMPORTED_MODULE_1__angular_platform_browser_animations__["a" /* BrowserAnimationsModule */],
+            __WEBPACK_IMPORTED_MODULE_5__angular_forms__["c" /* FormsModule */],
             __WEBPACK_IMPORTED_MODULE_3__angular_material__["a" /* MatButtonModule */],
             __WEBPACK_IMPORTED_MODULE_3__angular_material__["b" /* MatInputModule */],
-            __WEBPACK_IMPORTED_MODULE_9__app_routing_module__["a" /* AppRoutingModule */],
+            __WEBPACK_IMPORTED_MODULE_10__app_routing_module__["a" /* AppRoutingModule */],
             __WEBPACK_IMPORTED_MODULE_4__angular_common_http__["b" /* HttpClientModule */],
-            __WEBPACK_IMPORTED_MODULE_5__angular_flex_layout__["a" /* FlexLayoutModule */]
+            __WEBPACK_IMPORTED_MODULE_6__angular_flex_layout__["a" /* FlexLayoutModule */]
         ],
-        providers: [__WEBPACK_IMPORTED_MODULE_6__service_word_service__["a" /* WordService */], __WEBPACK_IMPORTED_MODULE_7__service_auth_guard_service__["a" /* AuthGuardService */], __WEBPACK_IMPORTED_MODULE_8__service_auth_service__["a" /* AuthService */]],
-        bootstrap: [__WEBPACK_IMPORTED_MODULE_10__app_component__["a" /* AppComponent */]]
+        providers: [__WEBPACK_IMPORTED_MODULE_7__service_word_service__["a" /* WordService */], __WEBPACK_IMPORTED_MODULE_8__service_auth_guard_service__["a" /* AuthGuardService */], __WEBPACK_IMPORTED_MODULE_9__service_auth_service__["a" /* AuthService */]],
+        bootstrap: [__WEBPACK_IMPORTED_MODULE_11__app_component__["a" /* AppComponent */]]
     })
 ], AppModule);
 
@@ -322,7 +325,7 @@ exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-b
 
 
 // module
-exports.push([module.i, "", ""]);
+exports.push([module.i, ".content {\r\n    height: 100%;\r\n}", ""]);
 
 // exports
 
@@ -335,7 +338,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/component/home/home.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<p>\n  home works!\n</p>\n"
+module.exports = "<div fxLayout=\"column\" fxLayoutAlign=\"center stretch\" fxLayoutGap=\"10px\" class=\"content\">\n  <div fxLayout=\"row\" fxLayoutAlign=\"center center\">\n  <button mat-raised-button (click)=\"goLeatn()\" fxFlex=\"50\">Learn</button>\n</div>\n<div fxLayout=\"row\" fxLayoutAlign=\"center center\">\n  <button mat-raised-button color=\"primary\" (click)=\"goNew()\" fxFlex=\"50\">New</button>\n</div>\n</div>"
 
 /***/ }),
 
@@ -359,6 +362,10 @@ var HomeComponent = (function () {
     function HomeComponent() {
     }
     HomeComponent.prototype.ngOnInit = function () {
+    };
+    HomeComponent.prototype.goLearn = function () {
+    };
+    HomeComponent.prototype.goNew = function () {
     };
     return HomeComponent;
 }());
@@ -465,7 +472,7 @@ exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-b
 
 
 // module
-exports.push([module.i, "", ""]);
+exports.push([module.i, ".content {\r\n    height: 100%;\r\n}\r\n\r\n.form-signin {\r\n    max-width: 330px;\r\n    padding: 15px;\r\n    margin: 0 auto;\r\n}\r\n.form-signin .form-signin-heading,\r\n.form-signin .checkbox {\r\n    margin-bottom: 10px;\r\n}\r\n.form-signin .checkbox {\r\n    font-weight: 400;\r\n}\r\n.form-signin .form-control {\r\n    position: relative;\r\n    box-sizing: border-box;\r\n    height: auto;\r\n    padding: 10px;\r\n    font-size: 16px;\r\n}\r\n.form-signin .form-control:focus {\r\n    z-index: 2;\r\n}\r\n.form-signin input[type=\"email\"] {\r\n    margin-bottom: -1px;\r\n    border-bottom-right-radius: 0;\r\n    border-bottom-left-radius: 0;\r\n}\r\n.form-signin input[type=\"password\"] {\r\n    margin-bottom: 10px;\r\n    border-top-left-radius: 0;\r\n    border-top-right-radius: 0;\r\n}", ""]);
 
 // exports
 
@@ -478,7 +485,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/component/login/login.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div fxLayout=\"column\" fxLayoutAlign=\"center center\">\n  <mat-form-field>\n    <input matInput placeholder=\"username\">\n  </mat-form-field>\n  <mat-form-field>\n    <input matInput placeholder=\"password\" type=\"password\">\n  </mat-form-field>\n</div>\n<p>\n  <button (click)=\"login()\"  *ngIf=\"!authService.isLoggedIn\">Login</button>\n  <button (click)=\"logout()\" *ngIf=\"authService.isLoggedIn\">Logout</button>\n</p>\n"
+module.exports = "<div fxLayout=\"row\" fxLayoutAlign=\"center center\" class=\"content\">\n\n  <div class=\"form-signin\">\n    <h2 class=\"form-signin-heading\">Please sign in</h2>\n    <label for=\"inputUsername\" class=\"sr-only\">Username</label>\n    <input [(ngModel)]=\"username\" type=\"text\" id=\"inputUsername\" class=\"form-control\" placeholder=\"Username\" required autofocus>\n    <label for=\"inputPassword\" class=\"sr-only\">Password</label>\n    <input [(ngModel)]=\"password\" type=\"password\" id=\"inputPassword\" class=\"form-control\" placeholder=\"Password\" required>\n    <div class=\"checkbox\">\n      <label>\n        <input type=\"checkbox\" value=\"remember-me\"> Remember me\n      </label>\n    </div>\n    <button class=\"btn btn-lg btn-primary btn-block\" (click)=\"login()\">Sign in</button>\n  </div>\n\n</div>"
 
 /***/ }),
 
@@ -506,18 +513,15 @@ var LoginComponent = (function () {
     function LoginComponent(authService, router) {
         this.authService = authService;
         this.router = router;
-        this.setMessage();
+        this.username = null;
+        this.password = null;
     }
     LoginComponent.prototype.ngOnInit = function () {
     };
-    LoginComponent.prototype.setMessage = function () {
-        this.message = 'Logged ' + (this.authService.isLoggedIn ? 'in' : 'out');
-    };
     LoginComponent.prototype.login = function () {
         var _this = this;
-        this.message = 'Trying to log in ...';
-        this.authService.login().subscribe(function (res) {
-            console.log('After login: ');
+        // console.log('username: ' + this.username + ' password: ' + this.password);
+        this.authService.login(this.username, this.password).subscribe(function (res) {
             if (_this.authService.isLoggedIn) {
                 // Get the redirect URL from our auth service
                 // If no redirect has been set, use the default
@@ -525,11 +529,12 @@ var LoginComponent = (function () {
                 // Redirect the user
                 _this.router.navigate([redirect]);
             }
+        }, function (err) {
+            console.log(err);
         });
     };
     LoginComponent.prototype.logout = function () {
         this.authService.logout();
-        this.setMessage();
     };
     return LoginComponent;
 }());
@@ -743,11 +748,12 @@ var AuthService = (function () {
             return body['Authorized'];
         });
     };
-    AuthService.prototype.login = function () {
+    AuthService.prototype.login = function (username, password) {
         var _this = this;
+        // console.log('username: ' + username + ' password: ' + password);
         var data = {
-            'username': 'siki',
-            'password': 's'
+            'username': username,
+            'password': password
         };
         var config = {
             headers: new __WEBPACK_IMPORTED_MODULE_1__angular_common_http__["c" /* HttpHeaders */]({ 'Content-Type': 'application/json' })

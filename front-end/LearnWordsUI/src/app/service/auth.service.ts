@@ -22,10 +22,11 @@ export class AuthService {
     });
   }
 
-  login(): Observable<object> {
+  login(username: string, password: string): Observable<object> {
+    // console.log('username: ' + username + ' password: ' + password);
     const data = {
-      'username': 'siki',
-      'password': 's'
+      'username': username,
+      'password': password
     };
 
     const config = {
