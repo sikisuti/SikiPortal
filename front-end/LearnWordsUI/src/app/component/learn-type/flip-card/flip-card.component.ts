@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { Word } from '../../model/word';
+import { Word } from '../../../model/word';
 import { trigger, state, style, animate, transition, keyframes } from '@angular/core';
+import { TemplateComponent } from '../template.component';
 
 @Component({
   selector: 'app-flip-card',
@@ -25,7 +26,7 @@ import { trigger, state, style, animate, transition, keyframes } from '@angular/
     ])
   ]
 })
-export class FlipCardComponent implements OnInit {
+export class FlipCardComponent implements OnInit, TemplateComponent {
 
   @Input() word: Word;
   @Output() sendResult: EventEmitter<string> = new EventEmitter<string>();

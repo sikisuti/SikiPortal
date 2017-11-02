@@ -147,7 +147,7 @@ AppComponent = __decorate([
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__service_auth_service__ = __webpack_require__("../../../../../src/app/service/auth.service.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__app_routing_module__ = __webpack_require__("../../../../../src/app/app-routing.module.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__app_component__ = __webpack_require__("../../../../../src/app/app.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__component_flip_card_flip_card_component__ = __webpack_require__("../../../../../src/app/component/flip-card/flip-card.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__component_learn_type_flip_card_flip_card_component__ = __webpack_require__("../../../../../src/app/component/learn-type/flip-card/flip-card.component.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__component_learning_learning_component__ = __webpack_require__("../../../../../src/app/component/learning/learning.component.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_14_hammerjs__ = __webpack_require__("../../../../hammerjs/hammer.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_14_hammerjs___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_14_hammerjs__);
@@ -156,12 +156,16 @@ AppComponent = __decorate([
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_16__component_main_menu_main_menu_component__ = __webpack_require__("../../../../../src/app/component/main-menu/main-menu.component.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_17__component_login_login_component__ = __webpack_require__("../../../../../src/app/component/login/login.component.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_18__component_home_home_component__ = __webpack_require__("../../../../../src/app/component/home/home.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_19__component_learn_type_word_directive__ = __webpack_require__("../../../../../src/app/component/learn-type/word.directive.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_20__component_learn_type_type_card_type_card_component__ = __webpack_require__("../../../../../src/app/component/learn-type/type-card/type-card.component.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+
+
 
 
 
@@ -190,11 +194,13 @@ AppModule = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_2__angular_core__["M" /* NgModule */])({
         declarations: [
             __WEBPACK_IMPORTED_MODULE_11__app_component__["a" /* AppComponent */],
-            __WEBPACK_IMPORTED_MODULE_12__component_flip_card_flip_card_component__["a" /* FlipCardComponent */],
+            __WEBPACK_IMPORTED_MODULE_12__component_learn_type_flip_card_flip_card_component__["a" /* FlipCardComponent */],
             __WEBPACK_IMPORTED_MODULE_13__component_learning_learning_component__["a" /* LearningComponent */],
             __WEBPACK_IMPORTED_MODULE_16__component_main_menu_main_menu_component__["a" /* MainMenuComponent */],
             __WEBPACK_IMPORTED_MODULE_17__component_login_login_component__["a" /* LoginComponent */],
-            __WEBPACK_IMPORTED_MODULE_18__component_home_home_component__["a" /* HomeComponent */]
+            __WEBPACK_IMPORTED_MODULE_18__component_home_home_component__["a" /* HomeComponent */],
+            __WEBPACK_IMPORTED_MODULE_19__component_learn_type_word_directive__["a" /* WordDirective */],
+            __WEBPACK_IMPORTED_MODULE_20__component_learn_type_type_card_type_card_component__["a" /* TypeCardComponent */]
         ],
         imports: [
             __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser__["a" /* BrowserModule */],
@@ -207,7 +213,8 @@ AppModule = __decorate([
             __WEBPACK_IMPORTED_MODULE_6__angular_flex_layout__["a" /* FlexLayoutModule */]
         ],
         providers: [__WEBPACK_IMPORTED_MODULE_7__service_word_service__["a" /* WordService */], __WEBPACK_IMPORTED_MODULE_8__service_auth_guard_service__["a" /* AuthGuardService */], __WEBPACK_IMPORTED_MODULE_9__service_auth_service__["a" /* AuthService */]],
-        bootstrap: [__WEBPACK_IMPORTED_MODULE_11__app_component__["a" /* AppComponent */]]
+        bootstrap: [__WEBPACK_IMPORTED_MODULE_11__app_component__["a" /* AppComponent */]],
+        entryComponents: [__WEBPACK_IMPORTED_MODULE_12__component_learn_type_flip_card_flip_card_component__["a" /* FlipCardComponent */], __WEBPACK_IMPORTED_MODULE_20__component_learn_type_type_card_type_card_component__["a" /* TypeCardComponent */]]
     })
 ], AppModule);
 
@@ -215,7 +222,77 @@ AppModule = __decorate([
 
 /***/ }),
 
-/***/ "../../../../../src/app/component/flip-card/flip-card.component.css":
+/***/ "../../../../../src/app/component/home/home.component.css":
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, ".content {\r\n    height: 100%;\r\n}", ""]);
+
+// exports
+
+
+/*** EXPORTS FROM exports-loader ***/
+module.exports = module.exports.toString();
+
+/***/ }),
+
+/***/ "../../../../../src/app/component/home/home.component.html":
+/***/ (function(module, exports) {
+
+module.exports = "<div fxLayout=\"column\" fxLayoutAlign=\"center stretch\" fxLayoutGap=\"10px\" class=\"content\">\n  <div fxLayout=\"row\" fxLayoutAlign=\"center center\">\n  <button mat-raised-button (click)=\"goLearn()\" fxFlex=\"50\">Learn</button>\n</div>\n<div fxLayout=\"row\" fxLayoutAlign=\"center center\">\n  <button mat-raised-button color=\"primary\" (click)=\"goNew()\" fxFlex=\"50\">New</button>\n</div>\n</div>"
+
+/***/ }),
+
+/***/ "../../../../../src/app/component/home/home.component.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return HomeComponent; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_router__ = __webpack_require__("../../../router/@angular/router.es5.js");
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+var HomeComponent = (function () {
+    function HomeComponent(router) {
+        this.router = router;
+    }
+    HomeComponent.prototype.ngOnInit = function () {
+    };
+    HomeComponent.prototype.goLearn = function () {
+        this.router.navigate(['/learn']);
+    };
+    HomeComponent.prototype.goNew = function () {
+    };
+    return HomeComponent;
+}());
+HomeComponent = __decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["o" /* Component */])({
+        selector: 'app-home',
+        template: __webpack_require__("../../../../../src/app/component/home/home.component.html"),
+        styles: [__webpack_require__("../../../../../src/app/component/home/home.component.css")]
+    }),
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__angular_router__["a" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_router__["a" /* Router */]) === "function" && _a || Object])
+], HomeComponent);
+
+var _a;
+//# sourceMappingURL=home.component.js.map
+
+/***/ }),
+
+/***/ "../../../../../src/app/component/learn-type/flip-card/flip-card.component.css":
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-base.js")(false);
@@ -233,14 +310,14 @@ module.exports = module.exports.toString();
 
 /***/ }),
 
-/***/ "../../../../../src/app/component/flip-card/flip-card.component.html":
+/***/ "../../../../../src/app/component/learn-type/flip-card/flip-card.component.html":
 /***/ (function(module, exports) {
 
 module.exports = "<div>\n  <div class=\"flip-card\" \n    (click)=\"onClick()\" \n    (swiperight)=\"onSwipeRight($event)\" \n    [@reviseWord]='reviseWordStarter'\n    (@reviseWord.done)='reviseWordDone($event)'\n    [@newWord]='word?.id'>\n    <span>{{word?.native}}</span>\n  </div>\n</div>\n"
 
 /***/ }),
 
-/***/ "../../../../../src/app/component/flip-card/flip-card.component.ts":
+/***/ "../../../../../src/app/component/learn-type/flip-card/flip-card.component.ts":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -288,8 +365,8 @@ __decorate([
 FlipCardComponent = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["o" /* Component */])({
         selector: 'app-flip-card',
-        template: __webpack_require__("../../../../../src/app/component/flip-card/flip-card.component.html"),
-        styles: [__webpack_require__("../../../../../src/app/component/flip-card/flip-card.component.css")],
+        template: __webpack_require__("../../../../../src/app/component/learn-type/flip-card/flip-card.component.html"),
+        styles: [__webpack_require__("../../../../../src/app/component/learn-type/flip-card/flip-card.component.css")],
         animations: [
             Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_37" /* trigger */])('reviseWord', [
                 Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_36" /* transition */])('* => 1', [
@@ -317,7 +394,7 @@ var _a, _b;
 
 /***/ }),
 
-/***/ "../../../../../src/app/component/home/home.component.css":
+/***/ "../../../../../src/app/component/learn-type/type-card/type-card.component.css":
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-base.js")(false);
@@ -325,7 +402,7 @@ exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-b
 
 
 // module
-exports.push([module.i, ".content {\r\n    height: 100%;\r\n}", ""]);
+exports.push([module.i, ".type-card {\r\n    width:  200px;\r\n    height: 100px;\r\n    background-color: green;\r\n}", ""]);
 
 // exports
 
@@ -335,18 +412,61 @@ module.exports = module.exports.toString();
 
 /***/ }),
 
-/***/ "../../../../../src/app/component/home/home.component.html":
+/***/ "../../../../../src/app/component/learn-type/type-card/type-card.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div fxLayout=\"column\" fxLayoutAlign=\"center stretch\" fxLayoutGap=\"10px\" class=\"content\">\n  <div fxLayout=\"row\" fxLayoutAlign=\"center center\">\n  <button mat-raised-button (click)=\"goLeatn()\" fxFlex=\"50\">Learn</button>\n</div>\n<div fxLayout=\"row\" fxLayoutAlign=\"center center\">\n  <button mat-raised-button color=\"primary\" (click)=\"goNew()\" fxFlex=\"50\">New</button>\n</div>\n</div>"
+module.exports = "<div class=\"type-card\">\n  <span>{{word?.native}}</span>\n</div>"
 
 /***/ }),
 
-/***/ "../../../../../src/app/component/home/home.component.ts":
+/***/ "../../../../../src/app/component/learn-type/type-card/type-card.component.ts":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return HomeComponent; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return TypeCardComponent; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__model_word__ = __webpack_require__("../../../../../src/app/model/word.ts");
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+var TypeCardComponent = (function () {
+    function TypeCardComponent() {
+    }
+    TypeCardComponent.prototype.ngOnInit = function () {
+    };
+    return TypeCardComponent;
+}());
+__decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["F" /* Input */])(),
+    __metadata("design:type", typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__model_word__["a" /* Word */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__model_word__["a" /* Word */]) === "function" && _a || Object)
+], TypeCardComponent.prototype, "word", void 0);
+TypeCardComponent = __decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["o" /* Component */])({
+        selector: 'app-type-card',
+        template: __webpack_require__("../../../../../src/app/component/learn-type/type-card/type-card.component.html"),
+        styles: [__webpack_require__("../../../../../src/app/component/learn-type/type-card/type-card.component.css")]
+    }),
+    __metadata("design:paramtypes", [])
+], TypeCardComponent);
+
+var _a;
+//# sourceMappingURL=type-card.component.js.map
+
+/***/ }),
+
+/***/ "../../../../../src/app/component/learn-type/word.directive.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return WordDirective; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -358,27 +478,21 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 
-var HomeComponent = (function () {
-    function HomeComponent() {
+var WordDirective = (function () {
+    function WordDirective(viewContainerRef) {
+        this.viewContainerRef = viewContainerRef;
     }
-    HomeComponent.prototype.ngOnInit = function () {
-    };
-    HomeComponent.prototype.goLearn = function () {
-    };
-    HomeComponent.prototype.goNew = function () {
-    };
-    return HomeComponent;
+    return WordDirective;
 }());
-HomeComponent = __decorate([
-    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["o" /* Component */])({
-        selector: 'app-home',
-        template: __webpack_require__("../../../../../src/app/component/home/home.component.html"),
-        styles: [__webpack_require__("../../../../../src/app/component/home/home.component.css")]
+WordDirective = __decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["u" /* Directive */])({
+        selector: '[word-host]',
     }),
-    __metadata("design:paramtypes", [])
-], HomeComponent);
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_0__angular_core__["_19" /* ViewContainerRef */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_core__["_19" /* ViewContainerRef */]) === "function" && _a || Object])
+], WordDirective);
 
-//# sourceMappingURL=home.component.js.map
+var _a;
+//# sourceMappingURL=word.directive.js.map
 
 /***/ }),
 
@@ -403,7 +517,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/component/learning/learning.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<ul>\n  <li *ngFor=\"let word of words\">\n    <span>{{word.native}} - {{word.foreign}}</span> \n  </li>\n</ul>\n<div class=\"content\">\n  <app-flip-card \n    [word]=\"words[actIndex]\" \n    (sendResult)=\"onSendResult($event)\">\n  </app-flip-card>\n</div>\n"
+module.exports = "<div>\n  <ng-template word-host></ng-template>\n</div>\n"
 
 /***/ }),
 
@@ -414,6 +528,8 @@ module.exports = "<ul>\n  <li *ngFor=\"let word of words\">\n    <span>{{word.na
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return LearningComponent; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__service_word_service__ = __webpack_require__("../../../../../src/app/service/word.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__learn_type_flip_card_flip_card_component__ = __webpack_require__("../../../../../src/app/component/learn-type/flip-card/flip-card.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__learn_type_word_directive__ = __webpack_require__("../../../../../src/app/component/learn-type/word.directive.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -425,19 +541,37 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 
 
+
+
 var LearningComponent = (function () {
-    function LearningComponent(wordService) {
+    function LearningComponent(wordService, componentFactoryResolver, changeDetectorRef) {
         this.wordService = wordService;
+        this.componentFactoryResolver = componentFactoryResolver;
+        this.changeDetectorRef = changeDetectorRef;
         this.words = [];
     }
     LearningComponent.prototype.ngOnInit = function () {
+    };
+    LearningComponent.prototype.ngAfterViewInit = function () {
         this.getWords();
+    };
+    LearningComponent.prototype.loadComponent = function () {
+        var componentFactory = this.componentFactoryResolver.resolveComponentFactory(__WEBPACK_IMPORTED_MODULE_2__learn_type_flip_card_flip_card_component__["a" /* FlipCardComponent */]);
+        var viewContainerRef = this.wordHost.viewContainerRef;
+        viewContainerRef.clear();
+        var componentRef = viewContainerRef.createComponent(componentFactory);
+        console.log(this.words[0]);
+        componentRef.instance.word = this.words[0];
+        this.changeDetectorRef.detectChanges();
+    };
+    LearningComponent.prototype.ngOnDestroy = function () {
     };
     LearningComponent.prototype.getWords = function () {
         var _this = this;
         this.wordService.getWords().then(function (words) {
             _this.words = words;
             _this.actIndex = 0;
+            _this.loadComponent();
         });
     };
     LearningComponent.prototype.onSendResult = function (message) {
@@ -450,16 +584,20 @@ var LearningComponent = (function () {
     };
     return LearningComponent;
 }());
+__decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_17" /* ViewChild */])(__WEBPACK_IMPORTED_MODULE_3__learn_type_word_directive__["a" /* WordDirective */]),
+    __metadata("design:type", typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_3__learn_type_word_directive__["a" /* WordDirective */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__learn_type_word_directive__["a" /* WordDirective */]) === "function" && _a || Object)
+], LearningComponent.prototype, "wordHost", void 0);
 LearningComponent = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["o" /* Component */])({
         selector: 'app-learning',
         template: __webpack_require__("../../../../../src/app/component/learning/learning.component.html"),
         styles: [__webpack_require__("../../../../../src/app/component/learning/learning.component.css")]
     }),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__service_word_service__["a" /* WordService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__service_word_service__["a" /* WordService */]) === "function" && _a || Object])
+    __metadata("design:paramtypes", [typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_1__service_word_service__["a" /* WordService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__service_word_service__["a" /* WordService */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_0__angular_core__["q" /* ComponentFactoryResolver */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_core__["q" /* ComponentFactoryResolver */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_0__angular_core__["l" /* ChangeDetectorRef */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_core__["l" /* ChangeDetectorRef */]) === "function" && _d || Object])
 ], LearningComponent);
 
-var _a;
+var _a, _b, _c, _d;
 //# sourceMappingURL=learning.component.js.map
 
 /***/ }),
@@ -472,7 +610,7 @@ exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-b
 
 
 // module
-exports.push([module.i, ".content {\r\n    height: 100%;\r\n}\r\n\r\n.form-signin {\r\n    max-width: 330px;\r\n    padding: 15px;\r\n    margin: 0 auto;\r\n}\r\n.form-signin .form-signin-heading,\r\n.form-signin .checkbox {\r\n    margin-bottom: 10px;\r\n}\r\n.form-signin .checkbox {\r\n    font-weight: 400;\r\n}\r\n.form-signin .form-control {\r\n    position: relative;\r\n    box-sizing: border-box;\r\n    height: auto;\r\n    padding: 10px;\r\n    font-size: 16px;\r\n}\r\n.form-signin .form-control:focus {\r\n    z-index: 2;\r\n}\r\n.form-signin input[type=\"email\"] {\r\n    margin-bottom: -1px;\r\n    border-bottom-right-radius: 0;\r\n    border-bottom-left-radius: 0;\r\n}\r\n.form-signin input[type=\"password\"] {\r\n    margin-bottom: 10px;\r\n    border-top-left-radius: 0;\r\n    border-top-right-radius: 0;\r\n}", ""]);
+exports.push([module.i, ".content {\r\n    height: 100%;\r\n}\r\n\r\n.form-signin {\r\n    max-width: 330px;\r\n    padding: 15px;\r\n    margin: 0 auto;\r\n    color: #2125E5;\r\n}\r\n.form-signin .form-signin-heading,\r\n.form-signin .checkbox {\r\n    margin-bottom: 10px;\r\n}\r\n.form-signin .checkbox {\r\n    font-weight: 400;\r\n}\r\n.form-signin .form-control {\r\n    position: relative;\r\n    box-sizing: border-box;\r\n    height: auto;\r\n    padding: 10px;\r\n    font-size: 16px;\r\n}\r\n.form-signin .form-control:focus {\r\n    z-index: 2;\r\n}\r\n.form-signin input[type=\"email\"] {\r\n    margin-bottom: -1px;\r\n    border-bottom-right-radius: 0;\r\n    border-bottom-left-radius: 0;\r\n}\r\n.form-signin input[type=\"password\"] {\r\n    margin-bottom: 10px;\r\n    border-top-left-radius: 0;\r\n    border-top-right-radius: 0;\r\n}", ""]);
 
 // exports
 

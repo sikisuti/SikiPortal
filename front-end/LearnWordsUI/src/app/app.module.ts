@@ -12,13 +12,15 @@ import { AuthService } from './service/auth.service';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { FlipCardComponent } from './component/flip-card/flip-card.component';
+import { FlipCardComponent } from './component/learn-type/flip-card/flip-card.component';
 import { LearningComponent } from './component/learning/learning.component';
 import 'hammerjs';
 import 'hammer-timejs';
 import { MainMenuComponent } from './component/main-menu/main-menu.component';
 import { LoginComponent } from './component/login/login.component';
 import { HomeComponent } from './component/home/home.component';
+import { WordDirective } from './component/learn-type/word.directive';
+import { TypeCardComponent } from './component/learn-type/type-card/type-card.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +29,9 @@ import { HomeComponent } from './component/home/home.component';
     LearningComponent,
     MainMenuComponent,
     LoginComponent,
-    HomeComponent
+    HomeComponent,
+    WordDirective,
+    TypeCardComponent
   ],
   imports: [
     BrowserModule,
@@ -40,6 +44,7 @@ import { HomeComponent } from './component/home/home.component';
     FlexLayoutModule
   ],
   providers: [WordService, AuthGuardService, AuthService],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [FlipCardComponent, TypeCardComponent]
 })
 export class AppModule { }
