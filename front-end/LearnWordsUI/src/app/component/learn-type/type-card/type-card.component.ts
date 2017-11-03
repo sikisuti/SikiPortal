@@ -1,6 +1,7 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter } from '@angular/core';
 import { TemplateComponent } from '../template.component';
 import { Word } from '../../../model/word';
+import { Subject } from 'rxjs/Subject';
 
 @Component({
   selector: 'app-type-card',
@@ -10,6 +11,7 @@ import { Word } from '../../../model/word';
 export class TypeCardComponent implements OnInit, TemplateComponent {
 
   @Input() word: Word;
+  wordFinished: Subject<string>;
 
   constructor() { }
 

@@ -1,5 +1,12 @@
+.content {
+    height: 100vh;
+}
+
 .flip-card {
-    width:  100px;
-    height: 100px;
-    background-color: yellow;
+    width: 80%;
+    height: 150px;
+    box-shadow: 5px 5px 10px #888888;
+    background-color: lightgray;
+    font-weight: bold;
+    font-size: 20px;
 }

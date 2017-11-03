@@ -14,13 +14,20 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { FlipCardComponent } from './component/learn-type/flip-card/flip-card.component';
 import { LearningComponent } from './component/learning/learning.component';
-import 'hammerjs';
+import * as Hammer from 'hammerjs';
 import 'hammer-timejs';
+import { HammerGestureConfig, HAMMER_GESTURE_CONFIG } from '@angular/platform-browser';
 import { MainMenuComponent } from './component/main-menu/main-menu.component';
 import { LoginComponent } from './component/login/login.component';
 import { HomeComponent } from './component/home/home.component';
 import { WordDirective } from './component/learn-type/word.directive';
 import { TypeCardComponent } from './component/learn-type/type-card/type-card.component';
+
+export class HammerConfig extends HammerGestureConfig {
+  overrides = <any>{
+    'swipe': { direction: Hammer.DIRECTION_ALL }
+  };
+}
 
 @NgModule({
   declarations: [
@@ -43,7 +50,15 @@ import { TypeCardComponent } from './component/learn-type/type-card/type-card.co
     HttpClientModule,
     FlexLayoutModule
   ],
-  providers: [WordService, AuthGuardService, AuthService],
+  providers: [
+    WordService,
+    AuthGuardService,
+    AuthService,
+    {
+      provide: HAMMER_GESTURE_CONFIG,
+      useClass: HammerConfig
+    }
+  ],
   bootstrap: [AppComponent],
   entryComponents: [FlipCardComponent, TypeCardComponent]
 })

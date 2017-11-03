@@ -35,9 +35,9 @@ export class LearningComponent implements OnInit, AfterViewInit, OnDestroy {
       viewContainerRef.clear();
 
       const componentRef = viewContainerRef.createComponent(componentFactory);
-      console.log(this.words[0]);
-      (<TemplateComponent>componentRef.instance).word = this.words[0];
+      (<TemplateComponent>componentRef.instance).word = this.words[this.actIndex];
       this.changeDetectorRef.detectChanges();
+      (<TemplateComponent>componentRef.instance).wordFinished.subscribe(msg => this.onSendResult(msg));
     }
 
   ngOnDestroy() {
@@ -52,9 +52,15 @@ export class LearningComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onSendResult(message: string): void {
-    if (message === 'next') {
-      this.actIndex = (this.actIndex + 1) % this.words.length;
-    } else {
+    console.log(message);
+    switch (message) {
+      case 'revise':
+        this.actIndex = (this.actIndex + 1) % this.words.length;
+        this.loadComponent();
+        break;
+      case 'skip':
+        break;
+      default:
       console.log(message);
     }
   }

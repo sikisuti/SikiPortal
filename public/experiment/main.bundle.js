@@ -134,6 +134,7 @@ AppComponent = __decorate([
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+/* unused harmony export HammerConfig */
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AppModule; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser__ = __webpack_require__("../../../platform-browser/@angular/platform-browser.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_platform_browser_animations__ = __webpack_require__("../../../platform-browser/@angular/platform-browser/animations.es5.js");
@@ -158,6 +159,16 @@ AppComponent = __decorate([
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_18__component_home_home_component__ = __webpack_require__("../../../../../src/app/component/home/home.component.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_19__component_learn_type_word_directive__ = __webpack_require__("../../../../../src/app/component/learn-type/word.directive.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_20__component_learn_type_type_card_type_card_component__ = __webpack_require__("../../../../../src/app/component/learn-type/type-card/type-card.component.ts");
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -184,6 +195,19 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 
 
 
+
+
+var HammerConfig = (function (_super) {
+    __extends(HammerConfig, _super);
+    function HammerConfig() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.overrides = {
+            'swipe': { direction: __WEBPACK_IMPORTED_MODULE_14_hammerjs__["DIRECTION_ALL"] }
+        };
+        return _this;
+    }
+    return HammerConfig;
+}(__WEBPACK_IMPORTED_MODULE_0__angular_platform_browser__["e" /* HammerGestureConfig */]));
 
 var AppModule = (function () {
     function AppModule() {
@@ -212,7 +236,15 @@ AppModule = __decorate([
             __WEBPACK_IMPORTED_MODULE_4__angular_common_http__["b" /* HttpClientModule */],
             __WEBPACK_IMPORTED_MODULE_6__angular_flex_layout__["a" /* FlexLayoutModule */]
         ],
-        providers: [__WEBPACK_IMPORTED_MODULE_7__service_word_service__["a" /* WordService */], __WEBPACK_IMPORTED_MODULE_8__service_auth_guard_service__["a" /* AuthGuardService */], __WEBPACK_IMPORTED_MODULE_9__service_auth_service__["a" /* AuthService */]],
+        providers: [
+            __WEBPACK_IMPORTED_MODULE_7__service_word_service__["a" /* WordService */],
+            __WEBPACK_IMPORTED_MODULE_8__service_auth_guard_service__["a" /* AuthGuardService */],
+            __WEBPACK_IMPORTED_MODULE_9__service_auth_service__["a" /* AuthService */],
+            {
+                provide: __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser__["d" /* HAMMER_GESTURE_CONFIG */],
+                useClass: HammerConfig
+            }
+        ],
         bootstrap: [__WEBPACK_IMPORTED_MODULE_11__app_component__["a" /* AppComponent */]],
         entryComponents: [__WEBPACK_IMPORTED_MODULE_12__component_learn_type_flip_card_flip_card_component__["a" /* FlipCardComponent */], __WEBPACK_IMPORTED_MODULE_20__component_learn_type_type_card_type_card_component__["a" /* TypeCardComponent */]]
     })
@@ -300,7 +332,7 @@ exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-b
 
 
 // module
-exports.push([module.i, ".flip-card {\r\n    width:  100px;\r\n    height: 100px;\r\n    background-color: yellow;\r\n}", ""]);
+exports.push([module.i, ".content {\r\n    height: 100vh;\r\n}\r\n\r\n.flip-card {\r\n    width: 80%;\r\n    height: 150px;\r\n    box-shadow: 5px 5px 10px #888888;\r\n    background-color: lightgray;\r\n    font-weight: bold;\r\n    font-size: 20px;\r\n}", ""]);
 
 // exports
 
@@ -313,7 +345,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/component/learn-type/flip-card/flip-card.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div>\n  <div class=\"flip-card\" \n    (click)=\"onClick()\" \n    (swiperight)=\"onSwipeRight($event)\" \n    [@reviseWord]='reviseWordStarter'\n    (@reviseWord.done)='reviseWordDone($event)'\n    [@newWord]='word?.id'>\n    <span>{{word?.native}}</span>\n  </div>\n</div>\n"
+module.exports = "<div fxLayout=\"column\" fxLayoutAlign=\"center center\" class=\"content\">\n  <div class=\"flip-card\" \n    (click)=\"onClick()\" (swiperight)=\"onSwipeRight($event)\" (swipedown)=\"onSwipeDown($event)\"\n    [@reviseWord]='reviseWordStarter' (@reviseWord.done)='reviseWordDone($event)' [@newWord]='word?.id' \n    fxLayout=\"row\" fxLayoutAlign=\"center center\">\n      <span>{{word?.native}}</span>\n  </div>\n</div>"
 
 /***/ }),
 
@@ -324,6 +356,8 @@ module.exports = "<div>\n  <div class=\"flip-card\" \n    (click)=\"onClick()\" 
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return FlipCardComponent; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__model_word__ = __webpack_require__("../../../../../src/app/model/word.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_Subject__ = __webpack_require__("../../../../rxjs/Subject.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_Subject___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_rxjs_Subject__);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -336,21 +370,27 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
+
 var FlipCardComponent = (function () {
     function FlipCardComponent() {
-        this.sendResult = new __WEBPACK_IMPORTED_MODULE_0__angular_core__["x" /* EventEmitter */]();
-        this.reviseWordStarter = 0;
+        this.wordFinished = new __WEBPACK_IMPORTED_MODULE_2_rxjs_Subject__["Subject"]();
+        this.reviseWordStarter = 'init';
     }
     FlipCardComponent.prototype.ngOnInit = function () {
     };
     FlipCardComponent.prototype.onClick = function () {
-        this.sendResult.emit('Button pushed');
     };
     FlipCardComponent.prototype.onSwipeRight = function (event) {
-        this.reviseWordStarter = 1;
+        this.reviseWordStarter = 'revise';
+    };
+    FlipCardComponent.prototype.onSwipeDown = function (event) {
+        console.log('Down');
+        this.reviseWordStarter = 'skip';
     };
     FlipCardComponent.prototype.reviseWordDone = function (event) {
-        this.sendResult.emit('next');
+        if (event['toState'] !== 'init') {
+            this.wordFinished.next(event['toState']);
+        }
     };
     return FlipCardComponent;
 }());
@@ -358,10 +398,6 @@ __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["F" /* Input */])(),
     __metadata("design:type", typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__model_word__["a" /* Word */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__model_word__["a" /* Word */]) === "function" && _a || Object)
 ], FlipCardComponent.prototype, "word", void 0);
-__decorate([
-    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["T" /* Output */])(),
-    __metadata("design:type", typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_0__angular_core__["x" /* EventEmitter */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_core__["x" /* EventEmitter */]) === "function" && _b || Object)
-], FlipCardComponent.prototype, "sendResult", void 0);
 FlipCardComponent = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["o" /* Component */])({
         selector: 'app-flip-card',
@@ -369,17 +405,14 @@ FlipCardComponent = __decorate([
         styles: [__webpack_require__("../../../../../src/app/component/learn-type/flip-card/flip-card.component.css")],
         animations: [
             Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_37" /* trigger */])('reviseWord', [
-                Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_36" /* transition */])('* => 1', [
-                    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_22" /* animate */])(600, Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_29" /* keyframes */])([
-                        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_35" /* style */])({ opacity: 1, transform: 'translateX(0)', offset: 0 }),
-                        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_35" /* style */])({ opacity: 0, transform: 'translateX(200px)', offset: 1 })
-                    ]))
-                ])
+                Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_34" /* state */])('init', Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_35" /* style */])({ opacity: 1, transform: 'translateX(0)' })),
+                Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_34" /* state */])('revise', Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_35" /* style */])({ opacity: 0, transform: 'translateX(500px)' })),
+                Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_36" /* transition */])('init => revise', Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_22" /* animate */])('300ms'))
             ]),
             Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_37" /* trigger */])('newWord', [
                 Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_36" /* transition */])('* => *', [
-                    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_22" /* animate */])(600, Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_29" /* keyframes */])([
-                        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_35" /* style */])({ opacity: 0, transform: 'translateX(-200px)', offset: 0 }),
+                    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_22" /* animate */])(300, Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_29" /* keyframes */])([
+                        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_35" /* style */])({ opacity: 0, transform: 'translateX(-400px)', offset: 0 }),
                         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_35" /* style */])({ opacity: 1, transform: 'translateX(0)', offset: 1 })
                     ]))
                 ])
@@ -389,7 +422,7 @@ FlipCardComponent = __decorate([
     __metadata("design:paramtypes", [])
 ], FlipCardComponent);
 
-var _a, _b;
+var _a;
 //# sourceMappingURL=flip-card.component.js.map
 
 /***/ }),
@@ -504,7 +537,7 @@ exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-b
 
 
 // module
-exports.push([module.i, ".content {\r\n    width: 80%;\r\n    height: 300px;\r\n    margin: auto auto;\r\n    background-color: gray;\r\n}", ""]);
+exports.push([module.i, ".header {\r\n    height: 8vh;\r\n}\r\n\r\n.sub-content {\r\n    position: absolute;\r\n    height: 100vh;\r\n    width: 100vW;\r\n}", ""]);
 
 // exports
 
@@ -517,7 +550,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/component/learning/learning.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div>\n  <ng-template word-host></ng-template>\n</div>\n"
+module.exports = "<div fxLayout=\"column\">\n  <div class=\"header\">\n    <span>abc</span>\n  </div>\n  <div class=\"sub-content\">\n    <ng-template word-host></ng-template>\n  </div>\n</div>"
 
 /***/ }),
 
@@ -556,13 +589,14 @@ var LearningComponent = (function () {
         this.getWords();
     };
     LearningComponent.prototype.loadComponent = function () {
+        var _this = this;
         var componentFactory = this.componentFactoryResolver.resolveComponentFactory(__WEBPACK_IMPORTED_MODULE_2__learn_type_flip_card_flip_card_component__["a" /* FlipCardComponent */]);
         var viewContainerRef = this.wordHost.viewContainerRef;
         viewContainerRef.clear();
         var componentRef = viewContainerRef.createComponent(componentFactory);
-        console.log(this.words[0]);
-        componentRef.instance.word = this.words[0];
+        componentRef.instance.word = this.words[this.actIndex];
         this.changeDetectorRef.detectChanges();
+        componentRef.instance.wordFinished.subscribe(function (msg) { return _this.onSendResult(msg); });
     };
     LearningComponent.prototype.ngOnDestroy = function () {
     };
@@ -575,11 +609,16 @@ var LearningComponent = (function () {
         });
     };
     LearningComponent.prototype.onSendResult = function (message) {
-        if (message === 'next') {
-            this.actIndex = (this.actIndex + 1) % this.words.length;
-        }
-        else {
-            console.log(message);
+        console.log(message);
+        switch (message) {
+            case 'revise':
+                this.actIndex = (this.actIndex + 1) % this.words.length;
+                this.loadComponent();
+                break;
+            case 'skip':
+                break;
+            default:
+                console.log(message);
         }
     };
     return LearningComponent;

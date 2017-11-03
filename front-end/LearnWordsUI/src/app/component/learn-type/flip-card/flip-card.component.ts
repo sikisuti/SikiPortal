@@ -2,6 +2,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Word } from '../../../model/word';
 import { trigger, state, style, animate, transition, keyframes } from '@angular/core';
 import { TemplateComponent } from '../template.component';
+import { Subject } from 'rxjs/Subject';
 
 @Component({
   selector: 'app-flip-card',
@@ -9,17 +10,14 @@ import { TemplateComponent } from '../template.component';
   styleUrls: ['./flip-card.component.css'],
   animations: [
     trigger('reviseWord', [
-      transition('* => 1', [
-        animate(600, keyframes([
-            style({opacity: 1, transform: 'translateX(0)', offset: 0}),
-            style({opacity: 0, transform: 'translateX(200px)', offset: 1})
-        ]))
-      ])
+      state('init', style({opacity: 1, transform: 'translateX(0)'})),
+      state('revise', style({opacity: 0, transform: 'translateX(500px)'})),
+      transition('init => revise', animate('300ms'))
     ]),
     trigger('newWord', [
       transition('* => *', [
-        animate(600, keyframes([
-            style({opacity: 0, transform: 'translateX(-200px)', offset: 0}),
+        animate(300, keyframes([
+            style({opacity: 0, transform: 'translateX(-400px)', offset: 0}),
             style({opacity: 1, transform: 'translateX(0)', offset: 1})
         ]))
       ])
@@ -29,9 +27,9 @@ import { TemplateComponent } from '../template.component';
 export class FlipCardComponent implements OnInit, TemplateComponent {
 
   @Input() word: Word;
-  @Output() sendResult: EventEmitter<string> = new EventEmitter<string>();
+  wordFinished: Subject<string> = new Subject();
 
-  reviseWordStarter = 0;
+  reviseWordStarter = 'init';
 
   constructor() { }
 
@@ -39,14 +37,20 @@ export class FlipCardComponent implements OnInit, TemplateComponent {
   }
 
   onClick() {
-    this.sendResult.emit('Button pushed');
   }
 
   onSwipeRight(event: any): void {
-    this.reviseWordStarter = 1;
+    this.reviseWordStarter = 'revise';
+  }
+
+  onSwipeDown(event: any): void {
+    console.log('Down');
+    this.reviseWordStarter = 'skip';
   }
 
   reviseWordDone(event: Event) {
-    this.sendResult.emit('next');
+    if (event['toState'] !== 'init') {
+      this.wordFinished.next(event['toState']);
+    }
   }
 }
