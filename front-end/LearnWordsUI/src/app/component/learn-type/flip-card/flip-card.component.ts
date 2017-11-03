@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, HostListener } from '@angular/core';
 import { Word } from '../../../model/word';
 import { trigger, state, style, animate, transition, keyframes } from '@angular/core';
 import { TemplateComponent } from '../template.component';
@@ -11,8 +11,13 @@ import { Subject } from 'rxjs/Subject';
   animations: [
     trigger('reviseWord', [
       state('init', style({opacity: 1, transform: 'translateX(0)'})),
-      state('revise', style({opacity: 0, transform: 'translateX(500px)'})),
+      state('revise', style({opacity: 0, transform: 'translateX(400px)'})),
       transition('init => revise', animate('300ms'))
+    ]),
+    trigger('skipWord', [
+      state('init', style({opacity: 1, transform: 'translateY(0)'})),
+      state('skip', style({opacity: 0, transform: 'translateY(400px)'})),
+      transition('init => skip', animate('300ms'))
     ]),
     trigger('newWord', [
       transition('* => *', [
@@ -30,6 +35,7 @@ export class FlipCardComponent implements OnInit, TemplateComponent {
   wordFinished: Subject<string> = new Subject();
 
   reviseWordStarter = 'init';
+  skipWordStarter = 'init';
 
   constructor() { }
 
@@ -39,18 +45,23 @@ export class FlipCardComponent implements OnInit, TemplateComponent {
   onClick() {
   }
 
+  @HostListener('window:keydown.arrowright', ['$event'])
   onSwipeRight(event: any): void {
     this.reviseWordStarter = 'revise';
   }
 
+  @HostListener('window:keydown.arrowdown', ['$event'])
   onSwipeDown(event: any): void {
-    console.log('Down');
-    this.reviseWordStarter = 'skip';
+    this.skipWordStarter = 'skip';
   }
 
   reviseWordDone(event: Event) {
     if (event['toState'] !== 'init') {
       this.wordFinished.next(event['toState']);
     }
+  }
+
+  handleKeyboardEvent(event: KeyboardEvent) {
+    this.onSwipeRight(event);
   }
 }

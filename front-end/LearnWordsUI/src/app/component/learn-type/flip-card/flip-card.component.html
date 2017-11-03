@@ -1,7 +1,10 @@
 <div fxLayout="column" fxLayoutAlign="center center" class="content">
   <div class="flip-card" 
-    (click)="onClick()" (swiperight)="onSwipeRight($event)" (swipedown)="onSwipeDown($event)"
-    [@reviseWord]='reviseWordStarter' (@reviseWord.done)='reviseWordDone($event)' [@newWord]='word?.id' 
+    (click)="onClick()" (swiperight)="onSwipeRight($event)" (swipedown)="onSwipeDown($event)" 
+    (keydown.arrowright)="onSwipeRight($event)" (keydown.arrowdown)="onSwipeDown($event)"
+    [@reviseWord]='reviseWordStarter' (@reviseWord.done)='reviseWordDone($event)' 
+    [@skipWord]='skipWordStarter' (@skipWord.done)='reviseWordDone($event)'
+    [@newWord]='word?.id' 
     fxLayout="row" fxLayoutAlign="center center">
       <span>{{word?.native}}</span>
   </div>

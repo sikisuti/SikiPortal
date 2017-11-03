@@ -24,11 +24,10 @@ export class LearningComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit() {
-    this.getWords();
+    this.startSession();
   }
 
     loadComponent() {
-
       const componentFactory = this.componentFactoryResolver.resolveComponentFactory(FlipCardComponent);
 
       const viewContainerRef = this.wordHost.viewContainerRef;
@@ -43,25 +42,37 @@ export class LearningComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnDestroy() {
   }
 
-  getWords(): void {
-    this.wordService.getWords().then(words => {
-      this.words = words;
-      this.actIndex = 0;
-      this.loadComponent();
+  startSession(): void {
+    this.wordService.startSession().then(x => {
+      this.getWords();
     });
   }
 
+  getWords(): void {
+    console.log('getWords()');
+    this.words = this.wordService.getSet();
+    this.actIndex = 0;
+    this.loadComponent();
+  }
+
   onSendResult(message: string): void {
-    console.log(message);
     switch (message) {
       case 'revise':
         this.actIndex = (this.actIndex + 1) % this.words.length;
         this.loadComponent();
         break;
       case 'skip':
+        this.words.splice(this.actIndex, 1);
+        console.log('length: ' + this.words.length);
+        if (this.words.length === 0) {
+          this.getWords();
+        } else {
+          this.actIndex = this.actIndex % this.words.length;
+          this.loadComponent();
+        }
         break;
       default:
-      console.log(message);
+        console.log(message);
     }
   }
 }

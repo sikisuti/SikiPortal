@@ -345,7 +345,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/component/learn-type/flip-card/flip-card.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div fxLayout=\"column\" fxLayoutAlign=\"center center\" class=\"content\">\n  <div class=\"flip-card\" \n    (click)=\"onClick()\" (swiperight)=\"onSwipeRight($event)\" (swipedown)=\"onSwipeDown($event)\"\n    [@reviseWord]='reviseWordStarter' (@reviseWord.done)='reviseWordDone($event)' [@newWord]='word?.id' \n    fxLayout=\"row\" fxLayoutAlign=\"center center\">\n      <span>{{word?.native}}</span>\n  </div>\n</div>"
+module.exports = "<div fxLayout=\"column\" fxLayoutAlign=\"center center\" class=\"content\">\n  <div class=\"flip-card\" \n    (click)=\"onClick()\" (swiperight)=\"onSwipeRight($event)\" (swipedown)=\"onSwipeDown($event)\" \n    (keydown.arrowright)=\"onSwipeRight($event)\" (keydown.arrowdown)=\"onSwipeDown($event)\"\n    [@reviseWord]='reviseWordStarter' (@reviseWord.done)='reviseWordDone($event)' \n    [@skipWord]='skipWordStarter' (@skipWord.done)='reviseWordDone($event)'\n    [@newWord]='word?.id' \n    fxLayout=\"row\" fxLayoutAlign=\"center center\">\n      <span>{{word?.native}}</span>\n  </div>\n</div>"
 
 /***/ }),
 
@@ -375,6 +375,7 @@ var FlipCardComponent = (function () {
     function FlipCardComponent() {
         this.wordFinished = new __WEBPACK_IMPORTED_MODULE_2_rxjs_Subject__["Subject"]();
         this.reviseWordStarter = 'init';
+        this.skipWordStarter = 'init';
     }
     FlipCardComponent.prototype.ngOnInit = function () {
     };
@@ -384,13 +385,15 @@ var FlipCardComponent = (function () {
         this.reviseWordStarter = 'revise';
     };
     FlipCardComponent.prototype.onSwipeDown = function (event) {
-        console.log('Down');
-        this.reviseWordStarter = 'skip';
+        this.skipWordStarter = 'skip';
     };
     FlipCardComponent.prototype.reviseWordDone = function (event) {
         if (event['toState'] !== 'init') {
             this.wordFinished.next(event['toState']);
         }
+    };
+    FlipCardComponent.prototype.handleKeyboardEvent = function (event) {
+        this.onSwipeRight(event);
     };
     return FlipCardComponent;
 }());
@@ -398,6 +401,18 @@ __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["F" /* Input */])(),
     __metadata("design:type", typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__model_word__["a" /* Word */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__model_word__["a" /* Word */]) === "function" && _a || Object)
 ], FlipCardComponent.prototype, "word", void 0);
+__decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["A" /* HostListener */])('window:keydown.arrowright', ['$event']),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", void 0)
+], FlipCardComponent.prototype, "onSwipeRight", null);
+__decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["A" /* HostListener */])('window:keydown.arrowdown', ['$event']),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", void 0)
+], FlipCardComponent.prototype, "onSwipeDown", null);
 FlipCardComponent = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["o" /* Component */])({
         selector: 'app-flip-card',
@@ -406,8 +421,13 @@ FlipCardComponent = __decorate([
         animations: [
             Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_37" /* trigger */])('reviseWord', [
                 Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_34" /* state */])('init', Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_35" /* style */])({ opacity: 1, transform: 'translateX(0)' })),
-                Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_34" /* state */])('revise', Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_35" /* style */])({ opacity: 0, transform: 'translateX(500px)' })),
+                Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_34" /* state */])('revise', Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_35" /* style */])({ opacity: 0, transform: 'translateX(400px)' })),
                 Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_36" /* transition */])('init => revise', Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_22" /* animate */])('300ms'))
+            ]),
+            Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_37" /* trigger */])('skipWord', [
+                Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_34" /* state */])('init', Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_35" /* style */])({ opacity: 1, transform: 'translateY(0)' })),
+                Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_34" /* state */])('skip', Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_35" /* style */])({ opacity: 0, transform: 'translateY(400px)' })),
+                Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_36" /* transition */])('init => skip', Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_22" /* animate */])('300ms'))
             ]),
             Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_37" /* trigger */])('newWord', [
                 Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_36" /* transition */])('* => *', [
@@ -586,7 +606,7 @@ var LearningComponent = (function () {
     LearningComponent.prototype.ngOnInit = function () {
     };
     LearningComponent.prototype.ngAfterViewInit = function () {
-        this.getWords();
+        this.startSession();
     };
     LearningComponent.prototype.loadComponent = function () {
         var _this = this;
@@ -600,22 +620,34 @@ var LearningComponent = (function () {
     };
     LearningComponent.prototype.ngOnDestroy = function () {
     };
-    LearningComponent.prototype.getWords = function () {
+    LearningComponent.prototype.startSession = function () {
         var _this = this;
-        this.wordService.getWords().then(function (words) {
-            _this.words = words;
-            _this.actIndex = 0;
-            _this.loadComponent();
+        this.wordService.startSession().then(function (x) {
+            _this.getWords();
         });
     };
+    LearningComponent.prototype.getWords = function () {
+        console.log('getWords()');
+        this.words = this.wordService.getSet();
+        this.actIndex = 0;
+        this.loadComponent();
+    };
     LearningComponent.prototype.onSendResult = function (message) {
-        console.log(message);
         switch (message) {
             case 'revise':
                 this.actIndex = (this.actIndex + 1) % this.words.length;
                 this.loadComponent();
                 break;
             case 'skip':
+                this.words.splice(this.actIndex, 1);
+                console.log('length: ' + this.words.length);
+                if (this.words.length === 0) {
+                    this.getWords();
+                }
+                else {
+                    this.actIndex = this.actIndex % this.words.length;
+                    this.loadComponent();
+                }
                 break;
             default:
                 console.log(message);
@@ -974,9 +1006,33 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 var WordService = (function () {
     function WordService() {
+        this.turn = 0;
     }
-    WordService.prototype.getWords = function () {
-        return Promise.resolve(__WEBPACK_IMPORTED_MODULE_1__mock_mock_words__["a" /* WORDS */]);
+    WordService.prototype.startSession = function () {
+        var _this = this;
+        return new Promise(function (resolve) {
+            setTimeout(function () {
+                _this.words = __WEBPACK_IMPORTED_MODULE_1__mock_mock_words__["a" /* WORDS */];
+                resolve();
+            }, 2000);
+        });
+    };
+    WordService.prototype.getSet = function () {
+        return this.shuffle(this.words.slice());
+    };
+    WordService.prototype.shuffle = function (array) {
+        var currentIndex = array.length, temporaryValue, randomIndex;
+        // While there remain elements to shuffle...
+        while (0 !== currentIndex) {
+            // Pick a remaining element...
+            randomIndex = Math.floor(Math.random() * currentIndex);
+            currentIndex -= 1;
+            // And swap it with the current element.
+            temporaryValue = array[currentIndex];
+            array[currentIndex] = array[randomIndex];
+            array[randomIndex] = temporaryValue;
+        }
+        return array;
     };
     return WordService;
 }());
