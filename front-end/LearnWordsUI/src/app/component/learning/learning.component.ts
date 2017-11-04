@@ -63,7 +63,6 @@ export class LearningComponent implements OnInit, AfterViewInit, OnDestroy {
         break;
       case 'skip':
         this.words.splice(this.actIndex, 1);
-        console.log('length: ' + this.words.length);
         if (this.words.length === 0) {
           this.getWords();
         } else {

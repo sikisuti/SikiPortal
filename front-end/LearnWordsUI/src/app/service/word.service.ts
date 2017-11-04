@@ -1,12 +1,14 @@
 import { Injectable } from '@angular/core';
 import { Word } from '../model/word';
 import { WORDS } from '../mock/mock-words';
+import { SENTENCES } from '../mock/mock-sentences';
 
 @Injectable()
 export class WordService {
 
   private words: Word[];
-  private turn = 0;
+  private sentences: Word[];
+  private round;
 
   constructor() { }
 
@@ -14,13 +16,40 @@ export class WordService {
     return new Promise(resolve => {
       setTimeout(() => {
         this.words = WORDS;
+        this.sentences = SENTENCES;
+        this.sentences.forEach(sentence => { sentence['side'] = 0; });
+        this.round = 0;
         resolve();
       }, 2000);
     });
   }
 
   getSet(): Word[] {
-    return this.shuffle(this.words.slice());
+    this.round += 1;
+    if (this.round === 11) {
+//      sendData();
+    }
+
+    const tempList = this.shuffle(this.words.slice());
+    if (this.round < 4) {
+      tempList.forEach(word => { word['side'] = 0; });
+      tempList.push(this.sentences[(this.round - 1) % this.sentences.length]);
+    }	else if (this.round < 7) {
+      tempList.forEach(word => { word['side'] = 1; });
+      tempList.push(this.sentences[(this.round - 1) % this.sentences.length]);
+    }	else {
+      tempList.forEach(word => { word['side'] = Math.round(Math.random()); });
+      tempList.push(this.sentences[(this.round - 1) % this.sentences.length]);
+      this.round += 1;
+      for (let i = 0; i < this.words.length; i++) {
+        tempList[i + this.words.length + 1] = Object.assign({}, tempList[i]);
+        tempList[i + this.words.length + 1]['side'] = Math.abs(tempList[i]['side'] - 1);
+      }
+      tempList.push(this.sentences[(this.round - 1) % this.sentences.length]);
+    }
+    console.log('round: ' + this.round);
+    console.log(JSON.stringify(tempList));
+    return tempList;
   }
 
   private shuffle(array: Word[]): Word[] {

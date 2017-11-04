@@ -11,18 +11,18 @@ import { Subject } from 'rxjs/Subject';
   animations: [
     trigger('reviseWord', [
       state('init', style({opacity: 1, transform: 'translateX(0)'})),
-      state('revise', style({opacity: 0, transform: 'translateX(400px)'})),
-      transition('init => revise', animate('300ms'))
+      state('revise', style({opacity: 0, transform: 'translateX(300px)'})),
+      transition('init => revise', animate('200ms'))
     ]),
     trigger('skipWord', [
       state('init', style({opacity: 1, transform: 'translateY(0)'})),
-      state('skip', style({opacity: 0, transform: 'translateY(400px)'})),
-      transition('init => skip', animate('300ms'))
+      state('skip', style({opacity: 0, transform: 'translateY(300px)'})),
+      transition('init => skip', animate('200ms'))
     ]),
     trigger('newWord', [
       transition('* => *', [
-        animate(300, keyframes([
-            style({opacity: 0, transform: 'translateX(-400px)', offset: 0}),
+        animate(200, keyframes([
+            style({opacity: 0, transform: 'translateX(-300px)', offset: 0}),
             style({opacity: 1, transform: 'translateX(0)', offset: 1})
         ]))
       ])

@@ -421,18 +421,18 @@ FlipCardComponent = __decorate([
         animations: [
             Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_37" /* trigger */])('reviseWord', [
                 Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_34" /* state */])('init', Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_35" /* style */])({ opacity: 1, transform: 'translateX(0)' })),
-                Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_34" /* state */])('revise', Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_35" /* style */])({ opacity: 0, transform: 'translateX(400px)' })),
-                Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_36" /* transition */])('init => revise', Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_22" /* animate */])('300ms'))
+                Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_34" /* state */])('revise', Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_35" /* style */])({ opacity: 0, transform: 'translateX(300px)' })),
+                Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_36" /* transition */])('init => revise', Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_22" /* animate */])('200ms'))
             ]),
             Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_37" /* trigger */])('skipWord', [
                 Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_34" /* state */])('init', Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_35" /* style */])({ opacity: 1, transform: 'translateY(0)' })),
-                Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_34" /* state */])('skip', Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_35" /* style */])({ opacity: 0, transform: 'translateY(400px)' })),
-                Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_36" /* transition */])('init => skip', Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_22" /* animate */])('300ms'))
+                Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_34" /* state */])('skip', Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_35" /* style */])({ opacity: 0, transform: 'translateY(300px)' })),
+                Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_36" /* transition */])('init => skip', Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_22" /* animate */])('200ms'))
             ]),
             Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_37" /* trigger */])('newWord', [
                 Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_36" /* transition */])('* => *', [
-                    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_22" /* animate */])(300, Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_29" /* keyframes */])([
-                        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_35" /* style */])({ opacity: 0, transform: 'translateX(-400px)', offset: 0 }),
+                    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_22" /* animate */])(200, Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_29" /* keyframes */])([
+                        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_35" /* style */])({ opacity: 0, transform: 'translateX(-300px)', offset: 0 }),
                         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_35" /* style */])({ opacity: 1, transform: 'translateX(0)', offset: 1 })
                     ]))
                 ])
@@ -640,7 +640,6 @@ var LearningComponent = (function () {
                 break;
             case 'skip':
                 this.words.splice(this.actIndex, 1);
-                console.log('length: ' + this.words.length);
                 if (this.words.length === 0) {
                     this.getWords();
                 }
@@ -840,6 +839,27 @@ MainMenuComponent = __decorate([
 
 /***/ }),
 
+/***/ "../../../../../src/app/mock/mock-sentences.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return SENTENCES; });
+var SENTENCES = [
+    { id: 1, foreign: 'sentence1', native: 'mondat1' },
+    { id: 2, foreign: 'sentence2', native: 'mondat2' },
+    { id: 3, foreign: 'sentence3', native: 'mondat3' },
+    { id: 4, foreign: 'sentence4', native: 'mondat4' },
+    { id: 5, foreign: 'sentence5', native: 'mondat5' },
+    { id: 6, foreign: 'sentence6', native: 'mondat6' },
+    { id: 7, foreign: 'sentence7', native: 'mondat7' },
+    { id: 8, foreign: 'sentence8', native: 'mondat8' },
+    { id: 8, foreign: 'sentence9', native: 'mondat9' },
+    { id: 9, foreign: 'sentence10', native: 'mondat10' }
+];
+//# sourceMappingURL=mock-sentences.js.map
+
+/***/ }),
+
 /***/ "../../../../../src/app/mock/mock-words.ts":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -854,8 +874,7 @@ var WORDS = [
     { id: 6, foreign: 'chair', native: 'szék' },
     { id: 7, foreign: 'work', native: 'munka' },
     { id: 8, foreign: 'heating', native: 'fűtés' },
-    { id: 9, foreign: 'computer', native: 'számítógép' },
-    { id: 10, foreign: 'cap', native: 'sapka' }
+    { id: 9, foreign: 'computer', native: 'számítógép' }
 ];
 //# sourceMappingURL=mock-words.js.map
 
@@ -993,6 +1012,7 @@ var _a;
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return WordService; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__mock_mock_words__ = __webpack_require__("../../../../../src/app/mock/mock-words.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__mock_mock_sentences__ = __webpack_require__("../../../../../src/app/mock/mock-sentences.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -1004,21 +1024,49 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 
 
+
 var WordService = (function () {
     function WordService() {
-        this.turn = 0;
     }
     WordService.prototype.startSession = function () {
         var _this = this;
         return new Promise(function (resolve) {
             setTimeout(function () {
                 _this.words = __WEBPACK_IMPORTED_MODULE_1__mock_mock_words__["a" /* WORDS */];
+                _this.sentences = __WEBPACK_IMPORTED_MODULE_2__mock_mock_sentences__["a" /* SENTENCES */];
+                _this.sentences.forEach(function (sentence) { sentence['side'] = 0; });
+                _this.round = 0;
                 resolve();
             }, 2000);
         });
     };
     WordService.prototype.getSet = function () {
-        return this.shuffle(this.words.slice());
+        this.round += 1;
+        if (this.round === 11) {
+            //      sendData();
+        }
+        var tempList = this.shuffle(this.words.slice());
+        if (this.round < 4) {
+            tempList.forEach(function (word) { word['side'] = 0; });
+            tempList.push(this.sentences[(this.round - 1) % this.sentences.length]);
+        }
+        else if (this.round < 7) {
+            tempList.forEach(function (word) { word['side'] = 1; });
+            tempList.push(this.sentences[(this.round - 1) % this.sentences.length]);
+        }
+        else {
+            tempList.forEach(function (word) { word['side'] = Math.round(Math.random()); });
+            tempList.push(this.sentences[(this.round - 1) % this.sentences.length]);
+            this.round += 1;
+            for (var i = 0; i < this.words.length; i++) {
+                tempList[i + this.words.length + 1] = Object.assign({}, tempList[i]);
+                tempList[i + this.words.length + 1]['side'] = Math.abs(tempList[i]['side'] - 1);
+            }
+            tempList.push(this.sentences[(this.round - 1) % this.sentences.length]);
+        }
+        console.log('round: ' + this.round);
+        console.log(JSON.stringify(tempList));
+        return tempList;
     };
     WordService.prototype.shuffle = function (array) {
         var currentIndex = array.length, temporaryValue, randomIndex;
