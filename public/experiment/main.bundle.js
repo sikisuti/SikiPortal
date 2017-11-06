@@ -345,7 +345,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/component/learn-type/flip-card/flip-card.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div fxLayout=\"column\" fxLayoutAlign=\"center center\" class=\"content\">\n  <div class=\"flip-card\" \n    (click)=\"onClick()\" (swiperight)=\"onSwipeRight($event)\" (swipedown)=\"onSwipeDown($event)\" \n    (keydown.arrowright)=\"onSwipeRight($event)\" (keydown.arrowdown)=\"onSwipeDown($event)\"\n    [@reviseWord]='reviseWordStarter' (@reviseWord.done)='reviseWordDone($event)' \n    [@skipWord]='skipWordStarter' (@skipWord.done)='reviseWordDone($event)'\n    [@newWord]='word?.id' \n    fxLayout=\"row\" fxLayoutAlign=\"center center\">\n      <span>{{word?.native}}</span>\n  </div>\n</div>"
+module.exports = "<div fxLayout=\"column\" fxLayoutAlign=\"center center\" class=\"content\">\n  <div class=\"flip-card\" \n    (click)=\"onFlipCard()\" (swiperight)=\"onSwipeRight($event)\" (swipedown)=\"onSwipeDown($event)\" \n    (keydown.arrowright)=\"onSwipeRight($event)\" (keydown.arrowdown)=\"onSwipeDown($event)\"\n    [@reviseWord]='reviseWordStarter' (@reviseWord.done)='reviseWordDone($event)' \n    [@skipWord]='skipWordStarter' (@skipWord.done)='reviseWordDone($event)'\n    [@newWord]='word?.id' \n    [@turnOver]='turnStatus' (@turnOver.done)='turnOverDone($event)'\n    fxLayout=\"row\" fxLayoutAlign=\"center center\">\n      <span>{{(word?.nativeSide ? !isFlipped : isFlipped) ? word?.native : word?.foreignWord}}</span>\n  </div>\n</div>"
 
 /***/ }),
 
@@ -376,10 +376,13 @@ var FlipCardComponent = (function () {
         this.wordFinished = new __WEBPACK_IMPORTED_MODULE_2_rxjs_Subject__["Subject"]();
         this.reviseWordStarter = 'init';
         this.skipWordStarter = 'init';
+        this.turnStatus = 'init';
+        this.isFlipped = false;
     }
     FlipCardComponent.prototype.ngOnInit = function () {
     };
-    FlipCardComponent.prototype.onClick = function () {
+    FlipCardComponent.prototype.onFlipCard = function () {
+        this.turnStatus = 'turned';
     };
     FlipCardComponent.prototype.onSwipeRight = function (event) {
         this.reviseWordStarter = 'revise';
@@ -392,6 +395,12 @@ var FlipCardComponent = (function () {
             this.wordFinished.next(event['toState']);
         }
     };
+    FlipCardComponent.prototype.turnOverDone = function (event) {
+        if (event['toState'] === 'turned') {
+            this.isFlipped = !this.isFlipped;
+            this.turnStatus = 'init';
+        }
+    };
     FlipCardComponent.prototype.handleKeyboardEvent = function (event) {
         this.onSwipeRight(event);
     };
@@ -401,6 +410,12 @@ __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["F" /* Input */])(),
     __metadata("design:type", typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__model_word__["a" /* Word */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__model_word__["a" /* Word */]) === "function" && _a || Object)
 ], FlipCardComponent.prototype, "word", void 0);
+__decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["A" /* HostListener */])('window:keydown.space', ['$event']),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], FlipCardComponent.prototype, "onFlipCard", null);
 __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["A" /* HostListener */])('window:keydown.arrowright', ['$event']),
     __metadata("design:type", Function),
@@ -436,6 +451,11 @@ FlipCardComponent = __decorate([
                         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_35" /* style */])({ opacity: 1, transform: 'translateX(0)', offset: 1 })
                     ]))
                 ])
+            ]),
+            Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_37" /* trigger */])('turnOver', [
+                Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_34" /* state */])('init', Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_35" /* style */])({ transform: 'rotateY(0)' })),
+                Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_34" /* state */])('turned', Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_35" /* style */])({ transform: 'rotateY(90deg)' })),
+                Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_36" /* transition */])('init <=> turned', Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_22" /* animate */])('200ms'))
             ])
         ]
     }),
@@ -580,9 +600,11 @@ module.exports = "<div fxLayout=\"column\">\n  <div class=\"header\">\n    <span
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return LearningComponent; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__service_word_service__ = __webpack_require__("../../../../../src/app/service/word.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__learn_type_flip_card_flip_card_component__ = __webpack_require__("../../../../../src/app/component/learn-type/flip-card/flip-card.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__learn_type_word_directive__ = __webpack_require__("../../../../../src/app/component/learn-type/word.directive.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_router__ = __webpack_require__("../../../router/@angular/router.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__service_word_service__ = __webpack_require__("../../../../../src/app/service/word.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__learn_type_flip_card_flip_card_component__ = __webpack_require__("../../../../../src/app/component/learn-type/flip-card/flip-card.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__learn_type_word_directive__ = __webpack_require__("../../../../../src/app/component/learn-type/word.directive.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__service_auth_service__ = __webpack_require__("../../../../../src/app/service/auth.service.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -596,11 +618,15 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
+
+
 var LearningComponent = (function () {
-    function LearningComponent(wordService, componentFactoryResolver, changeDetectorRef) {
+    function LearningComponent(wordService, componentFactoryResolver, changeDetectorRef, router, authService) {
         this.wordService = wordService;
         this.componentFactoryResolver = componentFactoryResolver;
         this.changeDetectorRef = changeDetectorRef;
+        this.router = router;
+        this.authService = authService;
         this.words = [];
     }
     LearningComponent.prototype.ngOnInit = function () {
@@ -610,10 +636,11 @@ var LearningComponent = (function () {
     };
     LearningComponent.prototype.loadComponent = function () {
         var _this = this;
-        var componentFactory = this.componentFactoryResolver.resolveComponentFactory(__WEBPACK_IMPORTED_MODULE_2__learn_type_flip_card_flip_card_component__["a" /* FlipCardComponent */]);
+        var componentFactory = this.componentFactoryResolver.resolveComponentFactory(__WEBPACK_IMPORTED_MODULE_3__learn_type_flip_card_flip_card_component__["a" /* FlipCardComponent */]);
         var viewContainerRef = this.wordHost.viewContainerRef;
         viewContainerRef.clear();
         var componentRef = viewContainerRef.createComponent(componentFactory);
+        //      console.log(JSON.stringify(this.words[this.actIndex]));
         componentRef.instance.word = this.words[this.actIndex];
         this.changeDetectorRef.detectChanges();
         componentRef.instance.wordFinished.subscribe(function (msg) { return _this.onSendResult(msg); });
@@ -622,13 +649,32 @@ var LearningComponent = (function () {
     };
     LearningComponent.prototype.startSession = function () {
         var _this = this;
-        this.wordService.startSession().then(function (x) {
-            _this.getWords();
+        this.wordService.startSession(function (status) {
+            //      console.log(status);
+            if (status === 401) {
+                _this.authService.redirectUrl = '/learn';
+                _this.router.navigate(['/login']);
+            }
+            else {
+                //        console.log('session started');
+                _this.getWords();
+            }
         });
     };
     LearningComponent.prototype.getWords = function () {
-        console.log('getWords()');
-        this.words = this.wordService.getSet();
+        var _this = this;
+        //    console.log('getWords()');
+        try {
+            this.words = this.wordService.getSet();
+        }
+        catch (error) {
+            if (error['message'] === 'EndOfSession') {
+                this.wordService.sendData().subscribe(function (res) {
+                    _this.router.navigate(['/home']);
+                });
+            }
+        }
+        //    console.log('words get: ' + JSON.stringify(this.words));
         this.actIndex = 0;
         this.loadComponent();
     };
@@ -655,8 +701,8 @@ var LearningComponent = (function () {
     return LearningComponent;
 }());
 __decorate([
-    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_17" /* ViewChild */])(__WEBPACK_IMPORTED_MODULE_3__learn_type_word_directive__["a" /* WordDirective */]),
-    __metadata("design:type", typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_3__learn_type_word_directive__["a" /* WordDirective */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__learn_type_word_directive__["a" /* WordDirective */]) === "function" && _a || Object)
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_17" /* ViewChild */])(__WEBPACK_IMPORTED_MODULE_4__learn_type_word_directive__["a" /* WordDirective */]),
+    __metadata("design:type", typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_4__learn_type_word_directive__["a" /* WordDirective */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4__learn_type_word_directive__["a" /* WordDirective */]) === "function" && _a || Object)
 ], LearningComponent.prototype, "wordHost", void 0);
 LearningComponent = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["o" /* Component */])({
@@ -664,10 +710,10 @@ LearningComponent = __decorate([
         template: __webpack_require__("../../../../../src/app/component/learning/learning.component.html"),
         styles: [__webpack_require__("../../../../../src/app/component/learning/learning.component.css")]
     }),
-    __metadata("design:paramtypes", [typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_1__service_word_service__["a" /* WordService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__service_word_service__["a" /* WordService */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_0__angular_core__["q" /* ComponentFactoryResolver */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_core__["q" /* ComponentFactoryResolver */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_0__angular_core__["l" /* ChangeDetectorRef */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_core__["l" /* ChangeDetectorRef */]) === "function" && _d || Object])
+    __metadata("design:paramtypes", [typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__service_word_service__["a" /* WordService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__service_word_service__["a" /* WordService */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_0__angular_core__["q" /* ComponentFactoryResolver */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_core__["q" /* ComponentFactoryResolver */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_0__angular_core__["l" /* ChangeDetectorRef */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_core__["l" /* ChangeDetectorRef */]) === "function" && _d || Object, typeof (_e = typeof __WEBPACK_IMPORTED_MODULE_1__angular_router__["a" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_router__["a" /* Router */]) === "function" && _e || Object, typeof (_f = typeof __WEBPACK_IMPORTED_MODULE_5__service_auth_service__["a" /* AuthService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_5__service_auth_service__["a" /* AuthService */]) === "function" && _f || Object])
 ], LearningComponent);
 
-var _a, _b, _c, _d;
+var _a, _b, _c, _d, _e, _f;
 //# sourceMappingURL=learning.component.js.map
 
 /***/ }),
@@ -839,47 +885,6 @@ MainMenuComponent = __decorate([
 
 /***/ }),
 
-/***/ "../../../../../src/app/mock/mock-sentences.ts":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return SENTENCES; });
-var SENTENCES = [
-    { id: 1, foreign: 'sentence1', native: 'mondat1' },
-    { id: 2, foreign: 'sentence2', native: 'mondat2' },
-    { id: 3, foreign: 'sentence3', native: 'mondat3' },
-    { id: 4, foreign: 'sentence4', native: 'mondat4' },
-    { id: 5, foreign: 'sentence5', native: 'mondat5' },
-    { id: 6, foreign: 'sentence6', native: 'mondat6' },
-    { id: 7, foreign: 'sentence7', native: 'mondat7' },
-    { id: 8, foreign: 'sentence8', native: 'mondat8' },
-    { id: 8, foreign: 'sentence9', native: 'mondat9' },
-    { id: 9, foreign: 'sentence10', native: 'mondat10' }
-];
-//# sourceMappingURL=mock-sentences.js.map
-
-/***/ }),
-
-/***/ "../../../../../src/app/mock/mock-words.ts":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return WORDS; });
-var WORDS = [
-    { id: 1, foreign: 'book', native: 'könyv' },
-    { id: 2, foreign: 'forest', native: 'erdő' },
-    { id: 3, foreign: 'phone', native: 'telefon' },
-    { id: 4, foreign: 'space', native: 'űr' },
-    { id: 5, foreign: 'window', native: 'ablak' },
-    { id: 6, foreign: 'chair', native: 'szék' },
-    { id: 7, foreign: 'work', native: 'munka' },
-    { id: 8, foreign: 'heating', native: 'fűtés' },
-    { id: 9, foreign: 'computer', native: 'számítógép' }
-];
-//# sourceMappingURL=mock-words.js.map
-
-/***/ }),
-
 /***/ "../../../../../src/app/model/word.ts":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -1011,8 +1016,7 @@ var _a;
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return WordService; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__mock_mock_words__ = __webpack_require__("../../../../../src/app/mock/mock-words.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__mock_mock_sentences__ = __webpack_require__("../../../../../src/app/mock/mock-sentences.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_common_http__ = __webpack_require__("../../../common/@angular/common/http.es5.js");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -1024,49 +1028,79 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 
 
-
 var WordService = (function () {
-    function WordService() {
+    function WordService(http) {
+        this.http = http;
     }
-    WordService.prototype.startSession = function () {
+    WordService.prototype.startSession = function (callback) {
         var _this = this;
-        return new Promise(function (resolve) {
-            setTimeout(function () {
-                _this.words = __WEBPACK_IMPORTED_MODULE_1__mock_mock_words__["a" /* WORDS */];
-                _this.sentences = __WEBPACK_IMPORTED_MODULE_2__mock_mock_sentences__["a" /* SENTENCES */];
-                _this.sentences.forEach(function (sentence) { sentence['side'] = 0; });
+        this.http.get('/learnWords/words').subscribe(function (words) {
+            _this.words = words;
+            //        console.log('words set');
+            _this.http.get('/learnWords/sentence').subscribe(function (sentence) {
+                _this.sentences = sentence;
+                _this.sentences.forEach(function (s) { s['nativeSide'] = true; });
+                //            console.log('sentences: ' + JSON.stringify(this.sentences));
                 _this.round = 0;
-                resolve();
-            }, 2000);
+                callback(200);
+            }, function (sentenceError) {
+                console.log('sentence error: ' + JSON.stringify(sentenceError));
+                callback(sentenceError.status);
+            });
+        }, function (wordError) {
+            console.log(JSON.stringify(wordError));
+            callback(wordError.status);
         });
+        /*
+        return new Observable(observer => {
+          setTimeout(() => {
+            this.words = WORDS;
+            this.sentences = SENTENCES;
+            this.sentences.forEach(sentence => { sentence['side'] = 0; });
+            this.round = 0;
+            observer.next();
+          }, 2000);
+        });
+        */
     };
     WordService.prototype.getSet = function () {
         this.round += 1;
-        if (this.round === 11) {
-            //      sendData();
+        if (this.round === 3) {
+            throw new Error('EndOfSession');
         }
         var tempList = this.shuffle(this.words.slice());
         if (this.round < 4) {
-            tempList.forEach(function (word) { word['side'] = 0; });
+            tempList.forEach(function (word) { word['nativeSide'] = true; });
             tempList.push(this.sentences[(this.round - 1) % this.sentences.length]);
         }
         else if (this.round < 7) {
-            tempList.forEach(function (word) { word['side'] = 1; });
+            tempList.forEach(function (word) { word['nativeSide'] = false; });
             tempList.push(this.sentences[(this.round - 1) % this.sentences.length]);
         }
         else {
-            tempList.forEach(function (word) { word['side'] = Math.round(Math.random()); });
+            tempList.forEach(function (word) { word['nativeSide'] = Math.random() >= 0.5; });
             tempList.push(this.sentences[(this.round - 1) % this.sentences.length]);
             this.round += 1;
             for (var i = 0; i < this.words.length; i++) {
                 tempList[i + this.words.length + 1] = Object.assign({}, tempList[i]);
-                tempList[i + this.words.length + 1]['side'] = Math.abs(tempList[i]['side'] - 1);
+                tempList[i + this.words.length + 1]['nativeSide'] = !tempList[i]['nativeSide'];
             }
             tempList.push(this.sentences[(this.round - 1) % this.sentences.length]);
         }
-        console.log('round: ' + this.round);
-        console.log(JSON.stringify(tempList));
+        //    console.log('round: ' + this.round);
+        //    console.log(JSON.stringify(tempList));
         return tempList;
+    };
+    WordService.prototype.sendData = function () {
+        var data = JSON.stringify(this.words);
+        var config = {
+            headers: new __WEBPACK_IMPORTED_MODULE_1__angular_common_http__["c" /* HttpHeaders */]({ 'Content-Type': 'application/json' }),
+            responseType: 'text'
+        };
+        return this.http.post('/learnWords/words', data, {
+            headers: new __WEBPACK_IMPORTED_MODULE_1__angular_common_http__["c" /* HttpHeaders */]().set('Content-Type', 'application/json'),
+            responseType: 'text'
+        });
     };
     WordService.prototype.shuffle = function (array) {
         var currentIndex = array.length, temporaryValue, randomIndex;
@@ -1086,9 +1120,10 @@ var WordService = (function () {
 }());
 WordService = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["C" /* Injectable */])(),
-    __metadata("design:paramtypes", [])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__angular_common_http__["a" /* HttpClient */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_common_http__["a" /* HttpClient */]) === "function" && _a || Object])
 ], WordService);
 
+var _a;
 //# sourceMappingURL=word.service.js.map
 
 /***/ }),

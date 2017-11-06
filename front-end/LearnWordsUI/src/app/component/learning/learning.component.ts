@@ -1,10 +1,12 @@
 import { Component, OnInit, ComponentFactoryResolver, AfterViewInit, OnDestroy, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { Router } from '@angular/router';
 import { Word } from '../../model/word';
 import { WordService } from '../../service/word.service';
 import { FlipCardComponent } from '../learn-type/flip-card/flip-card.component';
 import { TypeCardComponent } from '../learn-type/type-card/type-card.component';
 import { WordDirective } from '../learn-type/word.directive';
 import { TemplateComponent } from '../learn-type/template.component';
+import { AuthService } from '../../service/auth.service';
 
 @Component({
   selector: 'app-learning',
@@ -18,7 +20,7 @@ export class LearningComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild(WordDirective) wordHost: WordDirective;
 
   constructor(private wordService: WordService, private componentFactoryResolver: ComponentFactoryResolver,
-    private changeDetectorRef: ChangeDetectorRef) { }
+    private changeDetectorRef: ChangeDetectorRef, private router: Router, private authService: AuthService) { }
 
   ngOnInit(): void {
   }
@@ -34,6 +36,7 @@ export class LearningComponent implements OnInit, AfterViewInit, OnDestroy {
       viewContainerRef.clear();
 
       const componentRef = viewContainerRef.createComponent(componentFactory);
+//      console.log(JSON.stringify(this.words[this.actIndex]));
       (<TemplateComponent>componentRef.instance).word = this.words[this.actIndex];
       this.changeDetectorRef.detectChanges();
       (<TemplateComponent>componentRef.instance).wordFinished.subscribe(msg => this.onSendResult(msg));
@@ -43,14 +46,30 @@ export class LearningComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   startSession(): void {
-    this.wordService.startSession().then(x => {
-      this.getWords();
+    this.wordService.startSession(status => {
+//      console.log(status);
+      if (status === 401) {
+        this.authService.redirectUrl = '/learn';
+        this.router.navigate(['/login']);
+      } else {
+//        console.log('session started');
+        this.getWords();
+      }
     });
   }
 
   getWords(): void {
-    console.log('getWords()');
-    this.words = this.wordService.getSet();
+//    console.log('getWords()');
+    try {
+      this.words = this.wordService.getSet();
+    } catch (error) {
+      if (error['message'] === 'EndOfSession') {
+        this.wordService.sendData().subscribe(res => {
+          this.router.navigate(['/home']);
+        });
+      }
+    }
+//    console.log('words get: ' + JSON.stringify(this.words));
     this.actIndex = 0;
     this.loadComponent();
   }

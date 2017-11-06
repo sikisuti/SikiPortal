@@ -26,6 +26,11 @@ import { Subject } from 'rxjs/Subject';
             style({opacity: 1, transform: 'translateX(0)', offset: 1})
         ]))
       ])
+    ]),
+    trigger('turnOver', [
+      state('init', style({ transform: 'rotateY(0)' })),
+      state('turned', style({ transform: 'rotateY(90deg)' })),
+      transition('init <=> turned', animate('200ms'))
     ])
   ]
 })
@@ -36,13 +41,17 @@ export class FlipCardComponent implements OnInit, TemplateComponent {
 
   reviseWordStarter = 'init';
   skipWordStarter = 'init';
+  turnStatus = 'init';
+  isFlipped = false;
 
   constructor() { }
 
   ngOnInit() {
   }
 
-  onClick() {
+  @HostListener('window:keydown.space', ['$event'])
+  onFlipCard() {
+    this.turnStatus = 'turned';
   }
 
   @HostListener('window:keydown.arrowright', ['$event'])
@@ -58,6 +67,13 @@ export class FlipCardComponent implements OnInit, TemplateComponent {
   reviseWordDone(event: Event) {
     if (event['toState'] !== 'init') {
       this.wordFinished.next(event['toState']);
+    }
+  }
+
+  turnOverDone(event: Event) {
+    if (event['toState'] === 'turned') {
+      this.isFlipped = !this.isFlipped;
+      this.turnStatus = 'init';
     }
   }
 

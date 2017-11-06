@@ -68,12 +68,12 @@ router.get('/sentence', function(req, res) {
   pool.getConnection(function (err, connection){
     if (err) {console.log(err); return;}
 
-        connection.query('SELECT * FROM sentences ORDER BY RAND() LIMIT 1', function(err, sentencesResult, fields){
+        connection.query('SELECT * FROM sentences ORDER BY RAND() LIMIT 10', function(err, sentencesResult, fields){
         if (err) { console.log(err); res.send(err); return; }
 
           connection.release();
           sentencesResult[0].audioFile = '';
-          res.send(sentencesResult[0]);
+          res.send(sentencesResult);
         });
   });
 });
