@@ -1,7 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
-import { MatButtonModule, MatInputModule } from '@angular/material';
+import { MatButtonModule, MatInputModule, MatProgressBarModule } from '@angular/material';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -46,6 +46,7 @@ export class HammerConfig extends HammerGestureConfig {
     FormsModule,
     MatButtonModule,
     MatInputModule,
+    MatProgressBarModule,
     AppRoutingModule,
     HttpClientModule,
     FlexLayoutModule

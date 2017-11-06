@@ -50,7 +50,7 @@ export class WordService {
 
   getSet(): Word[] {
     this.round += 1;
-    if (this.round === 3) {
+    if (this.round === 11) {
       throw new Error('EndOfSession');
     }
 

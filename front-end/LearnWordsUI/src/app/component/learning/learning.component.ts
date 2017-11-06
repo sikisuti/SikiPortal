@@ -18,6 +18,8 @@ export class LearningComponent implements OnInit, AfterViewInit, OnDestroy {
   words: Word[] = [];
   actIndex: number;
   @ViewChild(WordDirective) wordHost: WordDirective;
+  progressValue = 0;
+  progressBuffer = 0;
 
   constructor(private wordService: WordService, private componentFactoryResolver: ComponentFactoryResolver,
     private changeDetectorRef: ChangeDetectorRef, private router: Router, private authService: AuthService) { }
@@ -62,6 +64,7 @@ export class LearningComponent implements OnInit, AfterViewInit, OnDestroy {
 //    console.log('getWords()');
     try {
       this.words = this.wordService.getSet();
+      this.progressBuffer += this.words.length;
     } catch (error) {
       if (error['message'] === 'EndOfSession') {
         this.wordService.sendData().subscribe(res => {
@@ -82,6 +85,7 @@ export class LearningComponent implements OnInit, AfterViewInit, OnDestroy {
         break;
       case 'skip':
         this.words.splice(this.actIndex, 1);
+        this.progressValue += 1;
         if (this.words.length === 0) {
           this.getWords();
         } else {

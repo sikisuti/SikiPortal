@@ -232,6 +232,7 @@ AppModule = __decorate([
             __WEBPACK_IMPORTED_MODULE_5__angular_forms__["c" /* FormsModule */],
             __WEBPACK_IMPORTED_MODULE_3__angular_material__["a" /* MatButtonModule */],
             __WEBPACK_IMPORTED_MODULE_3__angular_material__["b" /* MatInputModule */],
+            __WEBPACK_IMPORTED_MODULE_3__angular_material__["c" /* MatProgressBarModule */],
             __WEBPACK_IMPORTED_MODULE_10__app_routing_module__["a" /* AppRoutingModule */],
             __WEBPACK_IMPORTED_MODULE_4__angular_common_http__["b" /* HttpClientModule */],
             __WEBPACK_IMPORTED_MODULE_6__angular_flex_layout__["a" /* FlexLayoutModule */]
@@ -590,7 +591,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/component/learning/learning.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div fxLayout=\"column\">\n  <div class=\"header\">\n    <span>abc</span>\n  </div>\n  <div class=\"sub-content\">\n    <ng-template word-host></ng-template>\n  </div>\n</div>"
+module.exports = "<div fxLayout=\"column\">\n  <div class=\"header\">\n    <span>abc</span>\n  </div>\n  <div>\n    <mat-progress-bar mode=\"buffer\" [value]=\"progressValue\" [bufferValue]=\"progressBuffer\" color=\"primary\"></mat-progress-bar>\n  </div>\n  <div class=\"sub-content\">\n    <ng-template word-host></ng-template>\n  </div>\n</div>"
 
 /***/ }),
 
@@ -628,6 +629,8 @@ var LearningComponent = (function () {
         this.router = router;
         this.authService = authService;
         this.words = [];
+        this.progressValue = 0;
+        this.progressBuffer = 0;
     }
     LearningComponent.prototype.ngOnInit = function () {
     };
@@ -666,6 +669,7 @@ var LearningComponent = (function () {
         //    console.log('getWords()');
         try {
             this.words = this.wordService.getSet();
+            this.progressBuffer += this.words.length;
         }
         catch (error) {
             if (error['message'] === 'EndOfSession') {
@@ -686,6 +690,7 @@ var LearningComponent = (function () {
                 break;
             case 'skip':
                 this.words.splice(this.actIndex, 1);
+                this.progressValue += 1;
                 if (this.words.length === 0) {
                     this.getWords();
                 }
@@ -1065,7 +1070,7 @@ var WordService = (function () {
     };
     WordService.prototype.getSet = function () {
         this.round += 1;
-        if (this.round === 3) {
+        if (this.round === 11) {
             throw new Error('EndOfSession');
         }
         var tempList = this.shuffle(this.words.slice());
