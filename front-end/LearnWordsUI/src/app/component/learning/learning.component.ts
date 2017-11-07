@@ -15,8 +15,7 @@ import { AuthService } from '../../service/auth.service';
 })
 export class LearningComponent implements OnInit, AfterViewInit, OnDestroy {
 
-  words: Word[] = [];
-  actIndex: number;
+  word: Word;
   @ViewChild(WordDirective) wordHost: WordDirective;
   progressValue = 0;
   progressBuffer = 0;
@@ -29,6 +28,8 @@ export class LearningComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngAfterViewInit() {
     this.startSession();
+    this.wordService.progressBuffer.subscribe(buffer => this.progressBuffer = buffer);
+    this.wordService.progressValue.subscribe(value => this.progressValue = value);
   }
 
     loadComponent() {
@@ -39,7 +40,7 @@ export class LearningComponent implements OnInit, AfterViewInit, OnDestroy {
 
       const componentRef = viewContainerRef.createComponent(componentFactory);
 //      console.log(JSON.stringify(this.words[this.actIndex]));
-      (<TemplateComponent>componentRef.instance).word = this.words[this.actIndex];
+      (<TemplateComponent>componentRef.instance).word = this.word;
       this.changeDetectorRef.detectChanges();
       (<TemplateComponent>componentRef.instance).wordFinished.subscribe(msg => this.onSendResult(msg));
     }
@@ -55,16 +56,15 @@ export class LearningComponent implements OnInit, AfterViewInit, OnDestroy {
         this.router.navigate(['/login']);
       } else {
 //        console.log('session started');
-        this.getWords();
+        this.getNextWord();
       }
     });
   }
 
-  getWords(): void {
+  getNextWord(): void {
 //    console.log('getWords()');
     try {
-      this.words = this.wordService.getSet();
-      this.progressBuffer += this.words.length;
+      this.word = this.wordService.nextWord();
     } catch (error) {
       if (error['message'] === 'EndOfSession') {
         this.wordService.sendData().subscribe(res => {
@@ -73,25 +73,17 @@ export class LearningComponent implements OnInit, AfterViewInit, OnDestroy {
       }
     }
 //    console.log('words get: ' + JSON.stringify(this.words));
-    this.actIndex = 0;
     this.loadComponent();
   }
 
   onSendResult(message: string): void {
     switch (message) {
       case 'revise':
-        this.actIndex = (this.actIndex + 1) % this.words.length;
-        this.loadComponent();
+        this.getNextWord();
         break;
       case 'skip':
-        this.words.splice(this.actIndex, 1);
-        this.progressValue += 1;
-        if (this.words.length === 0) {
-          this.getWords();
-        } else {
-          this.actIndex = this.actIndex % this.words.length;
-          this.loadComponent();
-        }
+        this.wordService.skipWord();
+        this.getNextWord();
         break;
       default:
         console.log(message);

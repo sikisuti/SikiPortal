@@ -4,13 +4,20 @@ import { WORDS } from '../mock/mock-words';
 import { SENTENCES } from '../mock/mock-sentences';
 import { Observable } from 'rxjs/Observable';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Subject } from 'rxjs/Subject';
 
 @Injectable()
 export class WordService {
+  private MAX_TURNS = 10;
+
+  public progressValue: Subject<number> = new Subject();
+  public progressBuffer: Subject<number> = new Subject();
 
   private words: Word[];
+  private currentWords: Word[];
   private sentences: Word[];
   private round;
+  private actIndex: number;
 
   constructor(private http: HttpClient) { }
 
@@ -26,6 +33,9 @@ export class WordService {
             this.sentences.forEach(s => { s['nativeSide'] = true; });
 //            console.log('sentences: ' + JSON.stringify(this.sentences));
             this.round = 0;
+            this.getSet();
+            this.progressValue.next(0);
+            this.progressBuffer.next(0);
             callback(200);
         }, sentenceError => {
             console.log('sentence error: ' + JSON.stringify(sentenceError));
@@ -48,12 +58,12 @@ export class WordService {
     */
   }
 
-  getSet(): Word[] {
-    this.round += 1;
-    if (this.round === 11) {
+  getSet(): void {
+    if (this.round === this.MAX_TURNS) {
       throw new Error('EndOfSession');
     }
 
+    this.round += 1;
     const tempList = this.shuffle(this.words.slice());
     if (this.round < 4) {
       tempList.forEach(word => { word['nativeSide'] = true; });
@@ -73,7 +83,23 @@ export class WordService {
     }
 //    console.log('round: ' + this.round);
 //    console.log(JSON.stringify(tempList));
-    return tempList;
+    this.actIndex = -1;
+    this.currentWords = tempList;
+  }
+
+  nextWord(): Word {
+    if (this.currentWords.length === 0) {
+      this.getSet();
+    }
+
+    this.actIndex = (this.actIndex + 1) % this.currentWords.length;
+    this.calcProgress();
+    return this.currentWords[this.actIndex];
+  }
+
+  skipWord(): void {
+    this.currentWords.splice(this.actIndex, 1);
+    this.actIndex -= 1;
   }
 
   sendData(): Observable<any> {
@@ -105,5 +131,11 @@ export class WordService {
     }
 
     return array;
+  }
+
+  calcProgress(): void {
+    this.progressBuffer.next(this.round * this.words.length);
+    this.progressValue.next(((this.round - 1) * this.words.length) + (this.words.length - this.currentWords.length));
+    console.log(((this.round - 1) * this.words.length) + (this.words.length - this.currentWords.length));
   }
 }

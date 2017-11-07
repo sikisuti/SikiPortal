@@ -628,14 +628,16 @@ var LearningComponent = (function () {
         this.changeDetectorRef = changeDetectorRef;
         this.router = router;
         this.authService = authService;
-        this.words = [];
         this.progressValue = 0;
         this.progressBuffer = 0;
     }
     LearningComponent.prototype.ngOnInit = function () {
     };
     LearningComponent.prototype.ngAfterViewInit = function () {
+        var _this = this;
         this.startSession();
+        this.wordService.progressBuffer.subscribe(function (buffer) { return _this.progressBuffer = buffer; });
+        this.wordService.progressValue.subscribe(function (value) { return _this.progressValue = value; });
     };
     LearningComponent.prototype.loadComponent = function () {
         var _this = this;
@@ -644,7 +646,7 @@ var LearningComponent = (function () {
         viewContainerRef.clear();
         var componentRef = viewContainerRef.createComponent(componentFactory);
         //      console.log(JSON.stringify(this.words[this.actIndex]));
-        componentRef.instance.word = this.words[this.actIndex];
+        componentRef.instance.word = this.word;
         this.changeDetectorRef.detectChanges();
         componentRef.instance.wordFinished.subscribe(function (msg) { return _this.onSendResult(msg); });
     };
@@ -660,16 +662,15 @@ var LearningComponent = (function () {
             }
             else {
                 //        console.log('session started');
-                _this.getWords();
+                _this.getNextWord();
             }
         });
     };
-    LearningComponent.prototype.getWords = function () {
+    LearningComponent.prototype.getNextWord = function () {
         var _this = this;
         //    console.log('getWords()');
         try {
-            this.words = this.wordService.getSet();
-            this.progressBuffer += this.words.length;
+            this.word = this.wordService.nextWord();
         }
         catch (error) {
             if (error['message'] === 'EndOfSession') {
@@ -679,25 +680,16 @@ var LearningComponent = (function () {
             }
         }
         //    console.log('words get: ' + JSON.stringify(this.words));
-        this.actIndex = 0;
         this.loadComponent();
     };
     LearningComponent.prototype.onSendResult = function (message) {
         switch (message) {
             case 'revise':
-                this.actIndex = (this.actIndex + 1) % this.words.length;
-                this.loadComponent();
+                this.getNextWord();
                 break;
             case 'skip':
-                this.words.splice(this.actIndex, 1);
-                this.progressValue += 1;
-                if (this.words.length === 0) {
-                    this.getWords();
-                }
-                else {
-                    this.actIndex = this.actIndex % this.words.length;
-                    this.loadComponent();
-                }
+                this.wordService.skipWord();
+                this.getNextWord();
                 break;
             default:
                 console.log(message);
@@ -1022,6 +1014,8 @@ var _a;
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return WordService; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_common_http__ = __webpack_require__("../../../common/@angular/common/http.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_Subject__ = __webpack_require__("../../../../rxjs/Subject.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_Subject___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_rxjs_Subject__);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -1033,9 +1027,13 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 
 
+
 var WordService = (function () {
     function WordService(http) {
         this.http = http;
+        this.MAX_TURNS = 10;
+        this.progressValue = new __WEBPACK_IMPORTED_MODULE_2_rxjs_Subject__["Subject"]();
+        this.progressBuffer = new __WEBPACK_IMPORTED_MODULE_2_rxjs_Subject__["Subject"]();
     }
     WordService.prototype.startSession = function (callback) {
         var _this = this;
@@ -1047,6 +1045,9 @@ var WordService = (function () {
                 _this.sentences.forEach(function (s) { s['nativeSide'] = true; });
                 //            console.log('sentences: ' + JSON.stringify(this.sentences));
                 _this.round = 0;
+                _this.getSet();
+                _this.progressValue.next(0);
+                _this.progressBuffer.next(0);
                 callback(200);
             }, function (sentenceError) {
                 console.log('sentence error: ' + JSON.stringify(sentenceError));
@@ -1069,10 +1070,10 @@ var WordService = (function () {
         */
     };
     WordService.prototype.getSet = function () {
-        this.round += 1;
-        if (this.round === 11) {
+        if (this.round === this.MAX_TURNS) {
             throw new Error('EndOfSession');
         }
+        this.round += 1;
         var tempList = this.shuffle(this.words.slice());
         if (this.round < 4) {
             tempList.forEach(function (word) { word['nativeSide'] = true; });
@@ -1094,7 +1095,20 @@ var WordService = (function () {
         }
         //    console.log('round: ' + this.round);
         //    console.log(JSON.stringify(tempList));
-        return tempList;
+        this.actIndex = -1;
+        this.currentWords = tempList;
+    };
+    WordService.prototype.nextWord = function () {
+        if (this.currentWords.length === 0) {
+            this.getSet();
+        }
+        this.actIndex = (this.actIndex + 1) % this.currentWords.length;
+        this.calcProgress();
+        return this.currentWords[this.actIndex];
+    };
+    WordService.prototype.skipWord = function () {
+        this.currentWords.splice(this.actIndex, 1);
+        this.actIndex -= 1;
     };
     WordService.prototype.sendData = function () {
         var data = JSON.stringify(this.words);
@@ -1120,6 +1134,11 @@ var WordService = (function () {
             array[randomIndex] = temporaryValue;
         }
         return array;
+    };
+    WordService.prototype.calcProgress = function () {
+        this.progressBuffer.next(this.round * this.words.length);
+        this.progressValue.next(((this.round - 1) * this.words.length) + (this.words.length - this.currentWords.length));
+        console.log(((this.round - 1) * this.words.length) + (this.words.length - this.currentWords.length));
     };
     return WordService;
 }());
