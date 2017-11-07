@@ -1074,29 +1074,30 @@ var WordService = (function () {
             throw new Error('EndOfSession');
         }
         this.round += 1;
-        var tempList = this.shuffle(this.words.slice());
         if (this.round < 4) {
-            tempList.forEach(function (word) { word['nativeSide'] = true; });
-            tempList.push(this.sentences[(this.round - 1) % this.sentences.length]);
+            this.currentWords = this.shuffle(this.words.slice());
+            this.currentWords.forEach(function (word) { word['nativeSide'] = true; });
+            this.currentWords.push(this.sentences[(this.round - 1) % this.sentences.length]);
         }
         else if (this.round < 7) {
-            tempList.forEach(function (word) { word['nativeSide'] = false; });
-            tempList.push(this.sentences[(this.round - 1) % this.sentences.length]);
+            this.currentWords = this.shuffle(this.words.slice());
+            this.currentWords.forEach(function (word) { word['nativeSide'] = false; });
+            this.currentWords.push(this.sentences[(this.round - 1) % this.sentences.length]);
         }
-        else {
-            tempList.forEach(function (word) { word['nativeSide'] = Math.random() >= 0.5; });
-            tempList.push(this.sentences[(this.round - 1) % this.sentences.length]);
-            this.round += 1;
-            for (var i = 0; i < this.words.length; i++) {
-                tempList[i + this.words.length + 1] = Object.assign({}, tempList[i]);
-                tempList[i + this.words.length + 1]['nativeSide'] = !tempList[i]['nativeSide'];
-            }
-            tempList.push(this.sentences[(this.round - 1) % this.sentences.length]);
+        else if (this.round === 7 || this.round === 9) {
+            this.tempList = this.shuffle(this.words.slice());
+            this.tempList.forEach(function (word) { word['nativeSide'] = Math.random() >= 0.5; });
+            this.currentWords = this.tempList.slice();
+            this.currentWords.push(this.sentences[(this.round - 1) % this.sentences.length]);
+        }
+        else if (this.round === 8 || this.round === 10) {
+            this.currentWords = this.tempList.slice();
+            this.currentWords.forEach(function (word) { return word['nativeSide'] = !word['nativeSide']; });
+            this.currentWords.push(this.sentences[(this.round - 1) % this.sentences.length]);
         }
         //    console.log('round: ' + this.round);
         //    console.log(JSON.stringify(tempList));
         this.actIndex = -1;
-        this.currentWords = tempList;
     };
     WordService.prototype.nextWord = function () {
         if (this.currentWords.length === 0) {
@@ -1137,9 +1138,12 @@ var WordService = (function () {
     };
     WordService.prototype.calcProgress = function () {
         var all = this.MAX_TURNS * (this.words.length + 1);
-        this.progressBuffer.next(this.round * (this.words.length + 1));
-        this.progressValue.next(((this.round - 1) * this.words.length) + (this.words.length - this.currentWords.length));
-        console.log(((this.round - 1) * this.words.length) + (this.words.length - this.currentWords.length));
+        this.progressBuffer.next((this.round * (this.words.length + 1) * 100) / all);
+        var current = ((this.round - 1) * (this.words.length + 1)) + (this.words.length + 1 - this.currentWords.length);
+        var percentage = 100 * current / all;
+        this.progressValue.next(percentage);
+        console.log('all: ' + all + ' current: ' + current + ' percentage: ' + percentage +
+            ' round: ' + this.round + ' wordLen: ' + (this.words.length + 1) + ' curWordLen: ' + this.currentWords.length);
     };
     return WordService;
 }());
