@@ -134,7 +134,8 @@ export class WordService {
   }
 
   calcProgress(): void {
-    this.progressBuffer.next(this.round * this.words.length);
+    const all = this.MAX_TURNS * (this.words.length + 1);
+    this.progressBuffer.next(this.round * (this.words.length + 1));
     this.progressValue.next(((this.round - 1) * this.words.length) + (this.words.length - this.currentWords.length));
     console.log(((this.round - 1) * this.words.length) + (this.words.length - this.currentWords.length));
   }
