@@ -1,7 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
-import { MatButtonModule, MatInputModule, MatProgressBarModule } from '@angular/material';
+import { MatButtonModule, MatInputModule, MatProgressBarModule, MatDialogModule } from '@angular/material';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -12,7 +12,7 @@ import { AuthService } from './service/auth.service';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { FlipCardComponent } from './component/learn-type/flip-card/flip-card.component';
+import { FlipCardComponent, ConfirmDialogComponent } from './component/learn-type/flip-card/flip-card.component';
 import { LearningComponent } from './component/learning/learning.component';
 import * as Hammer from 'hammerjs';
 import 'hammer-timejs';
@@ -38,7 +38,8 @@ export class HammerConfig extends HammerGestureConfig {
     LoginComponent,
     HomeComponent,
     WordDirective,
-    TypeCardComponent
+    TypeCardComponent,
+    ConfirmDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -47,6 +48,7 @@ export class HammerConfig extends HammerGestureConfig {
     MatButtonModule,
     MatInputModule,
     MatProgressBarModule,
+    MatDialogModule,
     AppRoutingModule,
     HttpClientModule,
     FlexLayoutModule
@@ -61,6 +63,6 @@ export class HammerConfig extends HammerGestureConfig {
     }
   ],
   bootstrap: [AppComponent],
-  entryComponents: [FlipCardComponent, TypeCardComponent]
+  entryComponents: [FlipCardComponent, TypeCardComponent, ConfirmDialogComponent]
 })
 export class AppModule { }

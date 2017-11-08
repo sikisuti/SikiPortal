@@ -1,8 +1,10 @@
-import { Component, OnInit, Input, Output, HostListener } from '@angular/core';
+import { Component, OnInit, Input, Output, HostListener, Inject } from '@angular/core';
 import { Word } from '../../../model/word';
 import { trigger, state, style, animate, transition, keyframes } from '@angular/core';
 import { TemplateComponent } from '../template.component';
 import { Subject } from 'rxjs/Subject';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { WordService } from '../../../service/word.service';
 
 @Component({
   selector: 'app-flip-card',
@@ -18,6 +20,11 @@ import { Subject } from 'rxjs/Subject';
       state('init', style({opacity: 1, transform: 'translateY(0)'})),
       state('skip', style({opacity: 0, transform: 'translateY(300px)'})),
       transition('init => skip', animate('200ms'))
+    ]),
+    trigger('setKnown', [
+      state('init', style({opacity: 1, transform: 'translateY(0)'})),
+      state('known', style({opacity: 0, transform: 'translateY(-300px)'})),
+      transition('init => known', animate('200ms'))
     ]),
     trigger('newWord', [
       transition('* => *', [
@@ -41,27 +48,37 @@ export class FlipCardComponent implements OnInit, TemplateComponent {
 
   reviseWordStarter = 'init';
   skipWordStarter = 'init';
+  setKnownStarter = 'init';
   turnStatus = 'init';
   isFlipped = false;
 
-  constructor() { }
+  constructor(public dialog: MatDialog, private wordService: WordService) { }
 
   ngOnInit() {
   }
 
   @HostListener('window:keydown.space', ['$event'])
   onFlipCard() {
+    if (this.dialog.openDialogs.length !== 0) { return; }
     this.turnStatus = 'turned';
   }
 
   @HostListener('window:keydown.arrowright', ['$event'])
   onSwipeRight(event: any): void {
+    if (this.dialog.openDialogs.length !== 0) { return; }
     this.reviseWordStarter = 'revise';
   }
 
   @HostListener('window:keydown.arrowdown', ['$event'])
   onSwipeDown(event: any): void {
+    if (this.dialog.openDialogs.length !== 0) { return; }
     this.skipWordStarter = 'skip';
+  }
+
+  @HostListener('window:keydown.arrowup', ['$event'])
+  onSwipeUp(event: any): void {
+    if (this.dialog.openDialogs.length !== 0) { return; }
+    this.openDialog();
   }
 
   reviseWordDone(event: Event) {
@@ -80,4 +97,34 @@ export class FlipCardComponent implements OnInit, TemplateComponent {
   handleKeyboardEvent(event: KeyboardEvent) {
     this.onSwipeRight(event);
   }
+
+  openDialog(): void {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent);
+
+    dialogRef.afterClosed().subscribe(confirmed => {
+      if (confirmed) {
+        this.wordService.setKnown().subscribe(res => {
+          this.setKnownStarter = 'known';
+        });
+      }
+    });
+  }
+}
+
+@Component({
+  selector: 'app-confirm-dialog',
+  template: `
+    <h2 mat-dialog-title>Confirm</h2>
+    <mat-dialog-content>You are about to set this word known. Are you sure?</mat-dialog-content>
+    <mat-dialog-actions>
+      <button mat-button [mat-dialog-close]="true">Yes</button>
+      <button mat-button [mat-dialog-close]="false">No</button>
+    </mat-dialog-actions>
+    `
+})
+export class ConfirmDialogComponent {
+
+  constructor(
+    public dialogRef: MatDialogRef<ConfirmDialogComponent>) { }
+
 }

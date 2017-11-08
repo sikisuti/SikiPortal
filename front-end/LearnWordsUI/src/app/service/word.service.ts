@@ -103,6 +103,32 @@ export class WordService {
     this.actIndex -= 1;
   }
 
+  setKnown(): Observable<any> {
+    const wordID = this.currentWords[this.actIndex].wordID;
+    const userWordID = this.currentWords[this.actIndex].userWordID;
+    if (userWordID == null) {
+      return this.http.post('/learnWords/userWord/' + wordID, {})
+        .map(response => {
+          this.words.splice(this.words.map(function(word){ return word.wordID; }).indexOf(wordID), 1);
+          if (this.tempList.length > 0) {
+            this.tempList.splice(this.tempList.map(function(word){ return word.wordID; }).indexOf(wordID), 1);
+          }
+          this.currentWords.splice(this.actIndex, 1);
+          this.actIndex -= 1;
+        }, err => { console.log(err); });
+    } else {
+      return this.http.put('/learnWords/userWord/' + userWordID, {})
+        .map(response => {
+          this.words.splice(this.words.map(function(word){ return word.userWordID; }).indexOf(userWordID), 1);
+          if (this.tempList.length > 0) {
+            this.tempList.splice(this.tempList.map(function(word){ return word.userWordID; }).indexOf(userWordID), 1);
+          }
+          this.currentWords.splice(this.actIndex, 1);
+          this.actIndex -= 1;
+        }, err => { console.log(err); });
+    }
+  }
+
   sendData(): Observable<any> {
     const data = JSON.stringify(this.words);
     const config = {

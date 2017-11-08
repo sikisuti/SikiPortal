@@ -1,5 +1,6 @@
 export class Word {
-    id: Number;
+    wordID: Number;
     foreign: String;
     native: String;
+    userWordID: number;
 }
