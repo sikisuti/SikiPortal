@@ -42,7 +42,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 
 var appRoutes = [
     { path: 'home', component: __WEBPACK_IMPORTED_MODULE_3__component_home_home_component__["a" /* HomeComponent */], canActivate: [__WEBPACK_IMPORTED_MODULE_2__service_auth_guard_service__["a" /* AuthGuardService */]] },
-    { path: 'learn', component: __WEBPACK_IMPORTED_MODULE_4__component_learning_learning_component__["a" /* LearningComponent */] },
+    { path: 'learn', component: __WEBPACK_IMPORTED_MODULE_4__component_learning_learning_component__["b" /* LearningComponent */] },
     { path: 'login', component: __WEBPACK_IMPORTED_MODULE_5__component_login_login_component__["a" /* LoginComponent */] },
     { path: '', redirectTo: '/home', pathMatch: 'full' },
     { path: '**', redirectTo: '/home', pathMatch: 'full' }
@@ -159,6 +159,7 @@ AppComponent = __decorate([
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_18__component_home_home_component__ = __webpack_require__("../../../../../src/app/component/home/home.component.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_19__component_learn_type_word_directive__ = __webpack_require__("../../../../../src/app/component/learn-type/word.directive.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_20__component_learn_type_type_card_type_card_component__ = __webpack_require__("../../../../../src/app/component/learn-type/type-card/type-card.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_21__service_audio_service__ = __webpack_require__("../../../../../src/app/service/audio.service.ts");
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
@@ -175,6 +176,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+
 
 
 
@@ -218,14 +220,14 @@ AppModule = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_2__angular_core__["M" /* NgModule */])({
         declarations: [
             __WEBPACK_IMPORTED_MODULE_11__app_component__["a" /* AppComponent */],
-            __WEBPACK_IMPORTED_MODULE_12__component_learn_type_flip_card_flip_card_component__["b" /* FlipCardComponent */],
-            __WEBPACK_IMPORTED_MODULE_13__component_learning_learning_component__["a" /* LearningComponent */],
+            __WEBPACK_IMPORTED_MODULE_12__component_learn_type_flip_card_flip_card_component__["a" /* FlipCardComponent */],
+            __WEBPACK_IMPORTED_MODULE_13__component_learning_learning_component__["b" /* LearningComponent */],
             __WEBPACK_IMPORTED_MODULE_16__component_main_menu_main_menu_component__["a" /* MainMenuComponent */],
             __WEBPACK_IMPORTED_MODULE_17__component_login_login_component__["a" /* LoginComponent */],
             __WEBPACK_IMPORTED_MODULE_18__component_home_home_component__["a" /* HomeComponent */],
             __WEBPACK_IMPORTED_MODULE_19__component_learn_type_word_directive__["a" /* WordDirective */],
             __WEBPACK_IMPORTED_MODULE_20__component_learn_type_type_card_type_card_component__["a" /* TypeCardComponent */],
-            __WEBPACK_IMPORTED_MODULE_12__component_learn_type_flip_card_flip_card_component__["a" /* ConfirmDialogComponent */]
+            __WEBPACK_IMPORTED_MODULE_13__component_learning_learning_component__["a" /* ConfirmDialogComponent */]
         ],
         imports: [
             __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser__["a" /* BrowserModule */],
@@ -246,10 +248,11 @@ AppModule = __decorate([
             {
                 provide: __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser__["d" /* HAMMER_GESTURE_CONFIG */],
                 useClass: HammerConfig
-            }
+            },
+            __WEBPACK_IMPORTED_MODULE_21__service_audio_service__["a" /* AudioService */]
         ],
         bootstrap: [__WEBPACK_IMPORTED_MODULE_11__app_component__["a" /* AppComponent */]],
-        entryComponents: [__WEBPACK_IMPORTED_MODULE_12__component_learn_type_flip_card_flip_card_component__["b" /* FlipCardComponent */], __WEBPACK_IMPORTED_MODULE_20__component_learn_type_type_card_type_card_component__["a" /* TypeCardComponent */], __WEBPACK_IMPORTED_MODULE_12__component_learn_type_flip_card_flip_card_component__["a" /* ConfirmDialogComponent */]]
+        entryComponents: [__WEBPACK_IMPORTED_MODULE_12__component_learn_type_flip_card_flip_card_component__["a" /* FlipCardComponent */], __WEBPACK_IMPORTED_MODULE_20__component_learn_type_type_card_type_card_component__["a" /* TypeCardComponent */], __WEBPACK_IMPORTED_MODULE_13__component_learning_learning_component__["a" /* ConfirmDialogComponent */]]
     })
 ], AppModule);
 
@@ -356,14 +359,13 @@ module.exports = "<div fxLayout=\"column\" fxLayoutAlign=\"center center\" class
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return FlipCardComponent; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ConfirmDialogComponent; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return FlipCardComponent; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__model_word__ = __webpack_require__("../../../../../src/app/model/word.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_Subject__ = __webpack_require__("../../../../rxjs/Subject.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_Subject___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_rxjs_Subject__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_material__ = __webpack_require__("../../../material/esm5/material.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__service_word_service__ = __webpack_require__("../../../../../src/app/service/word.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__service_word_service__ = __webpack_require__("../../../../../src/app/service/word.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__service_audio_service__ = __webpack_require__("../../../../../src/app/service/audio.service.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -380,9 +382,9 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 var FlipCardComponent = (function () {
-    function FlipCardComponent(dialog, wordService) {
-        this.dialog = dialog;
+    function FlipCardComponent(wordService, audioService) {
         this.wordService = wordService;
+        this.audioService = audioService;
         this.wordFinished = new __WEBPACK_IMPORTED_MODULE_2_rxjs_Subject__["Subject"]();
         this.reviseWordStarter = 'init';
         this.skipWordStarter = 'init';
@@ -390,31 +392,23 @@ var FlipCardComponent = (function () {
         this.turnStatus = 'init';
         this.isFlipped = false;
     }
+    FlipCardComponent.prototype.init = function (word) {
+        this.word = word;
+        this.play();
+    };
     FlipCardComponent.prototype.ngOnInit = function () {
     };
     FlipCardComponent.prototype.onFlipCard = function () {
-        if (this.dialog.openDialogs.length !== 0) {
-            return;
-        }
         this.turnStatus = 'turned';
     };
     FlipCardComponent.prototype.onSwipeRight = function (event) {
-        if (this.dialog.openDialogs.length !== 0) {
-            return;
-        }
         this.reviseWordStarter = 'revise';
     };
     FlipCardComponent.prototype.onSwipeDown = function (event) {
-        if (this.dialog.openDialogs.length !== 0) {
-            return;
-        }
         this.skipWordStarter = 'skip';
     };
     FlipCardComponent.prototype.onSwipeUp = function (event) {
-        if (this.dialog.openDialogs.length !== 0) {
-            return;
-        }
-        this.openDialog();
+        this.setKnownStarter = 'known';
     };
     FlipCardComponent.prototype.reviseWordDone = function (event) {
         if (event['toState'] !== 'init') {
@@ -430,16 +424,8 @@ var FlipCardComponent = (function () {
     FlipCardComponent.prototype.handleKeyboardEvent = function (event) {
         this.onSwipeRight(event);
     };
-    FlipCardComponent.prototype.openDialog = function () {
-        var _this = this;
-        var dialogRef = this.dialog.open(ConfirmDialogComponent);
-        dialogRef.afterClosed().subscribe(function (confirmed) {
-            if (confirmed) {
-                _this.wordService.setKnown().subscribe(function (res) {
-                    _this.setKnownStarter = 'known';
-                });
-            }
-        });
+    FlipCardComponent.prototype.play = function () {
+        this.audioService.play(this.word['audioFile']);
     };
     return FlipCardComponent;
 }());
@@ -507,24 +493,10 @@ FlipCardComponent = __decorate([
             ])
         ]
     }),
-    __metadata("design:paramtypes", [typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_3__angular_material__["b" /* MatDialog */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__angular_material__["b" /* MatDialog */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_4__service_word_service__["a" /* WordService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4__service_word_service__["a" /* WordService */]) === "function" && _c || Object])
+    __metadata("design:paramtypes", [typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_3__service_word_service__["a" /* WordService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__service_word_service__["a" /* WordService */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_4__service_audio_service__["a" /* AudioService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4__service_audio_service__["a" /* AudioService */]) === "function" && _c || Object])
 ], FlipCardComponent);
 
-var ConfirmDialogComponent = (function () {
-    function ConfirmDialogComponent(dialogRef) {
-        this.dialogRef = dialogRef;
-    }
-    return ConfirmDialogComponent;
-}());
-ConfirmDialogComponent = __decorate([
-    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["o" /* Component */])({
-        selector: 'app-confirm-dialog',
-        template: "\n    <h2 mat-dialog-title>Confirm</h2>\n    <mat-dialog-content>You are about to set this word known. Are you sure?</mat-dialog-content>\n    <mat-dialog-actions>\n      <button mat-button [mat-dialog-close]=\"true\">Yes</button>\n      <button mat-button [mat-dialog-close]=\"false\">No</button>\n    </mat-dialog-actions>\n    "
-    }),
-    __metadata("design:paramtypes", [typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_3__angular_material__["d" /* MatDialogRef */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__angular_material__["d" /* MatDialogRef */]) === "function" && _d || Object])
-], ConfirmDialogComponent);
-
-var _a, _b, _c, _d;
+var _a, _b, _c;
 //# sourceMappingURL=flip-card.component.js.map
 
 /***/ }),
@@ -575,6 +547,8 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var TypeCardComponent = (function () {
     function TypeCardComponent() {
     }
+    TypeCardComponent.prototype.init = function (word) {
+    };
     TypeCardComponent.prototype.ngOnInit = function () {
     };
     return TypeCardComponent;
@@ -660,13 +634,15 @@ module.exports = "<div fxLayout=\"column\">\n  <div class=\"header\">\n    <span
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return LearningComponent; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return LearningComponent; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ConfirmDialogComponent; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_router__ = __webpack_require__("../../../router/@angular/router.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__service_word_service__ = __webpack_require__("../../../../../src/app/service/word.service.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__learn_type_flip_card_flip_card_component__ = __webpack_require__("../../../../../src/app/component/learn-type/flip-card/flip-card.component.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__learn_type_word_directive__ = __webpack_require__("../../../../../src/app/component/learn-type/word.directive.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__service_auth_service__ = __webpack_require__("../../../../../src/app/service/auth.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__angular_material__ = __webpack_require__("../../../material/esm5/material.es5.js");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -682,13 +658,15 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
+
 var LearningComponent = (function () {
-    function LearningComponent(wordService, componentFactoryResolver, changeDetectorRef, router, authService) {
+    function LearningComponent(wordService, componentFactoryResolver, changeDetectorRef, router, authService, dialog) {
         this.wordService = wordService;
         this.componentFactoryResolver = componentFactoryResolver;
         this.changeDetectorRef = changeDetectorRef;
         this.router = router;
         this.authService = authService;
+        this.dialog = dialog;
         this.progressValue = 0;
         this.progressBuffer = 0;
     }
@@ -702,12 +680,12 @@ var LearningComponent = (function () {
     };
     LearningComponent.prototype.loadComponent = function () {
         var _this = this;
-        var componentFactory = this.componentFactoryResolver.resolveComponentFactory(__WEBPACK_IMPORTED_MODULE_3__learn_type_flip_card_flip_card_component__["b" /* FlipCardComponent */]);
+        var componentFactory = this.componentFactoryResolver.resolveComponentFactory(__WEBPACK_IMPORTED_MODULE_3__learn_type_flip_card_flip_card_component__["a" /* FlipCardComponent */]);
         var viewContainerRef = this.wordHost.viewContainerRef;
         viewContainerRef.clear();
         var componentRef = viewContainerRef.createComponent(componentFactory);
         //      console.log(JSON.stringify(this.words[this.actIndex]));
-        componentRef.instance.word = this.word;
+        componentRef.instance.init(this.word);
         this.changeDetectorRef.detectChanges();
         componentRef.instance.wordFinished.subscribe(function (msg) { return _this.onSendResult(msg); });
     };
@@ -729,7 +707,7 @@ var LearningComponent = (function () {
     };
     LearningComponent.prototype.getNextWord = function () {
         var _this = this;
-        //    console.log('getWords()');
+        console.log('getWords()');
         try {
             this.word = this.wordService.nextWord();
         }
@@ -740,7 +718,7 @@ var LearningComponent = (function () {
                 });
             }
         }
-        //    console.log('words get: ' + JSON.stringify(this.words));
+        console.log('words get: ' + JSON.stringify(this.word));
         this.loadComponent();
     };
     LearningComponent.prototype.onSendResult = function (message) {
@@ -752,9 +730,24 @@ var LearningComponent = (function () {
                 this.wordService.skipWord();
                 this.getNextWord();
                 break;
+            case 'known':
+                this.openSetKnownConfirmDialog();
+                break;
             default:
                 console.log(message);
         }
+    };
+    LearningComponent.prototype.openSetKnownConfirmDialog = function () {
+        var _this = this;
+        var dialogRef = this.dialog.open(ConfirmDialogComponent);
+        dialogRef.afterClosed().subscribe(function (confirmed) {
+            if (confirmed) {
+                _this.wordService.setKnown().subscribe(function (res) {
+                    console.log('Word set to known');
+                });
+            }
+            _this.getNextWord();
+        });
     };
     return LearningComponent;
 }());
@@ -768,10 +761,24 @@ LearningComponent = __decorate([
         template: __webpack_require__("../../../../../src/app/component/learning/learning.component.html"),
         styles: [__webpack_require__("../../../../../src/app/component/learning/learning.component.css")]
     }),
-    __metadata("design:paramtypes", [typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__service_word_service__["a" /* WordService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__service_word_service__["a" /* WordService */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_0__angular_core__["q" /* ComponentFactoryResolver */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_core__["q" /* ComponentFactoryResolver */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_0__angular_core__["l" /* ChangeDetectorRef */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_core__["l" /* ChangeDetectorRef */]) === "function" && _d || Object, typeof (_e = typeof __WEBPACK_IMPORTED_MODULE_1__angular_router__["a" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_router__["a" /* Router */]) === "function" && _e || Object, typeof (_f = typeof __WEBPACK_IMPORTED_MODULE_5__service_auth_service__["a" /* AuthService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_5__service_auth_service__["a" /* AuthService */]) === "function" && _f || Object])
+    __metadata("design:paramtypes", [typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__service_word_service__["a" /* WordService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__service_word_service__["a" /* WordService */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_0__angular_core__["q" /* ComponentFactoryResolver */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_core__["q" /* ComponentFactoryResolver */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_0__angular_core__["l" /* ChangeDetectorRef */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_core__["l" /* ChangeDetectorRef */]) === "function" && _d || Object, typeof (_e = typeof __WEBPACK_IMPORTED_MODULE_1__angular_router__["a" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_router__["a" /* Router */]) === "function" && _e || Object, typeof (_f = typeof __WEBPACK_IMPORTED_MODULE_5__service_auth_service__["a" /* AuthService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_5__service_auth_service__["a" /* AuthService */]) === "function" && _f || Object, typeof (_g = typeof __WEBPACK_IMPORTED_MODULE_6__angular_material__["b" /* MatDialog */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_6__angular_material__["b" /* MatDialog */]) === "function" && _g || Object])
 ], LearningComponent);
 
-var _a, _b, _c, _d, _e, _f;
+var ConfirmDialogComponent = (function () {
+    function ConfirmDialogComponent(dialogRef) {
+        this.dialogRef = dialogRef;
+    }
+    return ConfirmDialogComponent;
+}());
+ConfirmDialogComponent = __decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["o" /* Component */])({
+        selector: 'app-confirm-dialog',
+        template: "\n    <h2 mat-dialog-title>Confirm</h2>\n    <mat-dialog-content>You are about to set this word known. Are you sure?</mat-dialog-content>\n    <mat-dialog-actions>\n      <button mat-button [mat-dialog-close]=\"true\">Yes</button>\n      <button mat-button [mat-dialog-close]=\"false\">No</button>\n    </mat-dialog-actions>\n    "
+    }),
+    __metadata("design:paramtypes", [typeof (_h = typeof __WEBPACK_IMPORTED_MODULE_6__angular_material__["d" /* MatDialogRef */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_6__angular_material__["d" /* MatDialogRef */]) === "function" && _h || Object])
+], ConfirmDialogComponent);
+
+var _a, _b, _c, _d, _e, _f, _g, _h;
 //# sourceMappingURL=learning.component.js.map
 
 /***/ }),
@@ -955,6 +962,53 @@ var Word = (function () {
 }());
 
 //# sourceMappingURL=word.js.map
+
+/***/ }),
+
+/***/ "../../../../../src/app/service/audio.service.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AudioService; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_howler__ = __webpack_require__("../../../../howler/dist/howler.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_howler___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_howler__);
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+var AudioService = (function () {
+    function AudioService() {
+        this.sounds = [];
+    }
+    AudioService.prototype.play = function (audioURL) {
+        console.log(audioURL);
+        if (audioURL === undefined || audioURL === 'n/a') {
+            return;
+        }
+        var sound = this.sounds.find(function (s) { return s._src === audioURL; });
+        if (sound === undefined) {
+            this.sounds.push(new __WEBPACK_IMPORTED_MODULE_1_howler__["Howl"]({ src: [audioURL], autoplay: true }));
+        }
+        else {
+            sound.play();
+        }
+    };
+    return AudioService;
+}());
+AudioService = __decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["C" /* Injectable */])(),
+    __metadata("design:paramtypes", [])
+], AudioService);
+
+//# sourceMappingURL=audio.service.js.map
 
 /***/ }),
 
@@ -1177,10 +1231,13 @@ var WordService = (function () {
         var wordID = this.currentWords[this.actIndex].wordID;
         var userWordID = this.currentWords[this.actIndex].userWordID;
         if (userWordID == null) {
-            return this.http.post('/learnWords/userWord/' + wordID, {})
+            return this.http.post('/learnWords/userWord/' + wordID, {}, {
+                headers: new __WEBPACK_IMPORTED_MODULE_1__angular_common_http__["c" /* HttpHeaders */]().set('Content-Type', 'application/json'),
+                responseType: 'text'
+            })
                 .map(function (response) {
                 _this.words.splice(_this.words.map(function (word) { return word.wordID; }).indexOf(wordID), 1);
-                if (_this.tempList.length > 0) {
+                if (_this.tempList !== undefined && _this.tempList.length > 0) {
                     _this.tempList.splice(_this.tempList.map(function (word) { return word.wordID; }).indexOf(wordID), 1);
                 }
                 _this.currentWords.splice(_this.actIndex, 1);
@@ -1188,10 +1245,13 @@ var WordService = (function () {
             }, function (err) { console.log(err); });
         }
         else {
-            return this.http.put('/learnWords/userWord/' + userWordID, {})
+            return this.http.put('/learnWords/userWord/' + userWordID, {}, {
+                headers: new __WEBPACK_IMPORTED_MODULE_1__angular_common_http__["c" /* HttpHeaders */]().set('Content-Type', 'application/json'),
+                responseType: 'text'
+            })
                 .map(function (response) {
                 _this.words.splice(_this.words.map(function (word) { return word.userWordID; }).indexOf(userWordID), 1);
-                if (_this.tempList.length > 0) {
+                if (_this.tempList !== undefined && _this.tempList.length > 0) {
                     _this.tempList.splice(_this.tempList.map(function (word) { return word.userWordID; }).indexOf(userWordID), 1);
                 }
                 _this.currentWords.splice(_this.actIndex, 1);

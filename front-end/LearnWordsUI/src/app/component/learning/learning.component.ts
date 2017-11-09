@@ -7,6 +7,7 @@ import { TypeCardComponent } from '../learn-type/type-card/type-card.component';
 import { WordDirective } from '../learn-type/word.directive';
 import { TemplateComponent } from '../learn-type/template.component';
 import { AuthService } from '../../service/auth.service';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 @Component({
   selector: 'app-learning',
@@ -21,7 +22,8 @@ export class LearningComponent implements OnInit, AfterViewInit, OnDestroy {
   progressBuffer = 0;
 
   constructor(private wordService: WordService, private componentFactoryResolver: ComponentFactoryResolver,
-    private changeDetectorRef: ChangeDetectorRef, private router: Router, private authService: AuthService) { }
+    private changeDetectorRef: ChangeDetectorRef, private router: Router, private authService: AuthService,
+    public dialog: MatDialog) { }
 
   ngOnInit(): void {
   }
@@ -32,18 +34,18 @@ export class LearningComponent implements OnInit, AfterViewInit, OnDestroy {
     this.wordService.progressValue.subscribe(value => this.progressValue = value);
   }
 
-    loadComponent() {
-      const componentFactory = this.componentFactoryResolver.resolveComponentFactory(FlipCardComponent);
+  loadComponent() {
+    const componentFactory = this.componentFactoryResolver.resolveComponentFactory(FlipCardComponent);
 
-      const viewContainerRef = this.wordHost.viewContainerRef;
-      viewContainerRef.clear();
+    const viewContainerRef = this.wordHost.viewContainerRef;
+    viewContainerRef.clear();
 
-      const componentRef = viewContainerRef.createComponent(componentFactory);
+    const componentRef = viewContainerRef.createComponent(componentFactory);
 //      console.log(JSON.stringify(this.words[this.actIndex]));
-      (<TemplateComponent>componentRef.instance).word = this.word;
-      this.changeDetectorRef.detectChanges();
-      (<TemplateComponent>componentRef.instance).wordFinished.subscribe(msg => this.onSendResult(msg));
-    }
+    (<TemplateComponent>componentRef.instance).init(this.word);
+    this.changeDetectorRef.detectChanges();
+    (<TemplateComponent>componentRef.instance).wordFinished.subscribe(msg => this.onSendResult(msg));
+  }
 
   ngOnDestroy() {
   }
@@ -62,7 +64,7 @@ export class LearningComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   getNextWord(): void {
-//    console.log('getWords()');
+    console.log('getWords()');
     try {
       this.word = this.wordService.nextWord();
     } catch (error) {
@@ -72,7 +74,7 @@ export class LearningComponent implements OnInit, AfterViewInit, OnDestroy {
         });
       }
     }
-//    console.log('words get: ' + JSON.stringify(this.words));
+    console.log('words get: ' + JSON.stringify(this.word));
     this.loadComponent();
   }
 
@@ -85,8 +87,43 @@ export class LearningComponent implements OnInit, AfterViewInit, OnDestroy {
         this.wordService.skipWord();
         this.getNextWord();
         break;
+      case 'known':
+        this.openSetKnownConfirmDialog();
+        break;
       default:
         console.log(message);
     }
   }
+
+  openSetKnownConfirmDialog(): void {
+      const dialogRef = this.dialog.open(ConfirmDialogComponent);
+
+      dialogRef.afterClosed().subscribe(confirmed => {
+        if (confirmed) {
+          this.wordService.setKnown().subscribe(res => {
+            console.log('Word set to known');
+          });
+        }
+
+        this.getNextWord();
+      });
+    }
+}
+
+@Component({
+  selector: 'app-confirm-dialog',
+  template: `
+    <h2 mat-dialog-title>Confirm</h2>
+    <mat-dialog-content>You are about to set this word known. Are you sure?</mat-dialog-content>
+    <mat-dialog-actions>
+      <button mat-button [mat-dialog-close]="true">Yes</button>
+      <button mat-button [mat-dialog-close]="false">No</button>
+    </mat-dialog-actions>
+    `
+})
+export class ConfirmDialogComponent {
+
+  constructor(
+    public dialogRef: MatDialogRef<ConfirmDialogComponent>) { }
+
 }

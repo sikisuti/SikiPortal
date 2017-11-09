@@ -5,6 +5,7 @@ import { TemplateComponent } from '../template.component';
 import { Subject } from 'rxjs/Subject';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { WordService } from '../../../service/word.service';
+import { AudioService } from '../../../service/audio.service';
 
 @Component({
   selector: 'app-flip-card',
@@ -52,33 +53,34 @@ export class FlipCardComponent implements OnInit, TemplateComponent {
   turnStatus = 'init';
   isFlipped = false;
 
-  constructor(public dialog: MatDialog, private wordService: WordService) { }
+  constructor(private wordService: WordService, private audioService: AudioService) {}
+
+  init(word: Word): void {
+    this.word = word;
+    this.play();
+  }
 
   ngOnInit() {
   }
 
   @HostListener('window:keydown.space', ['$event'])
   onFlipCard() {
-    if (this.dialog.openDialogs.length !== 0) { return; }
     this.turnStatus = 'turned';
   }
 
   @HostListener('window:keydown.arrowright', ['$event'])
   onSwipeRight(event: any): void {
-    if (this.dialog.openDialogs.length !== 0) { return; }
     this.reviseWordStarter = 'revise';
   }
 
   @HostListener('window:keydown.arrowdown', ['$event'])
   onSwipeDown(event: any): void {
-    if (this.dialog.openDialogs.length !== 0) { return; }
     this.skipWordStarter = 'skip';
   }
 
   @HostListener('window:keydown.arrowup', ['$event'])
   onSwipeUp(event: any): void {
-    if (this.dialog.openDialogs.length !== 0) { return; }
-    this.openDialog();
+    this.setKnownStarter = 'known';
   }
 
   reviseWordDone(event: Event) {
@@ -98,33 +100,7 @@ export class FlipCardComponent implements OnInit, TemplateComponent {
     this.onSwipeRight(event);
   }
 
-  openDialog(): void {
-    const dialogRef = this.dialog.open(ConfirmDialogComponent);
-
-    dialogRef.afterClosed().subscribe(confirmed => {
-      if (confirmed) {
-        this.wordService.setKnown().subscribe(res => {
-          this.setKnownStarter = 'known';
-        });
-      }
-    });
+  play(): void {
+    this.audioService.play(this.word['audioFile']);
   }
-}
-
-@Component({
-  selector: 'app-confirm-dialog',
-  template: `
-    <h2 mat-dialog-title>Confirm</h2>
-    <mat-dialog-content>You are about to set this word known. Are you sure?</mat-dialog-content>
-    <mat-dialog-actions>
-      <button mat-button [mat-dialog-close]="true">Yes</button>
-      <button mat-button [mat-dialog-close]="false">No</button>
-    </mat-dialog-actions>
-    `
-})
-export class ConfirmDialogComponent {
-
-  constructor(
-    public dialogRef: MatDialogRef<ConfirmDialogComponent>) { }
-
 }

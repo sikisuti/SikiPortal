@@ -267,7 +267,7 @@ router.put('/userWord/:id', function(req, res){
           });
         }
 
-        console.log(updateUserWordQuery);
+        console.log('Word set to known. userWordID: ' + req.params.id);
         connection.commit(function(err){
           if (err) { connection.rollback(function(){
               res.sendStatus(503);
@@ -296,7 +296,7 @@ router.post('/userWord/:wordID', function(req, res){
           });
         }
 
-        console.log(insertUserWordQuery);
+        console.log('Word set to known. wordID: ' + req.params.wordID);
         connection.commit(function(err){
           if (err) { connection.rollback(function(){
               res.sendStatus(503);

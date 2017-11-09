@@ -106,21 +106,28 @@ export class WordService {
   setKnown(): Observable<any> {
     const wordID = this.currentWords[this.actIndex].wordID;
     const userWordID = this.currentWords[this.actIndex].userWordID;
+
     if (userWordID == null) {
-      return this.http.post('/learnWords/userWord/' + wordID, {})
+      return this.http.post('/learnWords/userWord/' + wordID, {}, {
+        headers: new HttpHeaders().set('Content-Type', 'application/json'),
+        responseType: 'text'
+     })
         .map(response => {
           this.words.splice(this.words.map(function(word){ return word.wordID; }).indexOf(wordID), 1);
-          if (this.tempList.length > 0) {
+          if (this.tempList !== undefined && this.tempList.length > 0) {
             this.tempList.splice(this.tempList.map(function(word){ return word.wordID; }).indexOf(wordID), 1);
           }
           this.currentWords.splice(this.actIndex, 1);
           this.actIndex -= 1;
         }, err => { console.log(err); });
     } else {
-      return this.http.put('/learnWords/userWord/' + userWordID, {})
+      return this.http.put('/learnWords/userWord/' + userWordID, {}, {
+        headers: new HttpHeaders().set('Content-Type', 'application/json'),
+        responseType: 'text'
+     })
         .map(response => {
           this.words.splice(this.words.map(function(word){ return word.userWordID; }).indexOf(userWordID), 1);
-          if (this.tempList.length > 0) {
+          if (this.tempList !== undefined && this.tempList.length > 0) {
             this.tempList.splice(this.tempList.map(function(word){ return word.userWordID; }).indexOf(userWordID), 1);
           }
           this.currentWords.splice(this.actIndex, 1);

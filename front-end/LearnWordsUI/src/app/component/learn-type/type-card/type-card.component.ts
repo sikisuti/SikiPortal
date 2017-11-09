@@ -15,6 +15,10 @@ export class TypeCardComponent implements OnInit, TemplateComponent {
 
   constructor() { }
 
+  init(word: Word): void {
+
+  }
+
   ngOnInit() {
   }
 
