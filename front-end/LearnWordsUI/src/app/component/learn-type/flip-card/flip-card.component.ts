@@ -57,7 +57,6 @@ export class FlipCardComponent implements OnInit, TemplateComponent {
 
   init(word: Word): void {
     this.word = word;
-    this.play();
   }
 
   ngOnInit() {

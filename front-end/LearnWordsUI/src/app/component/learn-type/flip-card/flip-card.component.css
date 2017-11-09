@@ -10,3 +10,10 @@
     font-weight: bold;
     font-size: 20px;
 }
+
+.audio-button {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    margin: 20px 20px;
+}

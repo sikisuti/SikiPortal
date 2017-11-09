@@ -234,9 +234,10 @@ AppModule = __decorate([
             __WEBPACK_IMPORTED_MODULE_1__angular_platform_browser_animations__["a" /* BrowserAnimationsModule */],
             __WEBPACK_IMPORTED_MODULE_5__angular_forms__["c" /* FormsModule */],
             __WEBPACK_IMPORTED_MODULE_3__angular_material__["a" /* MatButtonModule */],
-            __WEBPACK_IMPORTED_MODULE_3__angular_material__["e" /* MatInputModule */],
-            __WEBPACK_IMPORTED_MODULE_3__angular_material__["f" /* MatProgressBarModule */],
+            __WEBPACK_IMPORTED_MODULE_3__angular_material__["f" /* MatInputModule */],
+            __WEBPACK_IMPORTED_MODULE_3__angular_material__["g" /* MatProgressBarModule */],
             __WEBPACK_IMPORTED_MODULE_3__angular_material__["c" /* MatDialogModule */],
+            __WEBPACK_IMPORTED_MODULE_3__angular_material__["e" /* MatIconModule */],
             __WEBPACK_IMPORTED_MODULE_10__app_routing_module__["a" /* AppRoutingModule */],
             __WEBPACK_IMPORTED_MODULE_4__angular_common_http__["b" /* HttpClientModule */],
             __WEBPACK_IMPORTED_MODULE_6__angular_flex_layout__["a" /* FlexLayoutModule */]
@@ -338,7 +339,7 @@ exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-b
 
 
 // module
-exports.push([module.i, ".content {\r\n    height: 100vh;\r\n}\r\n\r\n.flip-card {\r\n    width: 80%;\r\n    height: 150px;\r\n    box-shadow: 5px 5px 10px #888888;\r\n    background-color: lightgray;\r\n    font-weight: bold;\r\n    font-size: 20px;\r\n}", ""]);
+exports.push([module.i, ".content {\r\n    height: 100vh;\r\n}\r\n\r\n.flip-card {\r\n    width: 80%;\r\n    height: 150px;\r\n    box-shadow: 5px 5px 10px #888888;\r\n    background-color: lightgray;\r\n    font-weight: bold;\r\n    font-size: 20px;\r\n}\r\n\r\n.audio-button {\r\n    position: absolute;\r\n    bottom: 0;\r\n    right: 0;\r\n    margin: 20px 20px;\r\n}", ""]);
 
 // exports
 
@@ -351,7 +352,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/component/learn-type/flip-card/flip-card.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div fxLayout=\"column\" fxLayoutAlign=\"center center\" class=\"content\">\n  <div class=\"flip-card\" \n    (click)=\"onFlipCard()\" (swiperight)=\"onSwipeRight($event)\" (swipedown)=\"onSwipeDown($event)\" (swipeup)=\"onSwipeUp($event)\"\n    (keydown.arrowright)=\"onSwipeRight($event)\" (keydown.arrowdown)=\"onSwipeDown($event)\"\n    [@reviseWord]='reviseWordStarter' (@reviseWord.done)='reviseWordDone($event)' \n    [@skipWord]='skipWordStarter' (@skipWord.done)='reviseWordDone($event)'\n    [@setKnown]='setKnownStarter' (@setKnown.done)='reviseWordDone($event)'\n    [@newWord]='word?.id' \n    [@turnOver]='turnStatus' (@turnOver.done)='turnOverDone($event)'\n    fxLayout=\"row\" fxLayoutAlign=\"center center\">\n      <span>{{(word?.nativeSide ? !isFlipped : isFlipped) ? word?.native : word?.foreignWord}}</span>\n  </div>\n</div>"
+module.exports = "<div fxLayout=\"column\" fxLayoutAlign=\"center center\" class=\"content\">\n  <div class=\"flip-card\" \n    (click)=\"onFlipCard()\" (swiperight)=\"onSwipeRight($event)\" (swipedown)=\"onSwipeDown($event)\" (swipeup)=\"onSwipeUp($event)\"\n    (keydown.arrowright)=\"onSwipeRight($event)\" (keydown.arrowdown)=\"onSwipeDown($event)\"\n    [@reviseWord]='reviseWordStarter' (@reviseWord.done)='reviseWordDone($event)' \n    [@skipWord]='skipWordStarter' (@skipWord.done)='reviseWordDone($event)'\n    [@setKnown]='setKnownStarter' (@setKnown.done)='reviseWordDone($event)'\n    [@newWord]='word?.id' \n    [@turnOver]='turnStatus' (@turnOver.done)='turnOverDone($event)'\n    fxLayout=\"row\" fxLayoutAlign=\"center center\">\n      <span>{{(word?.nativeSide ? !isFlipped : isFlipped) ? word?.native : word?.foreignWord}}</span>\n  </div>\n  <button *ngIf=\"word.audioFile.indexOf('http://') != -1\" mat-icon-button color=\"primary\" (click)=\"play()\" class=\"audio-button\">\n    <i class=\"material-icons md-48\">volume_up</i>\n  </button>\n</div>"
 
 /***/ }),
 
@@ -394,7 +395,6 @@ var FlipCardComponent = (function () {
     }
     FlipCardComponent.prototype.init = function (word) {
         this.word = word;
-        this.play();
     };
     FlipCardComponent.prototype.ngOnInit = function () {
     };
