@@ -10,7 +10,7 @@
     fxLayout="row" fxLayoutAlign="center center">
       <span>{{(word?.nativeSide ? !isFlipped : isFlipped) ? word?.native : word?.foreignWord}}</span>
   </div>
-  <button *ngIf="word.audioFile.indexOf('http://') != -1" mat-icon-button color="primary" (click)="play()" class="audio-button">
+  <button *ngIf="(word.audioFile !== undefined && word.audioFile.indexOf('http://') != -1)" mat-icon-button color="primary" (click)="play()" class="audio-button">
     <i class="material-icons md-48">volume_up</i>
   </button>
 </div>
