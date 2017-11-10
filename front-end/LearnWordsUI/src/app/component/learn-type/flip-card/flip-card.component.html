@@ -1,5 +1,5 @@
 <div fxLayout="column" fxLayoutAlign="center center" class="content">
-  <div class="flip-card" 
+  <div class="flip-card" [ngClass]="{'bordered': word.state > 5}" 
     (click)="onFlipCard()" (swiperight)="onSwipeRight($event)" (swipedown)="onSwipeDown($event)" (swipeup)="onSwipeUp($event)"
     (keydown.arrowright)="onSwipeRight($event)" (keydown.arrowdown)="onSwipeDown($event)"
     [@reviseWord]='reviseWordStarter' (@reviseWord.done)='reviseWordDone($event)' 
