@@ -28,6 +28,7 @@ webpackEmptyAsyncContext.id = "../../../../../src/$$_gendir lazy recursive";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__component_home_home_component__ = __webpack_require__("../../../../../src/app/component/home/home.component.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__component_learning_learning_component__ = __webpack_require__("../../../../../src/app/component/learning/learning.component.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__component_login_login_component__ = __webpack_require__("../../../../../src/app/component/login/login.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__component_new_word_new_word_component__ = __webpack_require__("../../../../../src/app/component/new-word/new-word.component.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -40,10 +41,12 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 
 
 
+
 var appRoutes = [
     { path: 'home', component: __WEBPACK_IMPORTED_MODULE_3__component_home_home_component__["a" /* HomeComponent */], canActivate: [__WEBPACK_IMPORTED_MODULE_2__service_auth_guard_service__["a" /* AuthGuardService */]] },
     { path: 'learn', component: __WEBPACK_IMPORTED_MODULE_4__component_learning_learning_component__["b" /* LearningComponent */] },
     { path: 'login', component: __WEBPACK_IMPORTED_MODULE_5__component_login_login_component__["a" /* LoginComponent */] },
+    { path: 'new', component: __WEBPACK_IMPORTED_MODULE_6__component_new_word_new_word_component__["a" /* NewWordComponent */], canActivate: [__WEBPACK_IMPORTED_MODULE_2__service_auth_guard_service__["a" /* AuthGuardService */]] },
     { path: '', redirectTo: '/home', pathMatch: 'full' },
     { path: '**', redirectTo: '/home', pathMatch: 'full' }
 ];
@@ -160,6 +163,7 @@ AppComponent = __decorate([
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_19__component_learn_type_word_directive__ = __webpack_require__("../../../../../src/app/component/learn-type/word.directive.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_20__component_learn_type_type_card_type_card_component__ = __webpack_require__("../../../../../src/app/component/learn-type/type-card/type-card.component.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_21__service_audio_service__ = __webpack_require__("../../../../../src/app/service/audio.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_22__component_new_word_new_word_component__ = __webpack_require__("../../../../../src/app/component/new-word/new-word.component.ts");
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
@@ -176,6 +180,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+
 
 
 
@@ -227,7 +232,8 @@ AppModule = __decorate([
             __WEBPACK_IMPORTED_MODULE_18__component_home_home_component__["a" /* HomeComponent */],
             __WEBPACK_IMPORTED_MODULE_19__component_learn_type_word_directive__["a" /* WordDirective */],
             __WEBPACK_IMPORTED_MODULE_20__component_learn_type_type_card_type_card_component__["a" /* TypeCardComponent */],
-            __WEBPACK_IMPORTED_MODULE_13__component_learning_learning_component__["a" /* ConfirmDialogComponent */]
+            __WEBPACK_IMPORTED_MODULE_13__component_learning_learning_component__["a" /* ConfirmDialogComponent */],
+            __WEBPACK_IMPORTED_MODULE_22__component_new_word_new_word_component__["a" /* NewWordComponent */]
         ],
         imports: [
             __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser__["a" /* BrowserModule */],
@@ -947,6 +953,89 @@ MainMenuComponent = __decorate([
 ], MainMenuComponent);
 
 //# sourceMappingURL=main-menu.component.js.map
+
+/***/ }),
+
+/***/ "../../../../../src/app/component/new-word/new-word.component.css":
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, ".search-box {\r\n    margin: 10px;\r\n    height: 40px;\r\n}", ""]);
+
+// exports
+
+
+/*** EXPORTS FROM exports-loader ***/
+module.exports = module.exports.toString();
+
+/***/ }),
+
+/***/ "../../../../../src/app/component/new-word/new-word.component.html":
+/***/ (function(module, exports) {
+
+module.exports = "<div fxLayout=\"column\" class=\"content\">\n  <div fxLayout=\"row\" class=\"search-box\">\n    <input [(ngModel)]=\"foreignWord\" class=\"form-control form-control-lg\" type=\"text\" placeholder=\"Search...\">\n    <button  mat-fab color=\"primary\" (click)=\"search()\">\n      <i class=\"material-icons md-48\">search</i>\n    </button>\n  </div>\n</div>\n"
+
+/***/ }),
+
+/***/ "../../../../../src/app/component/new-word/new-word.component.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return NewWordComponent; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_common_http__ = __webpack_require__("../../../common/@angular/common/http.es5.js");
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+var NewWordComponent = (function () {
+    function NewWordComponent(http) {
+        this.http = http;
+    }
+    NewWordComponent.prototype.ngOnInit = function () {
+    };
+    NewWordComponent.prototype.search = function (word) {
+        var _this = this;
+        console.log(this.foreignWord);
+        this.http.get('/learnWords/searchNatives?word=' + this.foreignWord)
+            .subscribe(function (response) {
+            console.log(response);
+            _this.natives = response;
+        }, function (err) {
+            console.log(err);
+        });
+        this.http.get('/learnWords/searchOxford?word=' + this.foreignWord.replace(' ', '_'))
+            .subscribe(function (response) {
+            console.log(response);
+            _this.oxfords = response;
+        }, function (err) {
+            console.log(err);
+        });
+    };
+    return NewWordComponent;
+}());
+NewWordComponent = __decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["o" /* Component */])({
+        selector: 'app-new-word',
+        template: __webpack_require__("../../../../../src/app/component/new-word/new-word.component.html"),
+        styles: [__webpack_require__("../../../../../src/app/component/new-word/new-word.component.css")]
+    }),
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__angular_common_http__["a" /* HttpClient */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_common_http__["a" /* HttpClient */]) === "function" && _a || Object])
+], NewWordComponent);
+
+var _a;
+//# sourceMappingURL=new-word.component.js.map
 
 /***/ }),
 

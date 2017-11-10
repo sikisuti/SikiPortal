@@ -23,6 +23,7 @@ import { HomeComponent } from './component/home/home.component';
 import { WordDirective } from './component/learn-type/word.directive';
 import { TypeCardComponent } from './component/learn-type/type-card/type-card.component';
 import { AudioService } from './service/audio.service';
+import { NewWordComponent } from './component/new-word/new-word.component';
 
 export class HammerConfig extends HammerGestureConfig {
   overrides = <any>{
@@ -40,7 +41,8 @@ export class HammerConfig extends HammerGestureConfig {
     HomeComponent,
     WordDirective,
     TypeCardComponent,
-    ConfirmDialogComponent
+    ConfirmDialogComponent,
+    NewWordComponent
   ],
   imports: [
     BrowserModule,
