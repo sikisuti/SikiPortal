@@ -1,0 +1,15 @@
+.content {
+    height: 100vh;
+}
+
+.spell-card {
+    width: 80%;
+    background-color: lightgray;
+}
+
+.audio-button {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    margin: 20px 20px;
+}

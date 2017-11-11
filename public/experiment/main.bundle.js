@@ -161,9 +161,9 @@ AppComponent = __decorate([
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_17__component_login_login_component__ = __webpack_require__("../../../../../src/app/component/login/login.component.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_18__component_home_home_component__ = __webpack_require__("../../../../../src/app/component/home/home.component.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_19__component_learn_type_word_directive__ = __webpack_require__("../../../../../src/app/component/learn-type/word.directive.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_20__component_learn_type_type_card_type_card_component__ = __webpack_require__("../../../../../src/app/component/learn-type/type-card/type-card.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_21__service_audio_service__ = __webpack_require__("../../../../../src/app/service/audio.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_22__component_new_word_new_word_component__ = __webpack_require__("../../../../../src/app/component/new-word/new-word.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_20__service_audio_service__ = __webpack_require__("../../../../../src/app/service/audio.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_21__component_new_word_new_word_component__ = __webpack_require__("../../../../../src/app/component/new-word/new-word.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_22__component_learn_type_spell_card_spell_card_component__ = __webpack_require__("../../../../../src/app/component/learn-type/spell-card/spell-card.component.ts");
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
@@ -231,9 +231,9 @@ AppModule = __decorate([
             __WEBPACK_IMPORTED_MODULE_17__component_login_login_component__["a" /* LoginComponent */],
             __WEBPACK_IMPORTED_MODULE_18__component_home_home_component__["a" /* HomeComponent */],
             __WEBPACK_IMPORTED_MODULE_19__component_learn_type_word_directive__["a" /* WordDirective */],
-            __WEBPACK_IMPORTED_MODULE_20__component_learn_type_type_card_type_card_component__["a" /* TypeCardComponent */],
             __WEBPACK_IMPORTED_MODULE_13__component_learning_learning_component__["a" /* ConfirmDialogComponent */],
-            __WEBPACK_IMPORTED_MODULE_22__component_new_word_new_word_component__["a" /* NewWordComponent */]
+            __WEBPACK_IMPORTED_MODULE_21__component_new_word_new_word_component__["a" /* NewWordComponent */],
+            __WEBPACK_IMPORTED_MODULE_22__component_learn_type_spell_card_spell_card_component__["a" /* SpellCardComponent */]
         ],
         imports: [
             __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser__["a" /* BrowserModule */],
@@ -244,6 +244,7 @@ AppModule = __decorate([
             __WEBPACK_IMPORTED_MODULE_3__angular_material__["g" /* MatProgressBarModule */],
             __WEBPACK_IMPORTED_MODULE_3__angular_material__["c" /* MatDialogModule */],
             __WEBPACK_IMPORTED_MODULE_3__angular_material__["e" /* MatIconModule */],
+            __WEBPACK_IMPORTED_MODULE_3__angular_material__["h" /* MatSelectModule */],
             __WEBPACK_IMPORTED_MODULE_10__app_routing_module__["a" /* AppRoutingModule */],
             __WEBPACK_IMPORTED_MODULE_4__angular_common_http__["b" /* HttpClientModule */],
             __WEBPACK_IMPORTED_MODULE_6__angular_flex_layout__["a" /* FlexLayoutModule */]
@@ -256,10 +257,10 @@ AppModule = __decorate([
                 provide: __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser__["d" /* HAMMER_GESTURE_CONFIG */],
                 useClass: HammerConfig
             },
-            __WEBPACK_IMPORTED_MODULE_21__service_audio_service__["a" /* AudioService */]
+            __WEBPACK_IMPORTED_MODULE_20__service_audio_service__["a" /* AudioService */]
         ],
         bootstrap: [__WEBPACK_IMPORTED_MODULE_11__app_component__["a" /* AppComponent */]],
-        entryComponents: [__WEBPACK_IMPORTED_MODULE_12__component_learn_type_flip_card_flip_card_component__["a" /* FlipCardComponent */], __WEBPACK_IMPORTED_MODULE_20__component_learn_type_type_card_type_card_component__["a" /* TypeCardComponent */], __WEBPACK_IMPORTED_MODULE_13__component_learning_learning_component__["a" /* ConfirmDialogComponent */]]
+        entryComponents: [__WEBPACK_IMPORTED_MODULE_12__component_learn_type_flip_card_flip_card_component__["a" /* FlipCardComponent */], __WEBPACK_IMPORTED_MODULE_22__component_learn_type_spell_card_spell_card_component__["a" /* SpellCardComponent */], __WEBPACK_IMPORTED_MODULE_13__component_learning_learning_component__["a" /* ConfirmDialogComponent */]]
     })
 ], AppModule);
 
@@ -320,6 +321,7 @@ var HomeComponent = (function () {
         this.router.navigate(['/learn']);
     };
     HomeComponent.prototype.goNew = function () {
+        this.router.navigate(['/new']);
     };
     return HomeComponent;
 }());
@@ -507,7 +509,7 @@ var _a, _b, _c;
 
 /***/ }),
 
-/***/ "../../../../../src/app/component/learn-type/type-card/type-card.component.css":
+/***/ "../../../../../src/app/component/learn-type/spell-card/spell-card.component.css":
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-base.js")(false);
@@ -515,7 +517,7 @@ exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-b
 
 
 // module
-exports.push([module.i, ".type-card {\r\n    width:  200px;\r\n    height: 100px;\r\n    background-color: green;\r\n}", ""]);
+exports.push([module.i, ".content {\r\n    height: 100vh;\r\n}\r\n\r\n.spell-card {\r\n    width: 80%;\r\n    background-color: lightgray;\r\n}\r\n\r\n.audio-button {\r\n    position: absolute;\r\n    bottom: 0;\r\n    right: 0;\r\n    margin: 20px 20px;\r\n}", ""]);
 
 // exports
 
@@ -525,20 +527,19 @@ module.exports = module.exports.toString();
 
 /***/ }),
 
-/***/ "../../../../../src/app/component/learn-type/type-card/type-card.component.html":
+/***/ "../../../../../src/app/component/learn-type/spell-card/spell-card.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"type-card\">\n  <span>{{word?.native}}</span>\n</div>"
+module.exports = "<div fxLayout=\"column\" fxLayoutAlign=\"center center\" class=\"content\">\n    <div class=\"spell-card\" (click)=\"onFlipCard()\" fxLayout=\"column\" fxLayoutAlign=\"center center\">\n        <span>{{(word?.nativeSide ? !isFlipped : isFlipped) ? word?.native : word?.foreignWord}}</span>\n    </div>\n    <button *ngIf=\"(word.audioFile !== undefined && word.audioFile.indexOf('http://') != -1)\" mat-icon-button color=\"primary\" (click)=\"play()\" class=\"audio-button\">\n      <i class=\"material-icons md-48\">volume_up</i>\n    </button>\n  </div>\n"
 
 /***/ }),
 
-/***/ "../../../../../src/app/component/learn-type/type-card/type-card.component.ts":
+/***/ "../../../../../src/app/component/learn-type/spell-card/spell-card.component.ts":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return TypeCardComponent; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return SpellCardComponent; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__model_word__ = __webpack_require__("../../../../../src/app/model/word.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -549,31 +550,26 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 
-
-var TypeCardComponent = (function () {
-    function TypeCardComponent() {
+var SpellCardComponent = (function () {
+    function SpellCardComponent() {
     }
-    TypeCardComponent.prototype.init = function (word) {
+    SpellCardComponent.prototype.ngOnInit = function () {
     };
-    TypeCardComponent.prototype.ngOnInit = function () {
+    SpellCardComponent.prototype.init = function (word) {
+        this.word = word;
     };
-    return TypeCardComponent;
+    return SpellCardComponent;
 }());
-__decorate([
-    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["F" /* Input */])(),
-    __metadata("design:type", typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__model_word__["a" /* Word */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__model_word__["a" /* Word */]) === "function" && _a || Object)
-], TypeCardComponent.prototype, "word", void 0);
-TypeCardComponent = __decorate([
+SpellCardComponent = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["o" /* Component */])({
-        selector: 'app-type-card',
-        template: __webpack_require__("../../../../../src/app/component/learn-type/type-card/type-card.component.html"),
-        styles: [__webpack_require__("../../../../../src/app/component/learn-type/type-card/type-card.component.css")]
+        selector: 'app-spell-card',
+        template: __webpack_require__("../../../../../src/app/component/learn-type/spell-card/spell-card.component.html"),
+        styles: [__webpack_require__("../../../../../src/app/component/learn-type/spell-card/spell-card.component.css")]
     }),
     __metadata("design:paramtypes", [])
-], TypeCardComponent);
+], SpellCardComponent);
 
-var _a;
-//# sourceMappingURL=type-card.component.js.map
+//# sourceMappingURL=spell-card.component.js.map
 
 /***/ }),
 
@@ -645,7 +641,7 @@ module.exports = "<div fxLayout=\"column\">\n  <div class=\"header\">\n    <span
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_router__ = __webpack_require__("../../../router/@angular/router.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__service_word_service__ = __webpack_require__("../../../../../src/app/service/word.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__learn_type_flip_card_flip_card_component__ = __webpack_require__("../../../../../src/app/component/learn-type/flip-card/flip-card.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__learn_type_spell_card_spell_card_component__ = __webpack_require__("../../../../../src/app/component/learn-type/spell-card/spell-card.component.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__learn_type_word_directive__ = __webpack_require__("../../../../../src/app/component/learn-type/word.directive.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__service_auth_service__ = __webpack_require__("../../../../../src/app/service/auth.service.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__angular_material__ = __webpack_require__("../../../material/esm5/material.es5.js");
@@ -686,7 +682,7 @@ var LearningComponent = (function () {
     };
     LearningComponent.prototype.loadComponent = function () {
         var _this = this;
-        var componentFactory = this.componentFactoryResolver.resolveComponentFactory(__WEBPACK_IMPORTED_MODULE_3__learn_type_flip_card_flip_card_component__["a" /* FlipCardComponent */]);
+        var componentFactory = this.componentFactoryResolver.resolveComponentFactory(__WEBPACK_IMPORTED_MODULE_3__learn_type_spell_card_spell_card_component__["a" /* SpellCardComponent */]);
         var viewContainerRef = this.wordHost.viewContainerRef;
         viewContainerRef.clear();
         var componentRef = viewContainerRef.createComponent(componentFactory);
@@ -964,7 +960,7 @@ exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-b
 
 
 // module
-exports.push([module.i, ".search-box {\r\n    margin: 10px;\r\n    height: 40px;\r\n}", ""]);
+exports.push([module.i, ".content {\r\n    color: white;\r\n}\r\n\r\n.search-box {\r\n    margin: 10px;\r\n    height: 40px;\r\n}\r\n\r\n.native-box {\r\n    margin: 10px;\r\n    height: 40px;\r\n}\r\n\r\n.audio-button {\r\n    width: 25px;\r\n    height: 25px;\r\n    line-height: 25px;\r\n}\r\n\r\n.oxford-item {\r\n    margin: 10px;\r\n    font-size: 12px;\r\n    line-height: normal;\r\n}\r\n\r\n.example-sentence {\r\n    font-style: italic;\r\n}\r\n\r\n.selected {\r\n    /*background-color: #333;*/\r\n    font-size: 1em;\r\n    color: wheat;\r\n  }", ""]);
 
 // exports
 
@@ -977,7 +973,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/component/new-word/new-word.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div fxLayout=\"column\" class=\"content\">\n  <div fxLayout=\"row\" class=\"search-box\">\n    <input [(ngModel)]=\"foreignWord\" class=\"form-control form-control-lg\" type=\"text\" placeholder=\"Search...\">\n    <button  mat-fab color=\"primary\" (click)=\"search()\">\n      <i class=\"material-icons md-48\">search</i>\n    </button>\n  </div>\n</div>\n"
+module.exports = "<div fxLayout=\"column\" class=\"content\">\n  <div fxLayout=\"row\" class=\"search-box\" fxLayoutGap=\"10px\">\n    <button mat-fab color=\"primary\" (click)=\"search()\">\n      <i class=\"material-icons md-48\">search</i>\n    </button>\n    <input [(ngModel)]=\"newWord.foreignWord\" class=\"form-control form-control-lg\" type=\"text\" placeholder=\"Search...\">\n  </div>\n  <div fxLayout=\"row\" class=\"native-box\" fxLayoutGap=\"10px\">\n    <div class=\"nav-item dropdown\">\n      <a class=\"nav-link dropdown-toggle\" data-toggle=\"dropdown\" href=\"#\" role=\"button\" aria-haspopup=\"true\" aria-expanded=\"false\"></a>\n      <div class=\"dropdown-menu\">\n        <button *ngFor=\"let native of natives\" class=\"dropdown-item btn btn-light\" (click)=\"newWord.native = native.name\">{{native.name}}</button>\n      </div>\n    </div>\n    <input [(ngModel)]=\"newWord.native\" class=\"form-control form-control-lg\" type=\"text\">\n    <button class=\"btn\" (click)=\"submit()\"\n    [disabled]=\"(newWord.native == '' || newWord.foreignWord == '' || (oxfords != undefined && oxfords.length > 0 && newWord.definition == ''))\">Add</button>\n  </div>\n  <div>\n    <div *ngFor=\"let oxford of oxfords\" fxLayout=\"column\" class=\"oxford-item\" [ngClass]=\"{'selected': newWord.definition == oxford.definition}\">\n      <div fxLayout=\"row\" fxLayoutGap=\"10px\">\n        <span>{{oxford.lexicalCategory}}</span>\n        <span>/{{oxford.pronunciation}}/</span>\n        <button mat-icon-button color=\"primary\" (click)=\"play()\" class=\"audio-button\">\n          <i class=\"material-icons md-48\">volume_up</i>\n        </button>\n      </div>\n      <div (click)=\"selectOxford(oxford)\" fxLayout=\"column\">\n        <span>{{oxford.definition}}</span>\n        <span class=\"example-sentence\">{{oxford.example}}</span>\n      </div>\n    </div>\n  </div>\n</div>"
 
 /***/ }),
 
@@ -988,6 +984,8 @@ module.exports = "<div fxLayout=\"column\" class=\"content\">\n  <div fxLayout=\
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return NewWordComponent; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_common_http__ = __webpack_require__("../../../common/@angular/common/http.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_router__ = __webpack_require__("../../../router/@angular/router.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__service_word_service__ = __webpack_require__("../../../../../src/app/service/word.service.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -999,26 +997,59 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 
 
+
+
 var NewWordComponent = (function () {
-    function NewWordComponent(http) {
+    function NewWordComponent(http, router, wordService) {
         this.http = http;
+        this.router = router;
+        this.wordService = wordService;
+        //  nativeWord: string;
+        this.newWord = {
+            foreignWord: '',
+            native: '',
+            definition: '',
+            exampleSentence: '',
+            lexicalCategory: '',
+            pronunciation: '',
+            audioFile: ''
+        };
     }
     NewWordComponent.prototype.ngOnInit = function () {
     };
     NewWordComponent.prototype.search = function (word) {
         var _this = this;
-        console.log(this.foreignWord);
-        this.http.get('/learnWords/searchNatives?word=' + this.foreignWord)
+        console.log(this.newWord['foreignWord']);
+        this.http.get('/learnWords/searchNatives?word=' + this.newWord['foreignWord'])
             .subscribe(function (response) {
             console.log(response);
             _this.natives = response;
         }, function (err) {
             console.log(err);
         });
-        this.http.get('/learnWords/searchOxford?word=' + this.foreignWord.replace(' ', '_'))
+        this.http.get('/learnWords/searchOxford?word=' + this.newWord['foreignWord'].replace(' ', '_'))
             .subscribe(function (response) {
             console.log(response);
             _this.oxfords = response;
+        }, function (err) {
+            console.log(err);
+        });
+    };
+    NewWordComponent.prototype.selectOxford = function (oxford) {
+        this.newWord['definition'] = oxford.definition;
+    };
+    NewWordComponent.prototype.submit = function () {
+        var _this = this;
+        if (this.newWord['native'] === '' || this.newWord['foreignWord'] === '' ||
+            (this.oxfords !== undefined && this.oxfords.length > 0 && this.newWord['definition'] === '')) {
+            return;
+        }
+        this.newWord['levelID'] = 1;
+        if (this.newWord['audioFile'] == null) {
+            this.newWord['audioFile'] = 'n/a';
+        }
+        this.wordService.addWord(this.newWord).subscribe(function (response) {
+            _this.router.navigate(['/home']);
         }, function (err) {
             console.log(err);
         });
@@ -1031,10 +1062,10 @@ NewWordComponent = __decorate([
         template: __webpack_require__("../../../../../src/app/component/new-word/new-word.component.html"),
         styles: [__webpack_require__("../../../../../src/app/component/new-word/new-word.component.css")]
     }),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__angular_common_http__["a" /* HttpClient */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_common_http__["a" /* HttpClient */]) === "function" && _a || Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__angular_common_http__["a" /* HttpClient */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_common_http__["a" /* HttpClient */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__angular_router__["a" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__angular_router__["a" /* Router */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_3__service_word_service__["a" /* WordService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__service_word_service__["a" /* WordService */]) === "function" && _c || Object])
 ], NewWordComponent);
 
-var _a;
+var _a, _b, _c;
 //# sourceMappingURL=new-word.component.js.map
 
 /***/ }),
@@ -1381,6 +1412,12 @@ var WordService = (function () {
         this.progressValue.next(percentage);
         console.log('all: ' + all + ' current: ' + current + ' percentage: ' + percentage +
             ' round: ' + this.round + ' wordLen: ' + (this.words.length + 1) + ' curWordLen: ' + this.currentWords.length);
+    };
+    WordService.prototype.addWord = function (newWord) {
+        return this.http.post('/learnWords/word', newWord, {
+            headers: new __WEBPACK_IMPORTED_MODULE_1__angular_common_http__["c" /* HttpHeaders */]().set('Content-Type', 'application/json'),
+            responseType: 'text'
+        });
     };
     return WordService;
 }());

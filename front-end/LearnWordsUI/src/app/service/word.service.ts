@@ -176,4 +176,11 @@ export class WordService {
     console.log('all: ' + all + ' current: ' + current + ' percentage: ' + percentage +
       ' round: ' + this.round + ' wordLen: ' + (this.words.length + 1) + ' curWordLen: ' + this.currentWords.length);
   }
+
+  addWord(newWord): Observable<any> {
+    return this.http.post('/learnWords/word', newWord, {
+      headers: new HttpHeaders().set('Content-Type', 'application/json'),
+      responseType: 'text'
+   });
+  }
 }

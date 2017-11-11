@@ -1,8 +1,34 @@
 <div fxLayout="column" class="content">
-  <div fxLayout="row" class="search-box">
-    <input [(ngModel)]="foreignWord" class="form-control form-control-lg" type="text" placeholder="Search...">
-    <button  mat-fab color="primary" (click)="search()">
+  <div fxLayout="row" class="search-box" fxLayoutGap="10px">
+    <button mat-fab color="primary" (click)="search()">
       <i class="material-icons md-48">search</i>
     </button>
+    <input [(ngModel)]="newWord.foreignWord" class="form-control form-control-lg" type="text" placeholder="Search...">
+  </div>
+  <div fxLayout="row" class="native-box" fxLayoutGap="10px">
+    <div class="nav-item dropdown">
+      <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"></a>
+      <div class="dropdown-menu">
+        <button *ngFor="let native of natives" class="dropdown-item btn btn-light" (click)="newWord.native = native.name">{{native.name}}</button>
+      </div>
+    </div>
+    <input [(ngModel)]="newWord.native" class="form-control form-control-lg" type="text">
+    <button class="btn" (click)="submit()"
+    [disabled]="(newWord.native == '' || newWord.foreignWord == '' || (oxfords != undefined && oxfords.length > 0 && newWord.definition == ''))">Add</button>
+  </div>
+  <div>
+    <div *ngFor="let oxford of oxfords" fxLayout="column" class="oxford-item" [ngClass]="{'selected': newWord.definition == oxford.definition}">
+      <div fxLayout="row" fxLayoutGap="10px">
+        <span>{{oxford.lexicalCategory}}</span>
+        <span>/{{oxford.pronunciation}}/</span>
+        <button mat-icon-button color="primary" (click)="play()" class="audio-button">
+          <i class="material-icons md-48">volume_up</i>
+        </button>
+      </div>
+      <div (click)="selectOxford(oxford)" fxLayout="column">
+        <span>{{oxford.definition}}</span>
+        <span class="example-sentence">{{oxford.example}}</span>
+      </div>
+    </div>
   </div>
 </div>

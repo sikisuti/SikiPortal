@@ -1,7 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
-import { MatButtonModule, MatInputModule, MatProgressBarModule, MatDialogModule, MatIconModule } from '@angular/material';
+import { MatButtonModule, MatInputModule, MatProgressBarModule, MatDialogModule, MatIconModule, MatSelectModule } from '@angular/material';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -21,9 +21,9 @@ import { MainMenuComponent } from './component/main-menu/main-menu.component';
 import { LoginComponent } from './component/login/login.component';
 import { HomeComponent } from './component/home/home.component';
 import { WordDirective } from './component/learn-type/word.directive';
-import { TypeCardComponent } from './component/learn-type/type-card/type-card.component';
 import { AudioService } from './service/audio.service';
 import { NewWordComponent } from './component/new-word/new-word.component';
+import { SpellCardComponent } from './component/learn-type/spell-card/spell-card.component';
 
 export class HammerConfig extends HammerGestureConfig {
   overrides = <any>{
@@ -40,9 +40,9 @@ export class HammerConfig extends HammerGestureConfig {
     LoginComponent,
     HomeComponent,
     WordDirective,
-    TypeCardComponent,
     ConfirmDialogComponent,
-    NewWordComponent
+    NewWordComponent,
+    SpellCardComponent
   ],
   imports: [
     BrowserModule,
@@ -53,6 +53,7 @@ export class HammerConfig extends HammerGestureConfig {
     MatProgressBarModule,
     MatDialogModule,
     MatIconModule,
+    MatSelectModule,
     AppRoutingModule,
     HttpClientModule,
     FlexLayoutModule
@@ -68,6 +69,6 @@ export class HammerConfig extends HammerGestureConfig {
     AudioService
   ],
   bootstrap: [AppComponent],
-  entryComponents: [FlipCardComponent, TypeCardComponent, ConfirmDialogComponent]
+  entryComponents: [FlipCardComponent, SpellCardComponent, ConfirmDialogComponent]
 })
 export class AppModule { }

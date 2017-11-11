@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { Word } from '../../model/word';
 import { WordService } from '../../service/word.service';
 import { FlipCardComponent } from '../learn-type/flip-card/flip-card.component';
-import { TypeCardComponent } from '../learn-type/type-card/type-card.component';
+import { SpellCardComponent } from '../learn-type/spell-card/spell-card.component';
 import { WordDirective } from '../learn-type/word.directive';
 import { TemplateComponent } from '../learn-type/template.component';
 import { AuthService } from '../../service/auth.service';
@@ -35,7 +35,7 @@ export class LearningComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   loadComponent() {
-    const componentFactory = this.componentFactoryResolver.resolveComponentFactory(FlipCardComponent);
+    const componentFactory = this.componentFactoryResolver.resolveComponentFactory(SpellCardComponent);
 
     const viewContainerRef = this.wordHost.viewContainerRef;
     viewContainerRef.clear();

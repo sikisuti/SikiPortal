@@ -18,7 +18,7 @@ export class HomeComponent implements OnInit {
   }
 
   goNew(): void {
-
+    this.router.navigate(['/new']);
   }
 
 }
