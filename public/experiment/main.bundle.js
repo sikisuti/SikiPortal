@@ -517,7 +517,7 @@ exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-b
 
 
 // module
-exports.push([module.i, ".content {\r\n    height: 100vh;\r\n}\r\n\r\n.spell-card {\r\n    width: 80%;\r\n    background-color: lightgray;\r\n}\r\n\r\n.audio-button {\r\n    position: absolute;\r\n    bottom: 0;\r\n    right: 0;\r\n    margin: 20px 20px;\r\n}", ""]);
+exports.push([module.i, ".content {\r\n    height: 100vh;\r\n}\r\n\r\n.spell-card {\r\n    width: 80%;\r\n    background-color: lightyellow;\r\n    border-radius: 10px;\r\n}\r\n\r\n.audio-button {\r\n    position: absolute;\r\n    bottom: 0;\r\n    right: 0;\r\n    margin: 20px 20px;\r\n}\r\n\r\n.correct {\r\n    background-color: lightgreen;\r\n}", ""]);
 
 // exports
 
@@ -530,7 +530,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/component/learn-type/spell-card/spell-card.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div fxLayout=\"column\" fxLayoutAlign=\"center center\" class=\"content\">\n    <div class=\"spell-card\" (click)=\"onFlipCard()\" fxLayout=\"column\" fxLayoutAlign=\"center center\">\n        <span>{{(word?.nativeSide ? !isFlipped : isFlipped) ? word?.native : word?.foreignWord}}</span>\n    </div>\n    <button *ngIf=\"(word.audioFile !== undefined && word.audioFile.indexOf('http://') != -1)\" mat-icon-button color=\"primary\" (click)=\"play()\" class=\"audio-button\">\n      <i class=\"material-icons md-48\">volume_up</i>\n    </button>\n  </div>\n"
+module.exports = "<div fxLayout=\"column\" fxLayoutAlign=\"center center\" class=\"content\">\n  <div class=\"spell-card\" [ngClass]=\"{'correct': answer === word.foreignWord}\" fxLayout=\"column\" fxLayoutAlign=\"center center\"    \n    [@skipWord]='skipWordStarter' (@skipWord.done)='reviseWordDone($event)'\n    [@reviseWord]='reviseWordStarter' (@reviseWord.done)='reviseWordDone($event)' \n    [@newWord]='word?.id'>\n    <span>{{word?.native}}</span>\n    <mat-form-field>\n      <input matInput [ngModel]=\"answer\" #answerfield (ngModelChange)=\"answerChanged($event)\">\n    </mat-form-field>\n    <button *ngIf=\"answer !== word.foreignWord\" fxFlexAlign=\"end\" mat-button color=\"primary\" (click)=\"revise()\">I don't know</button>\n    <button *ngIf=\"answer === word.foreignWord\" fxFlexAlign=\"end\" mat-button color=\"primary\" (click)=\"ok()\">OK</button>\n  </div>\n\n  <button *ngIf=\"(word.audioFile !== undefined && word.audioFile.indexOf('http://') != -1)\" mat-icon-button color=\"primary\"\n    (click)=\"play()\" class=\"audio-button\">\n    <i class=\"material-icons md-48\">volume_up</i>\n  </button>\n</div>"
 
 /***/ }),
 
@@ -540,6 +540,8 @@ module.exports = "<div fxLayout=\"column\" fxLayoutAlign=\"center center\" class
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return SpellCardComponent; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_rxjs_Subject__ = __webpack_require__("../../../../rxjs/Subject.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_rxjs_Subject___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_rxjs_Subject__);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -550,25 +552,95 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 
+
+
+
+
 var SpellCardComponent = (function () {
     function SpellCardComponent() {
+        this.wordFinished = new __WEBPACK_IMPORTED_MODULE_1_rxjs_Subject__["Subject"]();
+        this.reviseWordStarter = 'init';
+        this.skipWordStarter = 'init';
+        this.setKnownStarter = 'init';
     }
     SpellCardComponent.prototype.ngOnInit = function () {
+    };
+    SpellCardComponent.prototype.ngAfterViewInit = function () {
+        this.answerField.nativeElement.focus();
+    };
+    SpellCardComponent.prototype.ngOnChanges = function (changes) {
+        console.log(changes);
     };
     SpellCardComponent.prototype.init = function (word) {
         this.word = word;
     };
+    SpellCardComponent.prototype.answerChanged = function (newValue) {
+        var _this = this;
+        this.answer = newValue;
+        if (newValue === this.word['foreignWord']) {
+            setTimeout(function () {
+                _this.skipWordStarter = 'skip';
+            }, 1000);
+        }
+        console.log(newValue);
+    };
+    SpellCardComponent.prototype.reviseWordDone = function (event) {
+        if (event['toState'] !== 'init') {
+            this.wordFinished.next(event['toState']);
+        }
+    };
+    SpellCardComponent.prototype.revise = function () {
+        this.answer = this.word['foreignWord'];
+    };
+    SpellCardComponent.prototype.ok = function () {
+        this.reviseWordStarter = 'revise';
+    };
     return SpellCardComponent;
 }());
+__decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_17" /* ViewChild */])('answerfield'),
+    __metadata("design:type", typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_0__angular_core__["v" /* ElementRef */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_core__["v" /* ElementRef */]) === "function" && _a || Object)
+], SpellCardComponent.prototype, "answerField", void 0);
 SpellCardComponent = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["o" /* Component */])({
         selector: 'app-spell-card',
         template: __webpack_require__("../../../../../src/app/component/learn-type/spell-card/spell-card.component.html"),
-        styles: [__webpack_require__("../../../../../src/app/component/learn-type/spell-card/spell-card.component.css")]
+        styles: [__webpack_require__("../../../../../src/app/component/learn-type/spell-card/spell-card.component.css")],
+        animations: [
+            Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_37" /* trigger */])('reviseWord', [
+                Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_34" /* state */])('init', Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_35" /* style */])({ opacity: 1, transform: 'translateX(0)' })),
+                Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_34" /* state */])('revise', Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_35" /* style */])({ opacity: 0, transform: 'translateX(300px)' })),
+                Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_36" /* transition */])('init => revise', Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_22" /* animate */])('200ms'))
+            ]),
+            Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_37" /* trigger */])('skipWord', [
+                Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_34" /* state */])('init', Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_35" /* style */])({ opacity: 1, transform: 'translateY(0)' })),
+                Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_34" /* state */])('skip', Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_35" /* style */])({ opacity: 0, transform: 'translateY(300px)' })),
+                Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_36" /* transition */])('init => skip', Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_22" /* animate */])('200ms'))
+            ]),
+            Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_37" /* trigger */])('setKnown', [
+                Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_34" /* state */])('init', Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_35" /* style */])({ opacity: 1, transform: 'translateY(0)' })),
+                Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_34" /* state */])('known', Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_35" /* style */])({ opacity: 0, transform: 'translateY(-300px)' })),
+                Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_36" /* transition */])('init => known', Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_22" /* animate */])('200ms'))
+            ]),
+            Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_37" /* trigger */])('newWord', [
+                Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_36" /* transition */])('* => *', [
+                    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_22" /* animate */])(200, Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_29" /* keyframes */])([
+                        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_35" /* style */])({ opacity: 0, transform: 'translateX(-300px)', offset: 0 }),
+                        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_35" /* style */])({ opacity: 1, transform: 'translateX(0)', offset: 1 })
+                    ]))
+                ])
+            ]),
+            Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_37" /* trigger */])('turnOver', [
+                Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_34" /* state */])('init', Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_35" /* style */])({ transform: 'rotateY(0)' })),
+                Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_34" /* state */])('turned', Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_35" /* style */])({ transform: 'rotateY(90deg)' })),
+                Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_36" /* transition */])('init <=> turned', Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_22" /* animate */])('200ms'))
+            ])
+        ]
     }),
     __metadata("design:paramtypes", [])
 ], SpellCardComponent);
 
+var _a;
 //# sourceMappingURL=spell-card.component.js.map
 
 /***/ }),
@@ -641,10 +713,11 @@ module.exports = "<div fxLayout=\"column\">\n  <div class=\"header\">\n    <span
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_router__ = __webpack_require__("../../../router/@angular/router.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__service_word_service__ = __webpack_require__("../../../../../src/app/service/word.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__learn_type_spell_card_spell_card_component__ = __webpack_require__("../../../../../src/app/component/learn-type/spell-card/spell-card.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__learn_type_word_directive__ = __webpack_require__("../../../../../src/app/component/learn-type/word.directive.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__service_auth_service__ = __webpack_require__("../../../../../src/app/service/auth.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__angular_material__ = __webpack_require__("../../../material/esm5/material.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__learn_type_flip_card_flip_card_component__ = __webpack_require__("../../../../../src/app/component/learn-type/flip-card/flip-card.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__learn_type_spell_card_spell_card_component__ = __webpack_require__("../../../../../src/app/component/learn-type/spell-card/spell-card.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__learn_type_word_directive__ = __webpack_require__("../../../../../src/app/component/learn-type/word.directive.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__service_auth_service__ = __webpack_require__("../../../../../src/app/service/auth.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__angular_material__ = __webpack_require__("../../../material/esm5/material.es5.js");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -654,6 +727,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+
 
 
 
@@ -680,9 +754,18 @@ var LearningComponent = (function () {
         this.wordService.progressBuffer.subscribe(function (buffer) { return _this.progressBuffer = buffer; });
         this.wordService.progressValue.subscribe(function (value) { return _this.progressValue = value; });
     };
+    LearningComponent.prototype.useSpellType = function () {
+        if (this.word['state'] === undefined || !this.word['nativeSide']) {
+            return false;
+        }
+        return this.word['rnd'] < (this.word['state'] - 1) * 0.2;
+    };
     LearningComponent.prototype.loadComponent = function () {
         var _this = this;
-        var componentFactory = this.componentFactoryResolver.resolveComponentFactory(__WEBPACK_IMPORTED_MODULE_3__learn_type_spell_card_spell_card_component__["a" /* SpellCardComponent */]);
+        var componentFactory;
+        this.useSpellType() ?
+            componentFactory = this.componentFactoryResolver.resolveComponentFactory(__WEBPACK_IMPORTED_MODULE_4__learn_type_spell_card_spell_card_component__["a" /* SpellCardComponent */]) :
+            componentFactory = this.componentFactoryResolver.resolveComponentFactory(__WEBPACK_IMPORTED_MODULE_3__learn_type_flip_card_flip_card_component__["a" /* FlipCardComponent */]);
         var viewContainerRef = this.wordHost.viewContainerRef;
         viewContainerRef.clear();
         var componentRef = viewContainerRef.createComponent(componentFactory);
@@ -754,8 +837,8 @@ var LearningComponent = (function () {
     return LearningComponent;
 }());
 __decorate([
-    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_17" /* ViewChild */])(__WEBPACK_IMPORTED_MODULE_4__learn_type_word_directive__["a" /* WordDirective */]),
-    __metadata("design:type", typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_4__learn_type_word_directive__["a" /* WordDirective */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4__learn_type_word_directive__["a" /* WordDirective */]) === "function" && _a || Object)
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_17" /* ViewChild */])(__WEBPACK_IMPORTED_MODULE_5__learn_type_word_directive__["a" /* WordDirective */]),
+    __metadata("design:type", typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_5__learn_type_word_directive__["a" /* WordDirective */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_5__learn_type_word_directive__["a" /* WordDirective */]) === "function" && _a || Object)
 ], LearningComponent.prototype, "wordHost", void 0);
 LearningComponent = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["o" /* Component */])({
@@ -763,7 +846,7 @@ LearningComponent = __decorate([
         template: __webpack_require__("../../../../../src/app/component/learning/learning.component.html"),
         styles: [__webpack_require__("../../../../../src/app/component/learning/learning.component.css")]
     }),
-    __metadata("design:paramtypes", [typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__service_word_service__["a" /* WordService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__service_word_service__["a" /* WordService */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_0__angular_core__["q" /* ComponentFactoryResolver */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_core__["q" /* ComponentFactoryResolver */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_0__angular_core__["l" /* ChangeDetectorRef */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_core__["l" /* ChangeDetectorRef */]) === "function" && _d || Object, typeof (_e = typeof __WEBPACK_IMPORTED_MODULE_1__angular_router__["a" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_router__["a" /* Router */]) === "function" && _e || Object, typeof (_f = typeof __WEBPACK_IMPORTED_MODULE_5__service_auth_service__["a" /* AuthService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_5__service_auth_service__["a" /* AuthService */]) === "function" && _f || Object, typeof (_g = typeof __WEBPACK_IMPORTED_MODULE_6__angular_material__["b" /* MatDialog */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_6__angular_material__["b" /* MatDialog */]) === "function" && _g || Object])
+    __metadata("design:paramtypes", [typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__service_word_service__["a" /* WordService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__service_word_service__["a" /* WordService */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_0__angular_core__["q" /* ComponentFactoryResolver */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_core__["q" /* ComponentFactoryResolver */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_0__angular_core__["l" /* ChangeDetectorRef */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_core__["l" /* ChangeDetectorRef */]) === "function" && _d || Object, typeof (_e = typeof __WEBPACK_IMPORTED_MODULE_1__angular_router__["a" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_router__["a" /* Router */]) === "function" && _e || Object, typeof (_f = typeof __WEBPACK_IMPORTED_MODULE_6__service_auth_service__["a" /* AuthService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_6__service_auth_service__["a" /* AuthService */]) === "function" && _f || Object, typeof (_g = typeof __WEBPACK_IMPORTED_MODULE_7__angular_material__["b" /* MatDialog */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_7__angular_material__["b" /* MatDialog */]) === "function" && _g || Object])
 ], LearningComponent);
 
 var ConfirmDialogComponent = (function () {
@@ -777,7 +860,7 @@ ConfirmDialogComponent = __decorate([
         selector: 'app-confirm-dialog',
         template: "\n    <h2 mat-dialog-title>Confirm</h2>\n    <mat-dialog-content>You are about to set this word known. Are you sure?</mat-dialog-content>\n    <mat-dialog-actions>\n      <button mat-button [mat-dialog-close]=\"true\">Yes</button>\n      <button mat-button [mat-dialog-close]=\"false\">No</button>\n    </mat-dialog-actions>\n    "
     }),
-    __metadata("design:paramtypes", [typeof (_h = typeof __WEBPACK_IMPORTED_MODULE_6__angular_material__["d" /* MatDialogRef */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_6__angular_material__["d" /* MatDialogRef */]) === "function" && _h || Object])
+    __metadata("design:paramtypes", [typeof (_h = typeof __WEBPACK_IMPORTED_MODULE_7__angular_material__["d" /* MatDialogRef */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_7__angular_material__["d" /* MatDialogRef */]) === "function" && _h || Object])
 ], ConfirmDialogComponent);
 
 var _a, _b, _c, _d, _e, _f, _g, _h;
@@ -1330,6 +1413,9 @@ var WordService = (function () {
             this.currentWords.forEach(function (word) { return word['nativeSide'] = !word['nativeSide']; });
             this.currentWords.push(this.sentences[(this.round - 1) % this.sentences.length]);
         }
+        this.currentWords.forEach(function (item) {
+            item['rnd'] = Math.random();
+        });
         //    console.log('round: ' + this.round);
         //    console.log(JSON.stringify(tempList));
         this.actIndex = -1;

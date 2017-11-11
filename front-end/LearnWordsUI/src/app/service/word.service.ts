@@ -83,6 +83,10 @@ export class WordService {
       this.currentWords.forEach(word => word['nativeSide'] = !word['nativeSide']);
       this.currentWords.push(this.sentences[(this.round - 1) % this.sentences.length]);
     }
+
+    this.currentWords.forEach(item => {
+      item['rnd'] = Math.random();
+    });
 //    console.log('round: ' + this.round);
 //    console.log(JSON.stringify(tempList));
     this.actIndex = -1;

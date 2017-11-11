@@ -34,8 +34,16 @@ export class LearningComponent implements OnInit, AfterViewInit, OnDestroy {
     this.wordService.progressValue.subscribe(value => this.progressValue = value);
   }
 
+  useSpellType(): boolean {
+    if (this.word['state'] === undefined || !this.word['nativeSide']) { return false; }
+    return this.word['rnd'] < (this.word['state'] - 1) * 0.2;
+  }
+
   loadComponent() {
-    const componentFactory = this.componentFactoryResolver.resolveComponentFactory(SpellCardComponent);
+    let componentFactory;
+    this.useSpellType() ?
+    componentFactory = this.componentFactoryResolver.resolveComponentFactory(SpellCardComponent) :
+    componentFactory = this.componentFactoryResolver.resolveComponentFactory(FlipCardComponent);
 
     const viewContainerRef = this.wordHost.viewContainerRef;
     viewContainerRef.clear();

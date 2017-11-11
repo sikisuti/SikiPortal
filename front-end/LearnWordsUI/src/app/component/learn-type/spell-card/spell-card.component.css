@@ -4,7 +4,8 @@
 
 .spell-card {
     width: 80%;
-    background-color: lightgray;
+    background-color: lightyellow;
+    border-radius: 10px;
 }
 
 .audio-button {
@@ -12,4 +13,8 @@
     bottom: 0;
     right: 0;
     margin: 20px 20px;
+}
+
+.correct {
+    background-color: lightgreen;
 }
