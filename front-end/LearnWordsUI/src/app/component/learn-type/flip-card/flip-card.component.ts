@@ -98,8 +98,4 @@ export class FlipCardComponent implements OnInit, TemplateComponent {
   handleKeyboardEvent(event: KeyboardEvent) {
     this.onSwipeRight(event);
   }
-
-  play(): void {
-    this.audioService.play(this.word['audioFile']);
-  }
 }

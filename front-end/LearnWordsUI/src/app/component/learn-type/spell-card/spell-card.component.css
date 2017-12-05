@@ -1,5 +1,5 @@
 .content {
-    height: 100vh;
+    height: 90vh;
 }
 
 .spell-card {
@@ -17,4 +17,8 @@
 
 .correct {
     background-color: lightgreen;
+}
+
+.bordered {
+    border: 3px solid green;
 }

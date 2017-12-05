@@ -8,6 +8,7 @@ import { WordDirective } from '../learn-type/word.directive';
 import { TemplateComponent } from '../learn-type/template.component';
 import { AuthService } from '../../service/auth.service';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { AudioService } from '../../service/audio.service';
 
 @Component({
   selector: 'app-learning',
@@ -23,7 +24,7 @@ export class LearningComponent implements OnInit, AfterViewInit, OnDestroy {
 
   constructor(private wordService: WordService, private componentFactoryResolver: ComponentFactoryResolver,
     private changeDetectorRef: ChangeDetectorRef, private router: Router, private authService: AuthService,
-    public dialog: MatDialog) { }
+    public dialog: MatDialog, private audioService: AudioService) { }
 
   ngOnInit(): void {
   }
@@ -36,7 +37,7 @@ export class LearningComponent implements OnInit, AfterViewInit, OnDestroy {
 
   useSpellType(): boolean {
     if (this.word['state'] === undefined || !this.word['nativeSide']) { return false; }
-    return this.word['rnd'] < (this.word['state'] - 1) * 0.2;
+    return this.word['rnd'] < (this.word['state'] - 1) * 0.18;
   }
 
   loadComponent() {
@@ -115,6 +116,11 @@ export class LearningComponent implements OnInit, AfterViewInit, OnDestroy {
 
         this.getNextWord();
       });
+    }
+
+    play(): void {
+      console.log('play');
+      this.audioService.play(this.word['audioFile']);
     }
 }
 

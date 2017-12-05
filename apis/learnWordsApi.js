@@ -16,12 +16,21 @@ var path = require('path');
 var nconf = require('nconf');
 nconf.argv().env().file({ file: path.normalize(path.join(__dirname, "../config.json")) });
 
+/**
+ * Returns a random integer between min (inclusive) and max (inclusive)
+ * Using Math.round() will give you a non-uniform distribution!
+ */
+function getRandomInt(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
 router.get('/authorizationCheck', function(req, res) { res.send('authorizationCheck OK'); });
 
 router.get('/words', function(req, res) {
   res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
   pool.getConnection(function (err, connection){
     if (err) {console.log(err); return;}
+
 
     connection.query(
       '(SELECT w.id AS wordID, w.native, w.foreignWord, w.exampleSentence, w.pronunciation, w.levelID, w.lexicalCategory, w.definition, uwInner.state, uwInner.id AS userWordID, w.audioFile ' +
@@ -44,7 +53,7 @@ router.get('/words', function(req, res) {
       	') ' +
       ') AND (NOT ISNULL(uwInner.userID) OR (ISNULL(uwInner.userID) AND w.levelID <> 1)) ' +
       'ORDER BY uwInner.state DESC, w.levelID ASC ' +
-      'LIMIT 8) ' +
+      'LIMIT ' + getRandomInt(6, 9) + ') ' +
       'UNION ' +
       '(SELECT w.id AS wordID, w.native, w.foreignWord, w.exampleSentence, w.pronunciation, w.levelID, w.lexicalCategory, w.definition, uw.state, uw.id AS userWordID, w.audioFile ' +
       'FROM words w ' +

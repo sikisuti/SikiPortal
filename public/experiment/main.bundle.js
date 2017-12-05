@@ -347,7 +347,7 @@ exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-b
 
 
 // module
-exports.push([module.i, ".content {\r\n    height: 100vh;\r\n}\r\n\r\n.flip-card {\r\n    width: 80%;\r\n    height: 150px;\r\n    box-shadow: 5px 5px 10px #888888;\r\n    background-color: lightgray;\r\n    font-weight: bold;\r\n    font-size: 20px;\r\n}\r\n\r\n.audio-button {\r\n    position: absolute;\r\n    bottom: 0;\r\n    right: 0;\r\n    margin: 20px 20px;\r\n}\r\n\r\n.bordered {\r\n    border: 3px solid green;\r\n}", ""]);
+exports.push([module.i, ".content {\r\n    height: 90vh;\r\n}\r\n\r\n.flip-card {\r\n    width: 80%;\r\n    height: 150px;\r\n    box-shadow: 5px 5px 10px #888888;\r\n    background-color: lightgray;\r\n    font-weight: bold;\r\n    font-size: 20px;\r\n}\r\n\r\n.audio-button {\r\n    position: absolute;\r\n    bottom: 0;\r\n    right: 0;\r\n    margin: 20px 20px;\r\n}\r\n\r\n.bordered {\r\n    border: 3px solid green;\r\n}", ""]);
 
 // exports
 
@@ -360,7 +360,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/component/learn-type/flip-card/flip-card.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div fxLayout=\"column\" fxLayoutAlign=\"center center\" class=\"content\">\n  <div class=\"flip-card\" [ngClass]=\"{'bordered': word.state > 5}\" \n    (click)=\"onFlipCard()\" (swiperight)=\"onSwipeRight($event)\" (swipedown)=\"onSwipeDown($event)\" (swipeup)=\"onSwipeUp($event)\"\n    (keydown.arrowright)=\"onSwipeRight($event)\" (keydown.arrowdown)=\"onSwipeDown($event)\"\n    [@reviseWord]='reviseWordStarter' (@reviseWord.done)='reviseWordDone($event)' \n    [@skipWord]='skipWordStarter' (@skipWord.done)='reviseWordDone($event)'\n    [@setKnown]='setKnownStarter' (@setKnown.done)='reviseWordDone($event)'\n    [@newWord]='word?.id' \n    [@turnOver]='turnStatus' (@turnOver.done)='turnOverDone($event)'\n    fxLayout=\"row\" fxLayoutAlign=\"center center\">\n      <span>{{(word?.nativeSide ? !isFlipped : isFlipped) ? word?.native : word?.foreignWord}}</span>\n  </div>\n  <button *ngIf=\"(word.audioFile !== undefined && word.audioFile.indexOf('http://') != -1)\" mat-icon-button color=\"primary\" (click)=\"play()\" class=\"audio-button\">\n    <i class=\"material-icons md-48\">volume_up</i>\n  </button>\n</div>"
+module.exports = "<div fxLayout=\"column\" fxLayoutAlign=\"center center\" class=\"content\">\n  <div class=\"flip-card\" [ngClass]=\"{'bordered': word.state > 5}\" \n    (click)=\"onFlipCard()\" (swiperight)=\"onSwipeRight($event)\" (swipedown)=\"onSwipeDown($event)\" (swipeup)=\"onSwipeUp($event)\"\n    (keydown.arrowright)=\"onSwipeRight($event)\" (keydown.arrowdown)=\"onSwipeDown($event)\"\n    [@reviseWord]='reviseWordStarter' (@reviseWord.done)='reviseWordDone($event)' \n    [@skipWord]='skipWordStarter' (@skipWord.done)='reviseWordDone($event)'\n    [@setKnown]='setKnownStarter' (@setKnown.done)='reviseWordDone($event)'\n    [@newWord]='word?.id' \n    [@turnOver]='turnStatus' (@turnOver.done)='turnOverDone($event)'\n    fxLayout=\"row\" fxLayoutAlign=\"center center\">\n      <span>{{(word?.nativeSide ? !isFlipped : isFlipped) ? word?.native : word?.foreignWord}}</span>\n  </div>\n</div>"
 
 /***/ }),
 
@@ -431,9 +431,6 @@ var FlipCardComponent = (function () {
     };
     FlipCardComponent.prototype.handleKeyboardEvent = function (event) {
         this.onSwipeRight(event);
-    };
-    FlipCardComponent.prototype.play = function () {
-        this.audioService.play(this.word['audioFile']);
     };
     return FlipCardComponent;
 }());
@@ -517,7 +514,7 @@ exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-b
 
 
 // module
-exports.push([module.i, ".content {\r\n    height: 100vh;\r\n}\r\n\r\n.spell-card {\r\n    width: 80%;\r\n    background-color: lightyellow;\r\n    border-radius: 10px;\r\n}\r\n\r\n.audio-button {\r\n    position: absolute;\r\n    bottom: 0;\r\n    right: 0;\r\n    margin: 20px 20px;\r\n}\r\n\r\n.correct {\r\n    background-color: lightgreen;\r\n}", ""]);
+exports.push([module.i, ".content {\r\n    height: 90vh;\r\n}\r\n\r\n.spell-card {\r\n    width: 80%;\r\n    background-color: lightyellow;\r\n    border-radius: 10px;\r\n}\r\n\r\n.audio-button {\r\n    position: absolute;\r\n    bottom: 0;\r\n    right: 0;\r\n    margin: 20px 20px;\r\n}\r\n\r\n.correct {\r\n    background-color: lightgreen;\r\n}\r\n\r\n.bordered {\r\n    border: 3px solid green;\r\n}", ""]);
 
 // exports
 
@@ -530,7 +527,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/component/learn-type/spell-card/spell-card.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div fxLayout=\"column\" fxLayoutAlign=\"center center\" class=\"content\">\n  <div class=\"spell-card\" [ngClass]=\"{'correct': answer === word.foreignWord}\" fxLayout=\"column\" fxLayoutAlign=\"center center\"    \n    [@skipWord]='skipWordStarter' (@skipWord.done)='reviseWordDone($event)'\n    [@reviseWord]='reviseWordStarter' (@reviseWord.done)='reviseWordDone($event)' \n    [@newWord]='word?.id'>\n    <span>{{word?.native}}</span>\n    <mat-form-field>\n      <input matInput [ngModel]=\"answer\" #answerfield (ngModelChange)=\"answerChanged($event)\">\n    </mat-form-field>\n    <button *ngIf=\"answer !== word.foreignWord\" fxFlexAlign=\"end\" mat-button color=\"primary\" (click)=\"revise()\">I don't know</button>\n    <button *ngIf=\"answer === word.foreignWord\" fxFlexAlign=\"end\" mat-button color=\"primary\" (click)=\"ok()\">OK</button>\n  </div>\n\n  <button *ngIf=\"(word.audioFile !== undefined && word.audioFile.indexOf('http://') != -1)\" mat-icon-button color=\"primary\"\n    (click)=\"play()\" class=\"audio-button\">\n    <i class=\"material-icons md-48\">volume_up</i>\n  </button>\n</div>"
+module.exports = "<div fxLayout=\"column\" fxLayoutAlign=\"center center\" class=\"content\">\n  <div class=\"spell-card\" [ngClass]=\"{'correct': answer === word.foreignWord, 'bordered': word.state > 5}\" fxLayout=\"column\" fxLayoutAlign=\"center center\"    \n    [@skipWord]='skipWordStarter' (@skipWord.done)='reviseWordDone($event)'\n    [@reviseWord]='reviseWordStarter' (@reviseWord.done)='reviseWordDone($event)' \n    [@newWord]='word?.id'>\n    <span>{{word?.native}}</span>\n    <mat-form-field>\n      <input matInput [ngModel]=\"answer\" #answerfield (ngModelChange)=\"answerChanged($event)\">\n    </mat-form-field>\n    <button *ngIf=\"answer !== word.foreignWord\" fxFlexAlign=\"end\" mat-button color=\"primary\" (click)=\"revise()\">I don't know</button>\n    <button *ngIf=\"answer === word.foreignWord\" fxFlexAlign=\"end\" mat-button color=\"primary\" (click)=\"ok()\">OK</button>\n  </div>\n</div>"
 
 /***/ }),
 
@@ -569,7 +566,7 @@ var SpellCardComponent = (function () {
         this.answerField.nativeElement.focus();
     };
     SpellCardComponent.prototype.ngOnChanges = function (changes) {
-        console.log(changes);
+        // console.log(changes);
     };
     SpellCardComponent.prototype.init = function (word) {
         this.word = word;
@@ -577,12 +574,12 @@ var SpellCardComponent = (function () {
     SpellCardComponent.prototype.answerChanged = function (newValue) {
         var _this = this;
         this.answer = newValue;
-        if (newValue === this.word['foreignWord']) {
+        if (newValue === this.word['foreignWord'].replace(/\(.*$/gi, '').trim()) {
             setTimeout(function () {
                 _this.skipWordStarter = 'skip';
             }, 1000);
         }
-        console.log(newValue);
+        // console.log(newValue);
     };
     SpellCardComponent.prototype.reviseWordDone = function (event) {
         if (event['toState'] !== 'init') {
@@ -687,7 +684,7 @@ exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-b
 
 
 // module
-exports.push([module.i, ".header {\r\n    height: 8vh;\r\n}\r\n\r\n.sub-content {\r\n    position: absolute;\r\n    height: 100vh;\r\n    width: 100vW;\r\n}", ""]);
+exports.push([module.i, ".header {\r\n    height: 8vh;\r\n}", ""]);
 
 // exports
 
@@ -700,7 +697,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/component/learning/learning.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div fxLayout=\"column\">\n  <div class=\"header\">\n    <span>abc</span>\n  </div>\n  <div>\n    <mat-progress-bar mode=\"buffer\" [value]=\"progressValue\" [bufferValue]=\"progressBuffer\" color=\"primary\"></mat-progress-bar>\n  </div>\n  <div class=\"sub-content\">\n    <ng-template word-host></ng-template>\n  </div>\n</div>"
+module.exports = "<div fxLayout=\"column\">\n  <div class=\"header\">\n    <button *ngIf=\"(word?.audioFile !== undefined && word?.audioFile.indexOf('http://') != -1)\" mat-icon-button color=\"primary\" (click)=\"play()\">\n      <i class=\"material-icons md-48\">volume_up</i>\n    </button>\n  </div>\n  <div>\n    <mat-progress-bar mode=\"buffer\" [value]=\"progressValue\" [bufferValue]=\"progressBuffer\" color=\"primary\"></mat-progress-bar>\n  </div>\n  <div class=\"sub-content\">\n    <ng-template word-host></ng-template>\n  </div>\n</div>"
 
 /***/ }),
 
@@ -718,6 +715,7 @@ module.exports = "<div fxLayout=\"column\">\n  <div class=\"header\">\n    <span
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__learn_type_word_directive__ = __webpack_require__("../../../../../src/app/component/learn-type/word.directive.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__service_auth_service__ = __webpack_require__("../../../../../src/app/service/auth.service.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__angular_material__ = __webpack_require__("../../../material/esm5/material.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__service_audio_service__ = __webpack_require__("../../../../../src/app/service/audio.service.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -735,14 +733,16 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
+
 var LearningComponent = (function () {
-    function LearningComponent(wordService, componentFactoryResolver, changeDetectorRef, router, authService, dialog) {
+    function LearningComponent(wordService, componentFactoryResolver, changeDetectorRef, router, authService, dialog, audioService) {
         this.wordService = wordService;
         this.componentFactoryResolver = componentFactoryResolver;
         this.changeDetectorRef = changeDetectorRef;
         this.router = router;
         this.authService = authService;
         this.dialog = dialog;
+        this.audioService = audioService;
         this.progressValue = 0;
         this.progressBuffer = 0;
     }
@@ -758,7 +758,7 @@ var LearningComponent = (function () {
         if (this.word['state'] === undefined || !this.word['nativeSide']) {
             return false;
         }
-        return this.word['rnd'] < (this.word['state'] - 1) * 0.2;
+        return this.word['rnd'] < (this.word['state'] - 1) * 0.18;
     };
     LearningComponent.prototype.loadComponent = function () {
         var _this = this;
@@ -834,6 +834,10 @@ var LearningComponent = (function () {
             _this.getNextWord();
         });
     };
+    LearningComponent.prototype.play = function () {
+        console.log('play');
+        this.audioService.play(this.word['audioFile']);
+    };
     return LearningComponent;
 }());
 __decorate([
@@ -846,7 +850,7 @@ LearningComponent = __decorate([
         template: __webpack_require__("../../../../../src/app/component/learning/learning.component.html"),
         styles: [__webpack_require__("../../../../../src/app/component/learning/learning.component.css")]
     }),
-    __metadata("design:paramtypes", [typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__service_word_service__["a" /* WordService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__service_word_service__["a" /* WordService */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_0__angular_core__["q" /* ComponentFactoryResolver */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_core__["q" /* ComponentFactoryResolver */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_0__angular_core__["l" /* ChangeDetectorRef */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_core__["l" /* ChangeDetectorRef */]) === "function" && _d || Object, typeof (_e = typeof __WEBPACK_IMPORTED_MODULE_1__angular_router__["a" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_router__["a" /* Router */]) === "function" && _e || Object, typeof (_f = typeof __WEBPACK_IMPORTED_MODULE_6__service_auth_service__["a" /* AuthService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_6__service_auth_service__["a" /* AuthService */]) === "function" && _f || Object, typeof (_g = typeof __WEBPACK_IMPORTED_MODULE_7__angular_material__["b" /* MatDialog */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_7__angular_material__["b" /* MatDialog */]) === "function" && _g || Object])
+    __metadata("design:paramtypes", [typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__service_word_service__["a" /* WordService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__service_word_service__["a" /* WordService */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_0__angular_core__["q" /* ComponentFactoryResolver */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_core__["q" /* ComponentFactoryResolver */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_0__angular_core__["l" /* ChangeDetectorRef */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_core__["l" /* ChangeDetectorRef */]) === "function" && _d || Object, typeof (_e = typeof __WEBPACK_IMPORTED_MODULE_1__angular_router__["a" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_router__["a" /* Router */]) === "function" && _e || Object, typeof (_f = typeof __WEBPACK_IMPORTED_MODULE_6__service_auth_service__["a" /* AuthService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_6__service_auth_service__["a" /* AuthService */]) === "function" && _f || Object, typeof (_g = typeof __WEBPACK_IMPORTED_MODULE_7__angular_material__["b" /* MatDialog */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_7__angular_material__["b" /* MatDialog */]) === "function" && _g || Object, typeof (_h = typeof __WEBPACK_IMPORTED_MODULE_8__service_audio_service__["a" /* AudioService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_8__service_audio_service__["a" /* AudioService */]) === "function" && _h || Object])
 ], LearningComponent);
 
 var ConfirmDialogComponent = (function () {
@@ -860,10 +864,10 @@ ConfirmDialogComponent = __decorate([
         selector: 'app-confirm-dialog',
         template: "\n    <h2 mat-dialog-title>Confirm</h2>\n    <mat-dialog-content>You are about to set this word known. Are you sure?</mat-dialog-content>\n    <mat-dialog-actions>\n      <button mat-button [mat-dialog-close]=\"true\">Yes</button>\n      <button mat-button [mat-dialog-close]=\"false\">No</button>\n    </mat-dialog-actions>\n    "
     }),
-    __metadata("design:paramtypes", [typeof (_h = typeof __WEBPACK_IMPORTED_MODULE_7__angular_material__["d" /* MatDialogRef */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_7__angular_material__["d" /* MatDialogRef */]) === "function" && _h || Object])
+    __metadata("design:paramtypes", [typeof (_j = typeof __WEBPACK_IMPORTED_MODULE_7__angular_material__["d" /* MatDialogRef */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_7__angular_material__["d" /* MatDialogRef */]) === "function" && _j || Object])
 ], ConfirmDialogComponent);
 
-var _a, _b, _c, _d, _e, _f, _g, _h;
+var _a, _b, _c, _d, _e, _f, _g, _h, _j;
 //# sourceMappingURL=learning.component.js.map
 
 /***/ }),

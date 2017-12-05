@@ -64,7 +64,7 @@ export class SpellCardComponent implements OnInit, TemplateComponent, OnChanges,
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log(changes);
+    // console.log(changes);
   }
 
   init(word: Word): void {
@@ -73,12 +73,12 @@ export class SpellCardComponent implements OnInit, TemplateComponent, OnChanges,
 
   answerChanged(newValue) {
     this.answer = newValue;
-    if (newValue === this.word['foreignWord']) {
+    if (newValue === this.word['foreignWord'].replace(/\(.*$/gi, '').trim()) {
       setTimeout(() => {
         this.skipWordStarter = 'skip';
       }, 1000);
     }
-    console.log(newValue);
+    // console.log(newValue);
   }
 
   reviseWordDone(event: Event) {

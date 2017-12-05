@@ -1,6 +1,8 @@
 <div fxLayout="column">
   <div class="header">
-    <span>abc</span>
+    <button *ngIf="(word?.audioFile !== undefined && word?.audioFile.indexOf('http://') != -1)" mat-icon-button color="primary" (click)="play()">
+      <i class="material-icons md-48">volume_up</i>
+    </button>
   </div>
   <div>
     <mat-progress-bar mode="buffer" [value]="progressValue" [bufferValue]="progressBuffer" color="primary"></mat-progress-bar>

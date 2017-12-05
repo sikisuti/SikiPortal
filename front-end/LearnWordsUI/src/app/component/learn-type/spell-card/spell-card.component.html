@@ -1,5 +1,5 @@
 <div fxLayout="column" fxLayoutAlign="center center" class="content">
-  <div class="spell-card" [ngClass]="{'correct': answer === word.foreignWord}" fxLayout="column" fxLayoutAlign="center center"    
+  <div class="spell-card" [ngClass]="{'correct': answer === word.foreignWord, 'bordered': word.state > 5}" fxLayout="column" fxLayoutAlign="center center"    
     [@skipWord]='skipWordStarter' (@skipWord.done)='reviseWordDone($event)'
     [@reviseWord]='reviseWordStarter' (@reviseWord.done)='reviseWordDone($event)' 
     [@newWord]='word?.id'>
@@ -10,9 +10,4 @@
     <button *ngIf="answer !== word.foreignWord" fxFlexAlign="end" mat-button color="primary" (click)="revise()">I don't know</button>
     <button *ngIf="answer === word.foreignWord" fxFlexAlign="end" mat-button color="primary" (click)="ok()">OK</button>
   </div>
-
-  <button *ngIf="(word.audioFile !== undefined && word.audioFile.indexOf('http://') != -1)" mat-icon-button color="primary"
-    (click)="play()" class="audio-button">
-    <i class="material-icons md-48">volume_up</i>
-  </button>
 </div>
