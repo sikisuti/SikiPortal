@@ -62,6 +62,10 @@ app.get("/java", function(req, res){
   res.sendFile("/public/learnJava/index.html", {root: __dirname});
 });
 
+app.get("/dozsa", function(req, res){
+  res.sendFile("/public/dozsa/index.html", {root: __dirname});
+});
+
 app.get("/words", function(req, res){
   res.sendFile("/public/learnWords/index.html", {root: __dirname});
 });
