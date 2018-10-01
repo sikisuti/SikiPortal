@@ -57,12 +57,12 @@
 
 /* Caption text */
 .text {
-  color: #f2f2f2;
+  color: #221313;
   font-size: 15px;
   padding: 8px 12px;
   position: absolute;
   bottom: 8px;
-  width: 100%;
+  width: 80%;
   text-align: center;
 }
 
