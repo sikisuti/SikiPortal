@@ -24,11 +24,6 @@
   margin: auto;
 }
 
-/* Hide the images by default */
-.mySlides {
-    display: none;
-}
-
 /* Next & previous buttons */
 .prev, .next {
   cursor: pointer;
@@ -59,10 +54,10 @@
 .text {
   color: #221313;
   font-size: 15px;
-  padding: 8px 12px;
+  padding: 5% 10%;
   position: absolute;
   bottom: 8px;
-  width: 80%;
+  width: 100%;
   text-align: center;
 }
 
@@ -73,6 +68,16 @@
   padding: 8px 12px;
   position: absolute;
   top: 0;
+}
+
+#title {
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  font-size: 48px;
+  font-weight: bold;
+  font-family: 'Courier New', Courier, monospace;
+  color: rgba(48, 38, 37, 0.87);
 }
 
 /* The dots/bullets/indicators */
