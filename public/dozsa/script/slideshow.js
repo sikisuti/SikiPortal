@@ -17,4 +17,8 @@ function showSlides(n) {
   $('#title').html(slideContent.title);
   let folder = slideContent.folder
   $('#description').load('slide/' + folder + '/description.html');
+  var img = $('<img>');
+  img.css('width', '100%');
+  img.attr('src', slideContent.pics[0]);
+  $('#pictures').append(img);
 }
