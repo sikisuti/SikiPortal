@@ -1,31 +1,109 @@
 Raspberry PI installation for Webserver
 
-Install standard Raspbian via Noobs. (Should try Raspbian light later !)
+Install standard Raspberry PI OS Lite
+
+Update packages
 	sudo apt-get update
 	sudo apt-get upgrade
 	
+Configure localization
+	Run: sudo raspi-config
+	Choose option 5: Localization Options
+		Keyboard
+	
 Change pi password
+	Run: sudo raspi-config
+	Choose option 1: System Options
+	Choose option S3: Password
+
+Set auto-login
+	Run: sudo raspi-config
+	Choose option 1: System Options
+	Choose option S5: Boot / Auto Login
+	Choose option B2: Console Autologin
+	
+Configure Wifi
+	Run: sudo raspi-config
+	Choose option 1: System Options
+	Choose option S1: Wireless LAN
+		Country
+		SSID
+		passphrase
 	
 Set static IP
+	ip link - for the interface names
+	/etc/dhcpcd.conf
+		interface wlan0
+		static ip_address=192.168.0.5/32    
+		static routers=192.168.0.1
+		static domain_name_servers=192.168.0.254 8.8.8.8
+		
+Enable SSH to remote terminal (Putty)
+	Run: sudo raspi-config
+	Choose option 3: Interface Options
+	Choose option P2: SSH
 
-Set dynamic DNS
+Set duckdns
+	crontab -e
+	add: */10 * * * * /home/pi/duckdns/duck.sh >/dev/null 2>&1
+	duck.sh: echo url="https://www.duckdns.org/update?domains=siki&token=fc177392-f25e-4ca4-9d7b-6e2254891457&ip=" | curl -k -o /home/pi/duckdns/duck.log -K -
 	
-Upgrade NodeJS
-	It has already installed but it is an old version.
+Install NodeJS
+	sudo apt-get install nodejs
+	sudo apt-get install npm
+	
+Install git
+	sudo apt-get install git
+	
+Config git ssh
+	ls ~/.ssh
+	ssh-keygen
+	add public key to github
 	
 Get code from git repo
-	git clone <url>
+	git clone git@github.com:sikisuti/SikiPortal.git
 
 Install dependencies
 	npm install
 	
-Install Forever node runner
+Set up mariadb (mysql)
+	install:				sudo apt-get install mariadb-server
+	set root password:		mysqladmin --user=root password "G*****.1"
+	enable root access:		GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY 'G*****.1' WITH GRANT OPTION;
+							FLUSH PRIVILEGES;
+	enable remote access:	/etc/mysql/mariadb.conf.d/50-server.cnf
+							comment out line
+								#bind-address = 127.0.0.1	
 
 Run program at startup
+	install pm2:	sudo npm install pm2 -g
+	start app:		sudo pm2 start /home/pi/SikiPortal/app.js
+	set startup:	sudo pm2 startup
+					sudo pm2 save
+	
+	useful commands:
+		list started apps:		sudo pm2 list
+		see logs:				sudo pm2 logs
+		see monitor				sudo pm2 monit
+		start app:				sudo pm2 start <app.js>
+		stop app:				sudo pm2 stop <app-name>
+		restart app:				sudo pm2 restart <app-name>
 
 Backup database
-	install gdrive 			https://github.com/prasmussen/gdrive
+	sudo apt install unzip
+	wget https://downloads.rclone.org/rclone-current-linux-arm.zip
+	unzip -j -d rclone-temp rclone-current-linux-arm.zip
+	sudo mv ~/rclone-temp/rclone /usr/bin/rclone
+	sudo mv ~/rclone-temp/rclone.1 /usr/share/man/man1/rclone.1
+	sudo chown root: /usr/bin/rclone
+	rm ~/rclone-current-linux-arm.zip
+	rm -r -f ~/rclone-temp
+	
+	See rclone configuration docs in separate word documents. (rclone_setup1.docx, rclone_setup2.docx)
 
 	crontab -e		-- set crontab
-	0 1 * * * mysqldump -uroot -pGaboca.1 --all-databases --add-drop-database > /home/pi/gdrive/sqlDump/dump_$(date '+\%d').sql
-	0 2 * * * gdrive sync upload /home/pi/gdrive/sqlDump <fileid>
+	0 2 * * * /home/pi/sqlDump/backup.sh >/dev/null 2>&1
+	
+	backup.sh:
+		sudo mysqldump -uroot -pG*****.1 --databases Auth CarInfo LearnWords --add-drop-database > /home/pi/sqlDump/dump_$(date '+%d').sql
+		sudo cp /home/pi/sqlDump/dump_$(date '+%d').sql /home/pi/mnt/pi_drive/sqlDump/dump_$(date '+%d').sql

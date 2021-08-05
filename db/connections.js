@@ -10,6 +10,7 @@ module.exports = {
      host     : 'localhost',
      user     : nconf.get('db_user'),
      password : nconf.get('db_password'),
+     port     : nconf.get('db_port'),
      database : 'CarInfo',
      connectionLimit: 10,
      supportBigNumbers: true
@@ -21,6 +22,7 @@ module.exports = {
      host     : 'localhost',
      user     : nconf.get('db_user'),
      password : nconf.get('db_password'),
+     port     : nconf.get('db_port'),
      database : 'JavaQuestions',
      connectionLimit: 10,
      supportBigNumbers: true
@@ -32,6 +34,7 @@ module.exports = {
         host     : 'localhost',
         user     : nconf.get('db_user'),
         password : nconf.get('db_password'),
+        port     : nconf.get('db_port'),
         database : 'Auth',
         connectionLimit: 10,
         supportBigNumbers: true
@@ -43,6 +46,7 @@ module.exports = {
         host     : 'localhost',
         user     : nconf.get('db_user'),
         password : nconf.get('db_password'),
+        port     : nconf.get('db_port'),
         database : 'LearnWords',
         connectionLimit: 10,
         supportBigNumbers: true
