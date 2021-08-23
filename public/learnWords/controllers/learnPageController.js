@@ -4,6 +4,7 @@ learnWordsApp.controller('learnPageController', ['$scope', '$location', '$http',
 	var round = 1;
 	var rndSide;
 	var modifiedWords = new Array();
+  var sentences;
 
 	var sounds = [];
 
@@ -113,12 +114,18 @@ learnWordsApp.controller('learnPageController', ['$scope', '$location', '$http',
   }
 
   function getSentence(tempList, callback){
-    setBusy(true, 'Getting sentence...');
-    $http.get('/learnWords/sentence').then(function(response){
-      tempList.push(response.data);
-      setBusy(false);
+    if (!sentences) {
+      setBusy(true, 'Getting sentence...');
+      $http.get('/learnWords/sentence').then(function(response){
+        sentences = response.data;
+        tempList.push(sentences[0]);
+        setBusy(false);
+        callback(tempList);
+      }, function(err){});
+    } else {
+      tempList.push(sentences[round - 1]);
       callback(tempList);
-    }, function(err){});
+    }
   }
 
   $scope.roundEnded = function(){

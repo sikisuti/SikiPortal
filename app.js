@@ -54,24 +54,9 @@ app.get("/", function(req, res){
   res.render("index");
 });
 */
-app.get("/shop", function(req, res){
-  res.sendFile("/public/shoppingList/index.html", {root: __dirname});
-});
-
-app.get("/java", function(req, res){
-  res.sendFile("/public/learnJava/index.html", {root: __dirname});
-});
-
-app.get("/dozsa", function(req, res){
-  res.sendFile("/public/dozsa/index.html", {root: __dirname});
-});
 
 app.get("/words", function(req, res){
   res.sendFile("/public/learnWords/index.html", {root: __dirname});
-});
-
-app.get("/experiment/**", function(req, res){
-  res.sendFile("/public/experiment/index.html", {root: __dirname});
 });
 
 var server = app.listen(port);
