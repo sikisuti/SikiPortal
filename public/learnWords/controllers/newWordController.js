@@ -38,7 +38,7 @@ learnWordsApp.controller('newWordController', ['$scope', '$location', '$http', f
 
   $scope.search = function(word) {
     audio = undefined;
-    startProcess('Search translation...');
+    /*startProcess('Search translation...');
     $http.get('/learnWords/searchNatives?word=' + word)
       .then(function(response){
         $scope.natives = response.data;
@@ -46,7 +46,7 @@ learnWordsApp.controller('newWordController', ['$scope', '$location', '$http', f
       }, function(err){
         console.log(err);
         endProcess('Search translation...');
-      });
+      });*/
 
     startProcess('Search definition...');
     $http.get('/learnWords/searchOxford?word=' + word.replace(' ', '_'))

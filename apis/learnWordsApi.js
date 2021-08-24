@@ -114,7 +114,7 @@ var getAudio = function(word, callback){
   var options = {
     hostname: 'od-api.oxforddictionaries.com',
     port: 443,
-    path: '/api/v1/entries/en/' + encodeURI(word.foreignWord) + '/examples;definitions;pronunciations',
+    path: '/api/v2/entries/en-gb/' + encodeURI(word.foreignWord) + '?fields=definitions,examples,pronunciations',
     method: 'GET',
     headers: {
       'Accept': 'application/json',
@@ -135,11 +135,12 @@ var getAudio = function(word, callback){
         callback(word, 'n/a');
         return;
       }
-      if (jData != undefined && jData.results != undefined &&
-          jData.results[0].lexicalEntries != undefined &&
-          jData.results[0].lexicalEntries[0].pronunciations != undefined &&
-          jData.results[0].lexicalEntries[0].pronunciations[0].audioFile != undefined){
-         var audioFile = jData.results[0].lexicalEntries[0].pronunciations[0].audioFile;
+      if (jData && jData.results &&
+          jData.results[0].lexicalEntries &&
+          jData.results[0].lexicalEntries[0].entries &&
+          jData.results[0].lexicalEntries[0].entries[0].pronunciations &&
+          jData.results[0].lexicalEntries[0].entries[0].pronunciations[0].audioFile){
+         var audioFile = jData.results[0].lexicalEntries[0].entries[0].pronunciations[0].audioFile;
          callback(word, audioFile);
       } else { callback(word, 'n/a'); }
     });
@@ -320,7 +321,7 @@ router.post('/userWord/:wordID', function(req, res){
   });
 });
 
-router.get('/searchNatives', function(req, res){
+/*router.get('/searchNatives', function(req, res){
   res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
   https.get('https://glosbe.com/gapi/translate?from=eng&dest=hun&format=json&phrase=' + req.query.word, (response) => {
     var data = '';
@@ -338,14 +339,14 @@ router.get('/searchNatives', function(req, res){
       res.send(collectedData);
     });
   });
-});
+});*/
 
 router.get('/searchOxford', function(req, res){
   res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
   var options = {
     hostname: 'od-api.oxforddictionaries.com',
     port: 443,
-    path: '/api/v1/entries/en/' + req.query.word + '/examples;definitions;pronunciations',
+    path: '/api/v2/entries/en-gb/' + req.query.word + '?fields=definitions,examples,pronunciations',
     method: 'GET',
     headers: {
       'Accept': 'application/json',
@@ -367,23 +368,24 @@ router.get('/searchOxford', function(req, res){
         return;
       }
       console.log(jData);
-      if (jData != undefined && jData.results != undefined && jData.results[0].lexicalEntries != undefined){
+      if (jData && jData.results && jData.results[0].lexicalEntries){
         for (var i = 0; i < jData.results[0].lexicalEntries.length; i++) {
           var pronunciation = '';
           var audioFile = '';
-          if (jData.results[0].lexicalEntries[i].pronunciations != undefined) {
-            pronunciation = jData.results[0].lexicalEntries[i].pronunciations[0].phoneticSpelling;
-            audioFile = jData.results[0].lexicalEntries[i].pronunciations[0].audioFile;
+          if (jData.results[0].lexicalEntries[i].entries[0].pronunciations) {
+            pronunciation = jData.results[0].lexicalEntries[i].entries[0].pronunciations[0].phoneticSpelling;
+            audioFile = jData.results[0].lexicalEntries[i].entries[0].pronunciations[0].audioFile;
           }
-          var lexicalCategory = jData.results[0].lexicalEntries[i].lexicalCategory;
 
-          if (jData.results[0].lexicalEntries[i].entries != undefined && jData.results[0].lexicalEntries[i].entries[0].senses != undefined){
+          var lexicalCategory = jData.results[0].lexicalEntries[i].lexicalCategory.text;
+          if (jData.results[0].lexicalEntries[i].entries && jData.results[0].lexicalEntries[i].entries[0].senses){
             for (var j = 0; j < jData.results[0].lexicalEntries[i].entries[0].senses.length; j++) {
               var definition = jData.results[0].lexicalEntries[i].entries[0].senses[j].definitions[0];
               var example = '';
-              if (jData.results[0].lexicalEntries[i].entries[0].senses[j].examples != undefined) {
+              if (jData.results[0].lexicalEntries[i].entries[0].senses[j].examples) {
                 example = jData.results[0].lexicalEntries[i].entries[0].senses[j].examples[0].text;
               }
+
               collectedData.push(
                 {
                   lexicalCategory: lexicalCategory,
