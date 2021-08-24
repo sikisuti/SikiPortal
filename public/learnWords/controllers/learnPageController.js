@@ -239,6 +239,11 @@ learnWordsApp.controller('learnPageController', ['$scope', '$location', '$http',
 
   $scope.flipCard = function() {
     $scope.isFlipped = !$scope.isFlipped;
-    if ($scope.isFlipped && actList[actIndex].audioFile.indexOf('http://') != -1 && $scope.autoVoice) {playCachedAudio();}
+    if ($scope.isFlipped && 
+      actList[actIndex].audioFile &&
+      actList[actIndex].audioFile.indexOf('http://') != -1 && 
+      $scope.autoVoice) {
+      playCachedAudio();
+    }
   };
 }]);
