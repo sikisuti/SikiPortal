@@ -24,7 +24,9 @@ learnWordsApp.controller('learnPageController', ['$scope', '$location', '$http',
   $scope.playCachedAudio = function(){playCachedAudio();};
 
   $scope.audioNotExists = function(){
-    return $scope.word == undefined || $scope.word.audioFile == null || $scope.word.audioFile.indexOf('http://') == -1;
+    return !$scope.word || 
+            !$scope.word.audioFile || 
+            ($scope.word.audioFile.indexOf('http://') == -1 && $scope.word.audioFile.indexOf('https://') == -1);
   }
 
   $http.get('/learnWords/words').then(function(response){
@@ -42,7 +44,9 @@ learnWordsApp.controller('learnPageController', ['$scope', '$location', '$http',
   function fillContent(){
     $scope.word = actList[actIndex];
     $scope.isFlipped = rndSide[actIndex] == 1;
-    if ($scope.isFlipped && actList[actIndex].audioFile.indexOf('http://') != -1 && $scope.autoVoice) {playCachedAudio();}
+    if ($scope.isFlipped && 
+      (actList[actIndex].audioFile.indexOf('http://') != -1 || actList[actIndex].audioFile.indexOf('https://') != -1) && 
+      $scope.autoVoice) {playCachedAudio();}
   }
 
   function playCachedAudio(){
@@ -241,7 +245,7 @@ learnWordsApp.controller('learnPageController', ['$scope', '$location', '$http',
     $scope.isFlipped = !$scope.isFlipped;
     if ($scope.isFlipped && 
       actList[actIndex].audioFile &&
-      actList[actIndex].audioFile.indexOf('http://') != -1 && 
+      (actList[actIndex].audioFile.indexOf('http://') != -1 || actList[actIndex].audioFile.indexOf('https://') != -1) && 
       $scope.autoVoice) {
       playCachedAudio();
     }

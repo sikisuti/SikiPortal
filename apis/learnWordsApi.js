@@ -236,8 +236,9 @@ router.post('/word', function(req, res){
       if (err) { res.sendStatus(503); }
 
       var insertWordQuery = connection.query('INSERT INTO words set ?', req.body, function(err, insertResult){
+        console.log(insertWordQuery.sql);
         if (err) { connection.rollback(function(){
-          console.log(insertWordQuery.sql); console.log(err); connection.release(); res.sendStatus(503);
+           console.log(err); connection.release(); res.sendStatus(503);
           });
         }
 
