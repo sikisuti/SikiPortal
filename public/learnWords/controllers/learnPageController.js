@@ -84,36 +84,36 @@ learnWordsApp.controller('learnPageController', ['$scope', '$location', '$http',
   		for (var i = 0; i < words.length; i++){
       	rndSide[i] = 0;
       }
-      getSentence(tempList, function(listWithSentence){
+      //getSentence(tempList, function(listWithSentence){
         rndSide.push(0);
-        callback(listWithSentence);
-      });
+        callback(tempList);
+      //});
     }	else if (round < 7){
   		for (var i = 0; i < words.length; i++){
       	rndSide[i] = 1;
       }
-      getSentence(tempList, function(listWithSentence){
+      //getSentence(tempList, function(listWithSentence){
         rndSide.push(0);
-        callback(listWithSentence);
-      });
+        callback(tempList);
+      //});
     }	else {
-      getSentence(tempList, function(firstListWithSentence){
+      //getSentence(tempList, function(firstListWithSentence){
     		for (var i = 0; i < words.length; i++){
-        	firstListWithSentence[i + words.length + 1] = firstListWithSentence[i];
+        	tempList[i + words.length] = tempList[i];
         }
         rndSide = new Array();
     		for (var i = 0; i < words.length; i++){
         	rndSide[i] = Math.round(Math.random());
         }
-        rndSide.push(0);
-        getSentence(firstListWithSentence, function(secondListWithSentence){
+        //rndSide.push(0);
+        //getSentence(firstListWithSentence, function(secondListWithSentence){
       		for (var i = 0; i < words.length; i++){
-          	rndSide[i + words.length + 1] = Math.abs(rndSide[i] - 1);
+          	rndSide[i + words.length] = Math.abs(rndSide[i] - 1);
           }
-          rndSide.push(0);
-          callback(secondListWithSentence);
-        });
-      });
+          //rndSide.push(0);
+          callback(tempList);
+        //});
+      //});
     }
   }
 

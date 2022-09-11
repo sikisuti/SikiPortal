@@ -35,7 +35,7 @@ router.get('/words', function(req, res) {
     connection.query(
       '(SELECT w.id AS wordID, w.native, w.foreignWord, w.exampleSentence, w.pronunciation, w.levelID, w.lexicalCategory, w.definition, uwInner.state, uwInner.id AS userWordID, w.audioFile ' +
       'FROM words w ' +
-      	'LEFT OUTER JOIN ( ' +
+      	'JOIN ( ' +
       		'SELECT * ' +
       		'FROM userWords ' +
       		'WHERE userID = ' + req.userId +
@@ -53,11 +53,11 @@ router.get('/words', function(req, res) {
       	') ' +
       ') AND (NOT ISNULL(uwInner.userID) OR (ISNULL(uwInner.userID) AND w.levelID <> 1)) ' +
       'ORDER BY uwInner.state DESC, w.levelID ASC ' +
-      'LIMIT ' + getRandomInt(6, 9) + ') ' +
+      'LIMIT ' + getRandomInt(7, 9) + ') ' +
       'UNION ' +
       '(SELECT w.id AS wordID, w.native, w.foreignWord, w.exampleSentence, w.pronunciation, w.levelID, w.lexicalCategory, w.definition, uw.state, uw.id AS userWordID, w.audioFile ' +
       'FROM words w ' +
-      	'LEFT OUTER JOIN userWords uw ON w.id = uw.wordID ' +
+      	'JOIN userWords uw ON w.id = uw.wordID ' +
       'WHERE uw.userID = ' + req.userId + ' AND uw.state = 6 ' +
       'ORDER BY RAND() ' +
       'LIMIT 1)', function(err, wordsResult, fields){
