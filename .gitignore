@@ -1,3 +1,4 @@
 node_modules/*
 public/learnWords/audio/*
 config.json
+.idea

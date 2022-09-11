@@ -9,29 +9,29 @@ learnWordsApp.controller('loginPageController', ['$scope', '$location', '$http',
     $scope.busy.message = state ? message : "";
   };
 
-    $scope.submit = function() {
-      var data = {
-        'username': $scope.username,
-        'password': $scope.password
-      };
-
-      var config = {
-                headers : {
-                    'Content-Type': 'application/json'
-                }
-            }
-
-      setBusy(true, 'Logging in...');
-      $http.post('/authorization/login', data, config).then(function(response){
-        setBusy(false);
-        $location.path('/');
-      }, function(response){
-        setBusy(false);
-        console.log("Authentication failed");
-      });
+  $scope.submit = function() {
+    var data = {
+      'username': $scope.username,
+      'password': $scope.password
     };
 
-    $scope.register = function(){
-      $location.path('/register');
-    };
+    var config = {
+              headers : {
+                  'Content-Type': 'application/json'
+              }
+          }
+
+    setBusy(true, 'Logging in...');
+    $http.post('/authorization/login', data, config).then(function(response){
+      setBusy(false);
+      $location.path('/');
+    }, function(response){
+      setBusy(false);
+      console.log("Authentication failed");
+    });
+  };
+
+  $scope.register = function(){
+    $location.path('/register');
+  };
 }]);
