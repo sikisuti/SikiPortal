@@ -24,7 +24,7 @@
         <div ng-class="{'selected': newWord.definition == oxford.definition}" style="line-height: normal;">
           <span id="lexicalCategory">{{oxford.lexicalCategory}}</span>
           <span id="pronunciation">/{{oxford.pronunciation}}/</span>
-          <md-button class="smallAudioButton" ng-click="play(oxford.audioFile)"></md-button>
+          <md-button ng-class="{smallAudioButton : true, hidden : oxford.audioFile.indexOf('http') == -1}" ng-click="play(oxford.audioFile)"></md-button>
           <span id="definition">{{oxford.definition}}</span>
           <span id="example">{{oxford.example}}</span>
           <!--<p><strong>{{oxford.lexicalCategory}}</strong><br />{{oxford.definition}}<br /><i>{{oxford.example}}</i></p>-->

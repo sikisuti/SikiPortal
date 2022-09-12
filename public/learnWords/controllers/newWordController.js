@@ -49,7 +49,7 @@ learnWordsApp.controller('newWordController', ['$scope', '$location', '$http', f
       });*/
 
     startProcess('Search definition...');
-    $http.get('/learnWords/searchOxford?word=' + word.replace(' ', '_'))
+    $http.get('/learnWords/searchDictionary?word=' + word.replace(' ', '_'))
       .then(function(response){
         $scope.oxfords = response.data;
         endProcess('Search definition...');
