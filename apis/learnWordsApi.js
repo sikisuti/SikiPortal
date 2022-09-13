@@ -431,7 +431,7 @@ router.get('/searchDictionary', function(req, res){
         var pronunciation = '';
         var audioFile = '';
         if (jData[i].hwi && jData[i].hwi.prs && jData[i].hwi.prs[0]) {
-          pronunciation = jData[i].hwi.prs[0].mw.replaceAll('-', '');
+          pronunciation = jData[i].hwi.prs[0].mw.replace(/-/g, '');
           if (jData[i].hwi.prs[0].sound) {
             var fileName = jData[i].hwi.prs[0].sound.audio;
             audioFile = 'https://media.merriam-webster.com/audio/prons/en/us/mp3/' + Array.from(fileName)[0] + '/' + fileName + '.mp3';
@@ -449,7 +449,7 @@ router.get('/searchDictionary', function(req, res){
           for (var j = 0; j < jData[i].def[0].sseq[0][0][1].dt.length; j++) {
             if (jData[i].def[0].sseq[0][0][1].dt[j][0] == 'vis') {
               var regex = /\{.*?\}/g;
-              example = jData[i].def[0].sseq[0][0][1].dt[j][1][0].t.replaceAll(regex, '');
+              example = jData[i].def[0].sseq[0][0][1].dt[j][1][0].t.replace(regex, '');
             }
           }
         } catch(e) {}
