@@ -16,14 +16,6 @@ var path = require('path');
 var nconf = require('nconf');
 nconf.argv().env().file({ file: path.normalize(path.join(__dirname, "../config.json")) });
 
-/**
- * Returns a random integer between min (inclusive) and max (inclusive)
- * Using Math.round() will give you a non-uniform distribution!
- */
-function getRandomInt(min, max) {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
 router.get('/authorizationCheck', function(req, res) { res.send('authorizationCheck OK'); });
 
 router.get('/words', function(req, res) {
@@ -31,43 +23,16 @@ router.get('/words', function(req, res) {
   pool.getConnection(function (err, connection){
     if (err) {console.log(err); return;}
 
-
-    connection.query(
-      '(SELECT w.id AS wordID, w.native, w.foreignWord, w.exampleSentence, w.pronunciation, w.levelID, w.lexicalCategory, w.definition, uwInner.state, uwInner.id AS userWordID, w.audioFile ' +
-      'FROM words w ' +
-      	'JOIN ( ' +
-      		'SELECT * ' +
-      		'FROM userWords ' +
-      		'WHERE userID = ' + req.userId +
-      ') uwInner ON uwInner.wordID = w.id ' +
-      'WHERE w.id NOT IN ( ' +
-      	'SELECT uw.wordID ' +
-      	'FROM userWords uw ' +
-      	'WHERE uw.userID = ' + req.userId + ' AND ( ' +
-      		'uw.state > 5 OR ( ' +
-      			'(uw.state = 2 and uw.lastLearned > DATE_ADD(CURDATE(), INTERVAL -4 DAY)) OR ' +
-      			'(uw.state = 3 and uw.lastLearned > DATE_ADD(CURDATE(), INTERVAL -7 DAY)) OR ' +
-      			'(uw.state = 4 and uw.lastLearned > DATE_ADD(CURDATE(), INTERVAL -15 DAY)) OR ' +
-      			'(uw.state = 5 and uw.lastLearned > DATE_ADD(CURDATE(), INTERVAL -30 DAY)) ' +
-      		') ' +
-      	') ' +
-      ') AND (NOT ISNULL(uwInner.userID) OR (ISNULL(uwInner.userID) AND w.levelID <> 1)) ' +
-      'ORDER BY uwInner.state DESC, w.levelID ASC ' +
-      'LIMIT ' + getRandomInt(7, 9) + ') ' +
-      'UNION ' +
-      '(SELECT w.id AS wordID, w.native, w.foreignWord, w.exampleSentence, w.pronunciation, w.levelID, w.lexicalCategory, w.definition, uw.state, uw.id AS userWordID, w.audioFile ' +
-      'FROM words w ' +
-      	'JOIN userWords uw ON w.id = uw.wordID ' +
-      'WHERE uw.userID = ' + req.userId + ' AND uw.state = 6 ' +
-      'ORDER BY RAND() ' +
-      'LIMIT 1)', function(err, wordsResult, fields){
-      if (err) { console.log(err); res.send(err); return; }
-
-      getMissingAudios(wordsResult, 0, connection, function(){
-        connection.release();
-        res.send(wordsResult);
-      });
-
+    getWordsFromExistingSession(connection, req.userId, function(sessionWords) {
+      if (sessionWords.length == 0) {
+        getWordsFromNewSession(connection, req.userId, function(wordsResult) {
+          storeSession(wordsResult, connection, function(){
+            closeConnectionAndResponse(connection, res, wordsResult);
+          })
+        })
+      } else {
+        closeConnectionAndResponse(connection, res, sessionWords);
+      }
     });
   });
 });
@@ -86,66 +51,6 @@ router.get('/sentence', function(req, res) {
         });
   });
 });
-
-var getMissingAudios = function(words, index, connection, endCallback) {
-  if (index == words.length) { endCallback(); return; }
-
-  if (words[index].audioFile == null) { words[index].audioFile = 'n/a'; }
-
-  if (words[index].audioFile.indexOf('n/a') != -1 ||
-      words[index].audioFile.indexOf('http://') != -1) {
-    getMissingAudios(words, ++index, connection, endCallback);
-    return;
-  }
-
-  getAudio(words[index], function(word, audioUrl){
-    connection.query(
-      "UPDATE words SET audioFile = '" + audioUrl + "' WHERE id = " + word.wordID, function(err, updateResult, fields){
-      if (err) { console.log(err); res.send(err); return; }
-
-      words[index].audioFile = audioUrl;
-      //console.log(word.foreignWord + ' updated. URL: ' + audioUrl);
-      getMissingAudios(words, ++index, connection, endCallback);
-    });
-  });
-};
-
-var getAudio = function(word, callback){
-  var options = {
-    hostname: 'od-api.oxforddictionaries.com',
-    port: 443,
-    path: '/api/v2/entries/en-gb/' + encodeURI(word.foreignWord) + '?fields=definitions,examples,pronunciations',
-    method: 'GET',
-    headers: {
-      'Accept': 'application/json',
-      'app_id': nconf.get('app_id'),
-      'app_key': nconf.get('app_key')
-    }
-  };
-  https.get(options, (response) => {
-    var data = '';
-    response.on('data', (chunk) => {
-      data += chunk;
-    });
-    response.on('end', () => {
-      var collectedData = [];
-      try {
-        var jData = JSON.parse(data);
-      } catch(e) {
-        callback(word, 'n/a');
-        return;
-      }
-      if (jData && jData.results &&
-          jData.results[0].lexicalEntries &&
-          jData.results[0].lexicalEntries[0].entries &&
-          jData.results[0].lexicalEntries[0].entries[0].pronunciations &&
-          jData.results[0].lexicalEntries[0].entries[0].pronunciations[0].audioFile){
-         var audioFile = jData.results[0].lexicalEntries[0].entries[0].pronunciations[0].audioFile;
-         callback(word, audioFile);
-      } else { callback(word, 'n/a'); }
-    });
-  });
-};
 
 router.post('/words', function(req, res){
   var wordsToUpdate = [];
@@ -177,11 +82,14 @@ router.post('/words', function(req, res){
                 res.sendStatus(503);
                 return;
               });
+            } else {
+              clearSession(connection, req.userId, function() {
+                connection.release();
+                console.log('Words updated');
+                res.sendStatus(200);
+              });
             }
           });
-          connection.release();
-          console.log('Words updated');
-          res.sendStatus(200);
         });
       });
     });
@@ -227,6 +135,15 @@ var updateUserWords = function(connection, wordsToUpdate, callback) {
     });
   }
 };
+
+var clearSession = function(connection, userId, callback) {
+  connection.query(
+    'DELETE FROM sessionwords WHERE userID = ' + userId, function(err, sessionResult, fields){
+      if (err) { console.log(err); res.send(err); return; }
+
+      callback();
+    });
+}
 
 router.post('/word', function(req, res){
   pool.getConnection(function (err, connection){
@@ -322,88 +239,6 @@ router.post('/userWord/:wordID', function(req, res){
   });
 });
 
-/*router.get('/searchNatives', function(req, res){
-  res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
-  https.get('https://glosbe.com/gapi/translate?from=eng&dest=hun&format=json&phrase=' + req.query.word, (response) => {
-    var data = '';
-    response.on('data', (d) => {
-      data += d;
-    });
-    response.on('end', () => {
-      var collectedData = [];
-      var jData = JSON.parse(data);
-      for (var i = 0; i < jData.tuc.length; i++) {
-        if (jData.tuc[i].phrase != undefined) {
-          collectedData.push({name: jData.tuc[i].phrase.text});
-        }
-      }
-      res.send(collectedData);
-    });
-  });
-});*/
-
-/*router.get('/searchOxford', function(req, res){
-  res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
-  var options = {
-    hostname: 'od-api.oxforddictionaries.com',
-    port: 443,
-    path: '/api/v2/entries/en-gb/' + req.query.word + '?fields=definitions,examples,pronunciations',
-    method: 'GET',
-    headers: {
-      'Accept': 'application/json',
-      'app_id': nconf.get('app_id'),
-      'app_key': nconf.get('app_key')
-    }
-  };
-  https.get(options, (response) => {
-    var data = '';
-    response.on('data', (chunk) => {
-      data += chunk;
-    });
-    response.on('end', () => {
-      var collectedData = [];
-      try {
-        var jData = JSON.parse(data);
-      } catch(e) {
-        res.sendStatus(200);
-        return;
-      }
-      console.log(jData);
-      if (jData && jData.results && jData.results[0].lexicalEntries){
-        for (var i = 0; i < jData.results[0].lexicalEntries.length; i++) {
-          var pronunciation = '';
-          var audioFile = '';
-          if (jData.results[0].lexicalEntries[i].entries[0].pronunciations) {
-            pronunciation = jData.results[0].lexicalEntries[i].entries[0].pronunciations[0].phoneticSpelling;
-            audioFile = jData.results[0].lexicalEntries[i].entries[0].pronunciations[0].audioFile;
-          }
-
-          var lexicalCategory = jData.results[0].lexicalEntries[i].lexicalCategory.text;
-          if (jData.results[0].lexicalEntries[i].entries && jData.results[0].lexicalEntries[i].entries[0].senses){
-            for (var j = 0; j < jData.results[0].lexicalEntries[i].entries[0].senses.length; j++) {
-              var definition = jData.results[0].lexicalEntries[i].entries[0].senses[j].definitions[0];
-              var example = '';
-              if (jData.results[0].lexicalEntries[i].entries[0].senses[j].examples) {
-                example = jData.results[0].lexicalEntries[i].entries[0].senses[j].examples[0].text;
-              }
-
-              collectedData.push(
-                {
-                  lexicalCategory: lexicalCategory,
-                  definition: definition,
-                  example: example,
-                  pronunciation: pronunciation,
-                  audioFile: audioFile
-                });
-            }
-          }
-        }
-      }
-      res.send(collectedData);
-    });
-  });
-});*/
-
 router.get('/searchDictionary', function(req, res){
   res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
   var options = {
@@ -483,5 +318,87 @@ router.get('/stateStatistics', function(req, res){
     });
   });
 });
+
+var getWordsFromExistingSession = function(connection, userId, callback) {
+  connection.query(
+    'SELECT w.id AS wordID, w.native, w.foreignWord, w.exampleSentence, w.pronunciation, w.levelID, w.lexicalCategory, w.definition, uw.state, uw.id AS userWordID, uw.userID, w.audioFile ' +
+    'FROM sessionwords sw ' +
+    'JOIN userWords uw ON sw.userWordID = uw.id ' +
+    'JOIN words w ON uw.wordID = w.id ' +
+    'WHERE sw.userID = ' + userId, function(err, sessionResult, fields){
+      if (err) { console.log(err); res.send(err); return; }
+
+      callback(sessionResult);
+    });
+}
+
+var getWordsFromNewSession = function(connection, userId, callback) {
+  connection.query(
+    '(SELECT w.id AS wordID, w.native, w.foreignWord, w.exampleSentence, w.pronunciation, w.levelID, w.lexicalCategory, w.definition, uwInner.state, uwInner.id AS userWordID, uwInner.userID, w.audioFile ' +
+    'FROM words w ' +
+      'JOIN ( ' +
+        'SELECT * ' +
+        'FROM userWords ' +
+        'WHERE userID = ' + userId +
+    ') uwInner ON uwInner.wordID = w.id ' +
+    'WHERE w.id NOT IN ( ' +
+      'SELECT uw.wordID ' +
+      'FROM userWords uw ' +
+      'WHERE uw.userID = ' + userId + ' AND ( ' +
+        'uw.state > 5 OR ( ' +
+          '(uw.state = 2 and uw.lastLearned > DATE_ADD(CURDATE(), INTERVAL -4 DAY)) OR ' +
+          '(uw.state = 3 and uw.lastLearned > DATE_ADD(CURDATE(), INTERVAL -7 DAY)) OR ' +
+          '(uw.state = 4 and uw.lastLearned > DATE_ADD(CURDATE(), INTERVAL -15 DAY)) OR ' +
+          '(uw.state = 5 and uw.lastLearned > DATE_ADD(CURDATE(), INTERVAL -30 DAY)) ' +
+        ') ' +
+      ') ' +
+    ') AND (NOT ISNULL(uwInner.userID) OR (ISNULL(uwInner.userID) AND w.levelID <> 1)) ' +
+    'ORDER BY uwInner.state DESC, w.levelID ASC ' +
+    'LIMIT ' + getRandomInt(7, 9) + ') ' +
+    'UNION ' +
+    '(SELECT w.id AS wordID, w.native, w.foreignWord, w.exampleSentence, w.pronunciation, w.levelID, w.lexicalCategory, w.definition, uw.state, uw.id AS userWordID, uw.userID, w.audioFile ' +
+    'FROM words w ' +
+      'JOIN userWords uw ON w.id = uw.wordID ' +
+    'WHERE uw.userID = ' + userId + ' AND uw.state = 6 ' +
+    'ORDER BY RAND() ' +
+    'LIMIT 1)', function(err, wordsResult, fields){
+    if (err) { console.log(err); res.send(err); return; }
+
+    callback(wordsResult, connection);
+  });
+}
+
+/**
+ * Returns a random integer between min (inclusive) and max (inclusive)
+ * Using Math.round() will give you a non-uniform distribution!
+ */
+function getRandomInt(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+var storeSession = function(wordsToLearn, connection, callback) {
+  if (wordsToLearn.length != 0) {
+    var data = [];
+    for (var i = 0; i < wordsToLearn.length; i++) {
+      data.push([wordsToLearn[i].userID, wordsToLearn[i].userWordID])
+    }
+
+    var insertSessionWordsQuery = connection.query('INSERT INTO sessionwords(userID, userWordID) values ?',
+          [data], function(err, insertResult){
+      if (err) { connection.rollback(function(){
+        console.log(insertSessionWordsQuery.sql); console.log(err); connection.release(); res.sendStatus(503); return;
+        });
+      }
+      console.log('Session stored');
+    });
+  }
+
+  callback();
+};
+
+var closeConnectionAndResponse = function(connection, res, wordsResult) {
+  connection.release();
+  res.send(wordsResult);
+}
 
 module.exports = router;
