@@ -12,7 +12,6 @@ var port = nconf.get('port');
 // Controller files
 var carInfoController = require(path.join(__dirname, 'controllers/carInfoController'));
 var carInfoApi = require('./apis/carInfoApi');
-//var learnJavaApi = require('./apis/learnJavaApi');
 var carInfoRefuelApi = require('./apis/carInfoRefuelApi');
 var userManagementApi = require('./apis/userManagementApi');
 var authorizationApi = require('./apis/authorizationApi');
@@ -35,25 +34,16 @@ app.use(express.static(__dirname + '/public'));
 
 app.use(cookieParser());
 
-// Authentication middleware
-//app.use(authorization.authorize(connections.getAuthPool()));
-
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true}));
 
 // fire controllers
 carInfoController(app, connections.getCarInfoPool());
 carInfoApi(app, connections.getCarInfoPool());
-//learnJavaApi(app, connections.getJavaQuestionsPool());
 app.use(require('./apis'));
 carInfoRefuelApi(app, connections.getCarInfoPool());
 userManagementApi(app, connections.getAuthPool());
 authorizationApi(app, connections.getAuthPool());
-/*
-app.get("/", function(req, res){
-  res.render("index");
-});
-*/
 
 app.get("/words", function(req, res){
   res.sendFile("/public/learnWords/index.html", {root: __dirname});

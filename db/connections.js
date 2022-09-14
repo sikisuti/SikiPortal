@@ -17,18 +17,6 @@ module.exports = {
    });
  },
 
- getJavaQuestionsPool: function() {
-   return mysql.createPool({
-     host     : 'localhost',
-     user     : nconf.get('db_user'),
-     password : nconf.get('db_password'),
-     port     : nconf.get('db_port'),
-     database : 'JavaQuestions',
-     connectionLimit: 10,
-     supportBigNumbers: true
-   });
- },
-
  getAuthPool: function() {
    return mysql.createPool({
         host     : 'localhost',
