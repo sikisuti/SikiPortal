@@ -364,6 +364,10 @@ var getWordsFromNewSession = function(connection, userId, callback) {
     'LIMIT 1)', function(err, wordsResult, fields){
     if (err) { console.log(err); res.send(err); return; }
 
+    if (wordsResult.length < 5) {
+      wordsResult = [];
+    }
+
     callback(wordsResult, connection);
   });
 }
