@@ -1,0 +1,39 @@
+<div id="learnView" layout="column" flex>
+
+  <div layout="row">
+    <div id="progressBar" ng-style="{width : progressBarWidth}" layout="column"></div>
+  </div>
+
+    <div layout="row" ng-class="{hidden : word}">
+      <md-input-container class="narrow-input" flex>
+        <label>Number of words to test</label>
+        <input type="number" ng-model="noOfWords"/>
+      </md-input-container>
+      <button id="retrieveWordsToTest" ng-click="retrieveWordsToTest(noOfWords)">start</button>
+    </div>
+
+    <div layout="row" layout-margin flex>
+    </div>
+
+    <div layout="row">
+      <div layout="column" flex>
+        <md-progress-circular ng-disabled="!busy.state"></md-progress-circular>
+        <span ng-disabled="!busy.state" style="margin: auto 10px;">{{busy.message}}</span>
+      </div>
+      <div layout="column" flex>
+        <md-switch class="md-primary" ng-model="autoVoice" layout-align="center">voice</md-switch>
+      </div>
+      <div layout="column" layout-align="center end" flex>
+        <md-button id="audioButton" ng-click="playCachedAudio()" ng-class="{hidden : audioNotExists()}"></md-button>
+      </div>
+    </div>
+  
+    <section ng-hide="roundEnded()" ng-class="{hidden : !word}" class="card-container">
+      <div id="card" ng-class="{flipped: isFlipped}">
+        <figure class="front" ng-class="{knownWord: word.state > 5}"><span class="word" ng-bind="word.native"></figure>
+        <figure class="back" ng-class="{knownWord: word.state > 5}"><span class="word" ng-bind="word.foreignWord"></figure>
+      </div>
+    </section>
+  
+    <script src="/js/learnWords/gestures.js"></script>
+</div>

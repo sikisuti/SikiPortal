@@ -21,5 +21,9 @@ learnWordsApp.config(function($routeProvider){
     .when('/register', {
       templateUrl: 'learnWords/views/register.html',
       controller: 'registerController'
+    })
+    .when('/testPage', {
+      templateUrl: 'learnWords/views/testPage.html',
+      controller: 'testPageController'
     });
 });

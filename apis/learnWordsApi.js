@@ -319,6 +319,28 @@ router.get('/stateStatistics', function(req, res){
   });
 });
 
+router.get('/startTest', function(req, res){
+  res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+  pool.getConnection(function (err, connection){
+    if (err) {console.log(err); return;}
+
+    connection.query(
+      '(SELECT w.id AS wordID, w.native, w.foreignWord, w.exampleSentence, w.pronunciation, w.levelID, w.lexicalCategory, w.definition, uwInner.state, uwInner.id AS userWordID, uwInner.userID, w.audioFile ' +
+      'FROM words w ' +
+        'JOIN ( ' +
+          'SELECT * ' +
+          'FROM userWords ' +
+          'WHERE userID = ' + req.userId +
+      ') uwInner ON uwInner.wordID = w.id ' +
+      'ORDER BY uwInner.id DESC ' +
+      'LIMIT ' + req.query.noOfWords + ')', function(err, testWords, fields){
+      if (err) { console.log(err); res.send(err); return; }
+  
+      closeConnectionAndResponse(connection, res, testWords);
+    });
+  });
+});
+
 var getWordsFromExistingSession = function(connection, userId, callback) {
   connection.query(
     'SELECT w.id AS wordID, w.native, w.foreignWord, w.exampleSentence, w.pronunciation, w.levelID, w.lexicalCategory, w.definition, uw.state, uw.id AS userWordID, uw.userID, w.audioFile ' +

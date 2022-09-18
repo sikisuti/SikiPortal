@@ -13,10 +13,15 @@ learnWordsApp.controller('homeController', ['$scope', '$http', '$location', func
     }
   }, function(err){console.log(err);});
 
-    $scope.onLearn = function(){
-      $location.path('/learnPage');
-    };
-    $scope.onNew = function(){
-      $location.path('/newWord');
-    };
+  $scope.onLearn = function(){
+    $location.path('/learnPage');
+  };
+
+  $scope.onNew = function(){
+    $location.path('/newWord');
+  };
+
+  $scope.onTest = function() {
+    $location.path('/testPage');
+  }
 }]);
