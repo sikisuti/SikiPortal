@@ -33,8 +33,8 @@ router.post('/', function (req, res) {
     connection.beginTransaction(function (err) {
       if (err) { res.sendStatus(503); }
 
-      insertWord(connection, req, res, function (insertResult) {
-        insertUserWord(connection, req, res, insertResult, function () {
+      insertOrGetWord(connection, req, res, function (newId) {
+        insertUserWord(connection, req, res, newId, function () {
           connection.commit(function (err) {
             if (err) {
               connection.rollback(function () {
@@ -51,6 +51,21 @@ router.post('/', function (req, res) {
   });
 });
 
+var insertOrGetWord = function (connection, req, res, callback) {
+  var getWordQuery = connection.query('SELECT * FROM words WHERE foreignWord = ? AND native = ?', [req.body.foreignWord, req.body.native], function(err, existingWords) {
+    console.log('request\n' + getWordQuery.sql);
+    console.log('response\n' + existingWords);
+    var existingWord = existingWords ? existingWords[0] : undefined;
+    if (existingWord) {
+      callback(existingWord.id);
+    } else {
+      insertWord(connection, req, res, function(newId){
+        callback(newId);
+      });
+    }
+  });
+};
+
 var insertWord = function (connection, req, res, callback) {
   var insertWordQuery = connection.query('INSERT INTO words set ?', req.body, function (err, insertResult) {
     console.log(insertWordQuery.sql);
@@ -60,13 +75,13 @@ var insertWord = function (connection, req, res, callback) {
       });
     }
 
-    callback(insertResult);
+    callback(insertResult.insertId);
   });
 };
 
-var insertUserWord = function (connection, req, res, insertResult, callback) {
+var insertUserWord = function (connection, req, res, newId, callback) {
   var insertUserWordQuery = connection.query('INSERT INTO userWords set ?',
-    { userID: req.userId, wordID: insertResult.insertId, state: 1 }, function (err) {
+    { userID: req.userId, wordID: newId, state: 1 }, function (err) {
       if (err) {
         connection.rollback(function () {
           console.log(insertUserWordQuery.sql); console.log(err); connection.release(); res.sendStatus(503);
