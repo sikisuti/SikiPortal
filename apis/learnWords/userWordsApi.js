@@ -7,11 +7,6 @@ router.use(auth.authorize());
 var connections = require('../../db/connections');
 var pool = connections.getWordsPool();
 
-var path = require('path');
-
-var nconf = require('nconf');
-nconf.argv().env().file({ file: path.normalize(path.join(__dirname, "../../config.json")) });
-
 router.post('/', function (req, res) {
   var wordsToUpdate = [];
   var wordsToInsert = [];
