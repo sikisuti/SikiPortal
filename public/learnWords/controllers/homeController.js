@@ -2,7 +2,7 @@ learnWordsApp.controller('homeController', ['$scope', '$http', '$location', func
 
   $scope.statistics = [];
 
-  $http.get('learnWords/stateStatistics').then(function(result){
+  $http.get('learnWords/statistics').then(function(result){
     var max = Math.max.apply(Math, result.data.map(function(o){ return o.count }));
     for (var i = 0; i < result.data.length; i++) {
       $scope.statistics.push({

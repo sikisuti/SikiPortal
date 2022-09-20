@@ -5,7 +5,7 @@ learnWordsApp.controller('mainCtrl', ['$scope', '$location', '$http', '$cookies'
   $scope.$on('$locationChangeStart', function(event, newUrl) {
     if (newUrl.indexOf('register') != -1) {return;}
     console.log('auhorization check...');
-    $http.get('/learnWords/authorizationCheck')
+    $http.get('/authorization/check')
       .then(function(response){
         $scope.username = $cookies.get('sikiUsername');
       }, function(err){

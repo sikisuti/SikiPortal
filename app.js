@@ -13,11 +13,8 @@ var port = nconf.get('port');
 var carInfoController = require(path.join(__dirname, 'controllers/carInfoController'));
 var carInfoApi = require('./apis/carInfoApi');
 var carInfoRefuelApi = require('./apis/carInfoRefuelApi');
-var userManagementApi = require('./apis/userManagementApi');
-var authorizationApi = require('./apis/authorizationApi');
 
 var connections = require('./db/connections');
-var authorization = require('./middlewares/auth');
 
 var auth = require('./authManager');
 setInterval(function() { auth.clearTokenList(); }, 1800000); // 30 min
@@ -42,8 +39,6 @@ carInfoController(app, connections.getCarInfoPool());
 carInfoApi(app, connections.getCarInfoPool());
 app.use(require('./apis'));
 carInfoRefuelApi(app, connections.getCarInfoPool());
-userManagementApi(app, connections.getAuthPool());
-authorizationApi(app, connections.getAuthPool());
 
 app.get("/words", function(req, res){
   res.sendFile("/public/learnWords/index.html", {root: __dirname});

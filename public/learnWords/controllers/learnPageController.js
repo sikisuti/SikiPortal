@@ -3,7 +3,6 @@ learnWordsApp.controller('learnPageController', ['$scope', '$location', '$http',
 	var actIndex;
 	var round = 1;
 	var rndSide;
-	var modifiedWords = new Array();
   var sentences;
 
 	var sounds = [];
@@ -120,7 +119,7 @@ learnWordsApp.controller('learnPageController', ['$scope', '$location', '$http',
   function getSentence(tempList, callback){
     if (!sentences) {
       setBusy(true, 'Getting sentence...');
-      $http.get('/learnWords/sentence').then(function(response){
+      $http.get('/learnWords/sentences').then(function(response){
         sentences = response.data;
         tempList.push(sentences[0]);
         setBusy(false);
@@ -153,13 +152,13 @@ learnWordsApp.controller('learnPageController', ['$scope', '$location', '$http',
       var userWordID = actList[actIndex].userWordID;
       setBusy(true, 'Updating word...');
       if (userWordID == null) {
-        $http.post('/learnWords/userWord/' + actList[actIndex].wordID).then(function(response){
+        $http.post('/learnWords/userWords/' + actList[actIndex].wordID).then(function(response){
           words.splice(words.map(function(word){return word.userWordID}).indexOf(userWordID), 1);
           setBusy(false);
           callback(true);
         }, function(err){console.log(err);});
       } else {
-        $http.put('/learnWords/userWord/' + userWordID).then(function(response){
+        $http.put('/learnWords/userWords/' + userWordID).then(function(response){
           words.splice(words.map(function(word){return word.userWordID}).indexOf(userWordID), 1);
           setBusy(false);
           callback(true);
@@ -180,7 +179,7 @@ learnWordsApp.controller('learnPageController', ['$scope', '$location', '$http',
     }
     //console.log('post: ' + data);
     setBusy(true, 'Updating words...');
-    $http.post('/learnWords/words', data, config).then(function(res){
+    $http.post('/learnWords/userWords', data, config).then(function(res){
       setBusy(false);
       $location.path('/');
     }, function(err){

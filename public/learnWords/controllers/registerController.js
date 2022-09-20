@@ -22,7 +22,7 @@ learnWordsApp.controller('registerController', ['$scope', '$location', '$http', 
             }
   
       setBusy(true, 'Register user...');
-      $http.post('/userManagement/user', data, config).then(function(response){
+      $http.post('/authorization/user', data, config).then(function(response){
         setBusy(false);
         $location.path('/');
       }, function(response){

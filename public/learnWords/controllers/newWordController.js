@@ -38,18 +38,9 @@ learnWordsApp.controller('newWordController', ['$scope', '$location', '$http', f
 
   $scope.search = function(word) {
     audio = undefined;
-    /*startProcess('Search translation...');
-    $http.get('/learnWords/searchNatives?word=' + word)
-      .then(function(response){
-        $scope.natives = response.data;
-        endProcess('Search translation...');
-      }, function(err){
-        console.log(err);
-        endProcess('Search translation...');
-      });*/
 
     startProcess('Search definition...');
-    $http.get('/learnWords/searchDictionary?word=' + word.replace(' ', '_'))
+    $http.get('/learnWords/dictionary/search?word=' + word.replace(' ', '_'))
       .then(function(response){
         $scope.oxfords = response.data;
         endProcess('Search definition...');
@@ -71,9 +62,9 @@ learnWordsApp.controller('newWordController', ['$scope', '$location', '$http', f
     if ($scope.newWord.native == "" || $scope.newWord.foreignWord == "" || ($scope.oxfords != undefined && $scope.oxfords.length > 0 && $scope.newWord.definition == "")) {return;}
 
     $scope.newWord.levelID = 1;
-    if ($scope.newWord.audioFile == null) { $scope.newWord.audioFile = 'n/a'; }
+    if (!$scope.newWord.audioFile) { $scope.newWord.audioFile = 'n/a'; }
     startProcess('Saving word...');
-    $http.post('/learnWords/word', $scope.newWord).then(function(response){
+    $http.post('/learnWords/words', $scope.newWord).then(function(response){
       endProcess('Saving word...');
       $location.path('/');
     }, function(err){

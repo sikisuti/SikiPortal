@@ -54,7 +54,7 @@ learnWordsApp.controller('testPageController', ['$scope', '$location', '$http', 
     }
    
     $scope.retrieveWordsToTest = function(noOfWords) {
-        $http.get('/learnWords/startTest?noOfWords=' + noOfWords)
+        $http.get('/learnWords/testWords/start?noOfWords=' + noOfWords)
         .then(function(response){
             words = response.data;
             getWords(function(tempList){
