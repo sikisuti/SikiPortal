@@ -23,93 +23,101 @@ router.post('/', function (req, res) {
 
   pool.getConnection(function (err, connection) {
     if (err) { console.log(err); return; }
+    else {
+      connection.beginTransaction(function (err) {
+        if (err) { res.sendStatus(503); }
+        else {
+          console.log('Update started');
 
-    connection.beginTransaction(function (err) {
-      if (err) { res.sendStatus(503); }
-      console.log('Update started');
-
-      insertUserWords(connection, wordsToInsert, function () {
-        updateUserWords(connection, wordsToUpdate, function () {
-          connection.commit(function (err) {
-            if (err) {
-              connection.rollback(function () {
-                connection.release();
-                res.sendStatus(503);
-                return;
+          insertUserWords(connection, wordsToInsert, function () {
+            updateUserWords(connection, wordsToUpdate, function () {
+              connection.commit(function (err) {
+                if (err) {
+                  connection.rollback(function () {
+                    connection.release();
+                    res.sendStatus(503);
+                    return;
+                  });
+                } else {
+                  clearSession(connection, req.userId, function () {
+                    connection.release();
+                    console.log('Words updated');
+                    res.sendStatus(200);
+                  });
+                }
               });
-            } else {
-              clearSession(connection, req.userId, function () {
-                connection.release();
-                console.log('Words updated');
-                res.sendStatus(200);
-              });
-            }
+            });
           });
-        });
+        }
       });
-    });
+    }
   });
 });
 
 router.post('/:wordID', function (req, res) {
   pool.getConnection(function (err, connection) {
     if (err) { console.log(err); return; }
-
-    connection.beginTransaction(function (err) {
-      if (err) { res.sendStatus(503); }
-
-      var insertUserWordQuery = connection.query('INSERT INTO userWords SET ?',
-        { userID: req.userId, wordID: req.params.wordID, state: 7 }, function (err, insertUwResult) {
-          if (err) {
-            connection.rollback(function () {
-              console.log(insertUserWordQuery.sql); console.log(err); connection.release(); res.sendStatus(503); return;
-            });
-          }
-
-          console.log('Word set to known. wordID: ' + req.params.wordID);
-          connection.commit(function (err) {
-            if (err) {
-              connection.rollback(function () {
-                res.sendStatus(503);
-              });
+    else {
+      connection.beginTransaction(function (err) {
+        if (err) { res.sendStatus(503); }
+        else {
+          var insertUserWordQuery = connection.query('INSERT INTO userWords SET ?',
+            { userID: req.userId, wordID: req.params.wordID, state: 7 }, function (err, insertUwResult) {
+              if (err) {
+                connection.rollback(function () {
+                  console.log(insertUserWordQuery.sql); console.log(err); connection.release(); res.sendStatus(503); return;
+                });
+              } else {
+                console.log('Word set to known. wordID: ' + req.params.wordID);
+                connection.commit(function (err) {
+                  if (err) {
+                    connection.rollback(function () {
+                      res.sendStatus(503);
+                    });
+                  } else {
+                    connection.release();
+                    res.sendStatus(200);
+                  }
+                });
+              }
             }
-          });
-          connection.release();
-          res.sendStatus(200);
-
-        });
-    });
+          );
+        }
+      });
+    }
   });
 });
 
 router.put('/:id', function (req, res) {
   pool.getConnection(function (err, connection) {
     if (err) { console.log(err); return; }
-
-    connection.beginTransaction(function (err) {
-      if (err) { res.sendStatus(503); }
-
-      var updateUserWordQuery = connection.query('UPDATE userWords SET state = ? WHERE id = ?',
-        [7, parseInt(req.params.id)], function (err, updateUwResult) {
-          if (err) {
-            connection.rollback(function () {
-              console.log(updateUserWordQuery.sql); console.log(err); connection.release(); res.sendStatus(503);
+    else {
+      connection.beginTransaction(function (err) {
+        if (err) { res.sendStatus(503); }
+        else {
+          var updateUserWordQuery = connection.query('UPDATE userWords SET state = ? WHERE id = ?',
+            [7, parseInt(req.params.id)], function (err, updateUwResult) {
+              if (err) {
+                connection.rollback(function () {
+                  console.log(updateUserWordQuery.sql); console.log(err); connection.release(); res.sendStatus(503);
+                });
+              } else {
+                console.log('Word set to known. userWordID: ' + req.params.id);
+                connection.commit(function (err) {
+                  if (err) {
+                    connection.rollback(function () {
+                      res.sendStatus(503);
+                    });
+                  } else {
+                    connection.release();
+                    res.sendStatus(200);
+                  }
+                });
+              }
             });
-          }
-
-          console.log('Word set to known. userWordID: ' + req.params.id);
-          connection.commit(function (err) {
-            if (err) {
-              connection.rollback(function () {
-                res.sendStatus(503);
-              });
-            }
-          });
-          connection.release();
-          res.sendStatus(200);
-
-        });
-    });
+        }
+      });
+    }
   });
 });
 
@@ -123,10 +131,10 @@ var insertUserWords = function (connection, wordsToInsert, callback) {
           connection.rollback(function () {
             console.log(insertUserWordQuery.sql); console.log(err); connection.release(); res.sendStatus(503); return;
           });
+        } else {
+          console.log('Words inserted');
+          callback();
         }
-
-        console.log('Words inserted');
-        callback();
       });
   }
 };
@@ -143,12 +151,12 @@ var updateUserWords = function (connection, wordsToUpdate, callback) {
             connection.rollback(function () {
               console.log(updateUserWordQuery.sql); console.log(err); connection.release(); res.sendStatus(503); return;
             });
-          }
-
-          console.log('word with id: ' + wordToUpdate[2] + ' updated')
-          i++;
-          if (i == wordsToUpdate.length) {
-            callback();
+          } else {
+            console.log('word with id: ' + wordToUpdate[2] + ' updated')
+            i++;
+            if (i == wordsToUpdate.length) {
+              callback();
+            }
           }
         });
     });
@@ -159,8 +167,9 @@ var clearSession = function (connection, userId, callback) {
   connection.query(
     'DELETE FROM sessionwords WHERE userID = ' + userId, function (err, sessionResult, fields) {
       if (err) { console.log(err); res.send(err); return; }
-
-      callback();
+      else {
+        callback();
+      }
     });
 }
 

@@ -29,48 +29,51 @@ router.get('/', function (req, res) {
 router.post('/', function (req, res) {
   pool.getConnection(function (err, connection) {
     if (err) { console.log(err); return; }
-
-    connection.beginTransaction(function (err) {
-      if (err) { res.sendStatus(503); }
-
-      insertOrGetWord(connection, req, res, function (newId) {
-        insertUserWord(connection, req, res, newId, function () {
-          connection.commit(function (err) {
-            if (err) {
-              connection.rollback(function () {
-                res.sendStatus(503);
+    else {
+      connection.beginTransaction(function (err) {
+        if (err) { res.sendStatus(503); }
+        else {
+          insertOrUpdateWord(connection, req, res, function (newId) {
+            insertOrUpdateUserWord(connection, req, res, newId, function () {
+              connection.commit(function (err) {
+                if (err) {
+                  connection.rollback(function () {
+                    res.sendStatus(503);
+                  });
+                } else {
+                  connection.release();
+                  res.sendStatus(200);
+                }
               });
-            }
-            
-            connection.release();
-            res.sendStatus(200);
+            });
           });
-        });
+        }
       });
-    });
+    }
   });
 });
 
-var insertOrGetWord = function (connection, req, res, callback) {
-  var getWordQuery = connection.query('SELECT * FROM words WHERE foreignWord = ? AND native = ?', [req.body.foreignWord, req.body.native], function(err, existingWords) {
+var insertOrUpdateWord = function (connection, req, res, callback) {
+  var getWordQuery = connection.query('SELECT * FROM words WHERE foreignWord = ? AND native = ?', [req.body.foreignWord, req.body.native], function (err, existingWords) {
     if (err) { res.sendStatus(503); }
-
-    console.log('request\n' + getWordQuery.sql);
-    console.log('response\n' + existingWords);
-    var existingWord = existingWords ? existingWords[0] : undefined;
-    if (existingWord) {
-      var updateWordQuery = connection.query('UPDATE words SET ? WHERE id = ?', [req.body, existingWord.id], function(err, result) {
-        if (err) { res.sendStatus(503); }
-        else {
-          console.log('request\n' + updateWordQuery.sql);
-          console.log('response\n' + result);
-          callback(existingWord.id);
-        }
-      });
-    } else {
-      insertWord(connection, req, res, function(newId){
-        callback(newId);
-      });
+    else {
+      console.log('request\n' + getWordQuery.sql);
+      console.log('response\n' + existingWords);
+      var existingWord = existingWords ? existingWords[0] : undefined;
+      if (existingWord) {
+        var updateWordQuery = connection.query('UPDATE words SET ? WHERE id = ?', [req.body, existingWord.id], function (err, result) {
+          if (err) { res.sendStatus(503); }
+          else {
+            console.log('request\n' + updateWordQuery.sql);
+            console.log('response\n' + result);
+            callback(existingWord.id);
+          }
+        });
+      } else {
+        insertWord(connection, req, res, function (newId) {
+          callback(newId);
+        });
+      }
     }
   });
 };
@@ -82,11 +85,38 @@ var insertWord = function (connection, req, res, callback) {
       connection.rollback(function () {
         console.log(err); connection.release(); res.sendStatus(503);
       });
+    } else {
+      callback(insertResult.insertId);
     }
-
-    callback(insertResult.insertId);
   });
 };
+
+var insertOrUpdateUserWord = function (connection, req, res, newWordId, callback) {
+  var getUserWordQuery = connection.query('SELECT * FROM userWords WHERE userID = ? AND wordID = ?',
+    [req.userId, newWordId], function (err, existingUserWords) {
+      if (err) { res.sendStatus(503); }
+      else {
+        console.log('request\n' + getUserWordQuery.sql);
+        console.log('response\n' + existingUserWords);
+        var existingUserWord = existingUserWords ? existingUserWords[0] : undefined;
+        if (existingUserWord) {
+          var updateUserWordQuery = connection.query('UPDATE userWords SET state = 1 WHERE id = ?',
+            [existingUserWord.id], function (err, result) {
+              if (err) { res.sendStatus(503); }
+              else {
+                console.log('request\n' + updateUserWordQuery.sql);
+                console.log('response\n' + result);
+                callback();
+              }
+            });
+        } else {
+          insertUserWord(connection, req, res, newWordId, function () {
+            callback();
+          });
+        }
+      }
+    });
+}
 
 var insertUserWord = function (connection, req, res, newId, callback) {
   var insertUserWordQuery = connection.query('INSERT INTO userWords set ?',
@@ -95,9 +125,9 @@ var insertUserWord = function (connection, req, res, newId, callback) {
         connection.rollback(function () {
           console.log(insertUserWordQuery.sql); console.log(err); connection.release(); res.sendStatus(503);
         });
+      } else {
+        callback();
       }
-
-      callback();
     }
   );
 };
@@ -108,10 +138,11 @@ var getWordsFromExistingSession = function (connection, userId, callback) {
     'FROM sessionwords sw ' +
     'JOIN userWords uw ON sw.userWordID = uw.id ' +
     'JOIN words w ON uw.wordID = w.id ' +
-    'WHERE sw.userID = ' + userId, function (err, sessionResult, fields) {
+    'WHERE sw.userID = ' + userId, function (err, sessionResult) {
       if (err) { console.log(err); res.send(err); return; }
-
-      callback(sessionResult);
+      else {
+        callback(sessionResult);
+      }
     }
   );
 };
@@ -147,12 +178,13 @@ var getWordsFromNewSession = function (connection, userId, callback) {
     'ORDER BY RAND() ' +
     'LIMIT 1)', function (err, wordsResult, fields) {
       if (err) { console.log(err); res.send(err); return; }
+      else {
+        if (wordsResult.length < 5) {
+          wordsResult = [];
+        }
 
-      if (wordsResult.length < 5) {
-        wordsResult = [];
+        callback(wordsResult, connection);
       }
-
-      callback(wordsResult, connection);
     }
   );
 };
@@ -178,12 +210,13 @@ var storeSession = function (wordsToLearn, connection, callback) {
           connection.rollback(function () {
             console.log(insertSessionWordsQuery.sql); console.log(err); connection.release(); res.sendStatus(503); return;
           });
+        } else {
+          console.log('Session stored');
+          callback();
         }
-        console.log('Session stored');
-      });
+      }
+    );
   }
-
-  callback();
 };
 
 var closeConnectionAndResponse = function (connection, res, wordsResult) {
