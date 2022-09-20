@@ -41,10 +41,10 @@ router.post('/', function (req, res) {
                 res.sendStatus(503);
               });
             }
+            
+            connection.release();
+            res.sendStatus(200);
           });
-
-          connection.release();
-          res.sendStatus(200);
         });
       });
     });
@@ -53,11 +53,20 @@ router.post('/', function (req, res) {
 
 var insertOrGetWord = function (connection, req, res, callback) {
   var getWordQuery = connection.query('SELECT * FROM words WHERE foreignWord = ? AND native = ?', [req.body.foreignWord, req.body.native], function(err, existingWords) {
+    if (err) { res.sendStatus(503); }
+
     console.log('request\n' + getWordQuery.sql);
     console.log('response\n' + existingWords);
     var existingWord = existingWords ? existingWords[0] : undefined;
     if (existingWord) {
-      callback(existingWord.id);
+      var updateWordQuery = connection.query('UPDATE words SET ? WHERE id = ?', [req.body, existingWord.id], function(err, result) {
+        if (err) { res.sendStatus(503); }
+        else {
+          console.log('request\n' + updateWordQuery.sql);
+          console.log('response\n' + result);
+          callback(existingWord.id);
+        }
+      });
     } else {
       insertWord(connection, req, res, function(newId){
         callback(newId);
