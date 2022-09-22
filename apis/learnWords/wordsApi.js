@@ -29,27 +29,44 @@ router.get('/', function (req, res) {
 router.post('/', function (req, res) {
   pool.getConnection(function (err, connection) {
     if (err) { console.log(err); return; }
-    else {
-      connection.beginTransaction(function (err) {
-        if (err) { res.sendStatus(503); }
-        else {
-          insertOrUpdateWord(connection, req, res, function (newId) {
-            insertOrUpdateUserWord(connection, req, res, newId, function () {
-              connection.commit(function (err) {
-                if (err) {
-                  connection.rollback(function () {
-                    res.sendStatus(503);
-                  });
-                } else {
-                  connection.release();
-                  res.sendStatus(200);
-                }
+
+    connection.beginTransaction(function (err) {
+      if (err) { res.sendStatus(503); }
+
+      insertOrUpdateWord(connection, req, res, function (newId) {
+        insertOrUpdateUserWord(connection, req, res, newId, function () {
+          connection.commit(function (err) {
+            if (err) {
+              connection.rollback(function () {
+                res.sendStatus(503);
               });
-            });
+            } else {
+              connection.release();
+              res.sendStatus(200);
+            }
           });
-        }
+        });
       });
-    }
+    });
+  });
+});
+
+router.get('/known', function (req, res) {
+  pool.getConnection(function (err, connection) {
+    if (err) { console.log(err); return; }
+
+    connection.query(
+      'SELECT w.id AS wordID, w.native, w.foreignWord, w.exampleSentence, w.pronunciation, w.levelID, w.lexicalCategory, w.definition, uw.state, uw.id AS userWordID, uw.userID, w.audioFile ' +
+      'FROM words w ' +
+      'JOIN userWords uw ON w.id = uw.wordID ' +
+      'WHERE uw.userID = ' + req.userId + ' AND uw.state = 6 ' +
+      'ORDER BY RAND() ' +
+      'LIMIT 12', function (err, knownWords) {
+        if (err) { console.log(err); res.send(err); return; }
+
+        closeConnectionAndResponse(connection, res, knownWords);
+      }
+    );
   });
 });
 
@@ -140,16 +157,15 @@ var getWordsFromExistingSession = function (connection, userId, callback) {
     'JOIN words w ON uw.wordID = w.id ' +
     'WHERE sw.userID = ' + userId, function (err, sessionResult) {
       if (err) { console.log(err); res.send(err); return; }
-      else {
-        callback(sessionResult);
-      }
+
+      callback(sessionResult);
     }
   );
 };
 
 var getWordsFromNewSession = function (connection, userId, callback) {
   connection.query(
-    '(SELECT w.id AS wordID, w.native, w.foreignWord, w.exampleSentence, w.pronunciation, w.levelID, w.lexicalCategory, w.definition, uwInner.state, uwInner.id AS userWordID, uwInner.userID, w.audioFile ' +
+    'SELECT w.id AS wordID, w.native, w.foreignWord, w.exampleSentence, w.pronunciation, w.levelID, w.lexicalCategory, w.definition, uwInner.state, uwInner.id AS userWordID, uwInner.userID, w.audioFile ' +
     'FROM words w ' +
     'JOIN ( ' +
     'SELECT * ' +
@@ -169,22 +185,14 @@ var getWordsFromNewSession = function (connection, userId, callback) {
     ') ' +
     ') AND (NOT ISNULL(uwInner.userID) OR (ISNULL(uwInner.userID) AND w.levelID <> 1)) ' +
     'ORDER BY uwInner.state DESC, w.levelID ASC ' +
-    'LIMIT ' + getRandomInt(7, 9) + ') ' +
-    'UNION ' +
-    '(SELECT w.id AS wordID, w.native, w.foreignWord, w.exampleSentence, w.pronunciation, w.levelID, w.lexicalCategory, w.definition, uw.state, uw.id AS userWordID, uw.userID, w.audioFile ' +
-    'FROM words w ' +
-    'JOIN userWords uw ON w.id = uw.wordID ' +
-    'WHERE uw.userID = ' + userId + ' AND uw.state = 6 ' +
-    'ORDER BY RAND() ' +
-    'LIMIT 1)', function (err, wordsResult, fields) {
+    'LIMIT ' + getRandomInt(7, 9), function (err, wordsResult) {
       if (err) { console.log(err); res.send(err); return; }
-      else {
-        if (wordsResult.length < 5) {
-          wordsResult = [];
-        }
 
-        callback(wordsResult, connection);
+      if (wordsResult.length < 5) {
+        wordsResult = [];
       }
+
+      callback(wordsResult, connection);
     }
   );
 };
@@ -205,7 +213,7 @@ var storeSession = function (wordsToLearn, connection, callback) {
     }
 
     var insertSessionWordsQuery = connection.query('INSERT INTO sessionwords(userID, userWordID) values ?',
-      [data], function (err, insertResult) {
+      [data], function (err) {
         if (err) {
           connection.rollback(function () {
             console.log(insertSessionWordsQuery.sql); console.log(err); connection.release(); res.sendStatus(503); return;
@@ -216,6 +224,8 @@ var storeSession = function (wordsToLearn, connection, callback) {
         }
       }
     );
+  } else {
+    callback();
   }
 };
 
