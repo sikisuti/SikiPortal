@@ -86,7 +86,7 @@ learnWordsApp.controller('learnPageController', ['$scope', '$location', '$http',
     }
 
     if (round < 4) {
-      if (knownWords) {
+      if (knownWords && knownWords.length > 0) {
         tempList[tempList.length] = knownWords.pop();
       }
 
@@ -96,7 +96,7 @@ learnWordsApp.controller('learnPageController', ['$scope', '$location', '$http',
 
       callback(tempList);
     } else if (round < 7) {
-      if (knownWords) {
+      if (knownWords && knownWords.length > 0) {
         tempList[tempList.length] = knownWords.pop();
       }
       
@@ -106,7 +106,7 @@ learnWordsApp.controller('learnPageController', ['$scope', '$location', '$http',
       
       callback(tempList);
     } else {
-      if (knownWords) {
+      if (knownWords && knownWords.length > 0) {
         tempList[tempList.length] = knownWords.pop();
       }
       
@@ -114,8 +114,8 @@ learnWordsApp.controller('learnPageController', ['$scope', '$location', '$http',
       for (var i = 0; i < words.length; i++) {
         tempList.push(tempList[i]);
       }
-      
-      if (knownWords) {
+
+      if (knownWords && knownWords.length > 0) {
         tempList[tempList.length] = knownWords.pop();
       }
 
@@ -209,12 +209,13 @@ learnWordsApp.controller('learnPageController', ['$scope', '$location', '$http',
   }
 
   var updateProgressBar = function () {
+    var wordCount = (knownWords && knownWords.length > 0) ? words.length + 1 : words.length;
     var pastRounds = round - 1;
     var multiplyer = 1;
     if (pastRounds > 5) { multiplyer = 2; }
     if (pastRounds > 6) { pastRounds += pastRounds - 6 }
-    var pastSteps = (pastRounds * (words.length + 1)) + ((multiplyer * (words.length + 1)) - actList.length + 1);
-    var percent = (pastSteps / (12 * (words.length + 1))) * 100;
+    var pastSteps = (pastRounds * wordCount) + ((multiplyer * wordCount) - actList.length + 1);
+    var percent = (pastSteps / (12 * wordCount)) * 100;
     $scope.progressBarWidth = percent.toFixed(1) + "%";
   }
 
