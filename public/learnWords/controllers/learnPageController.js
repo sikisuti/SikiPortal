@@ -87,9 +87,7 @@ learnWordsApp.controller('learnPageController', ['$scope', '$location', '$http',
     actIndex = 0;
 
     if (knownWords && knownWords.length > 0) {
-      var kw = knownWords.pop();
-      tempList[tempList.length] = kw;
-      knownWordsForUpdate.push(kw);
+      tempList[tempList.length] = knownWords.pop();
     }
 
     if (round < 4) {
@@ -107,9 +105,7 @@ learnWordsApp.controller('learnPageController', ['$scope', '$location', '$http',
       }
 
       if (knownWords && knownWords.length > 0) {
-        var kw = knownWords.pop();
-        tempList[tempList.length] = kw;
-        knownWordsForUpdate.push(kw);
+        tempList[tempList.length] = knownWords.pop();
       }
 
       rndSide = new Array();
@@ -134,6 +130,12 @@ learnWordsApp.controller('learnPageController', ['$scope', '$location', '$http',
   }
 
   $scope.setKnown = function (callback) {
+    var actWord = actList[actIndex];
+    if (actWord.state > 5) {
+      callback();
+      return;
+    }
+
     var confirm = $mdDialog.confirm()
       .title('Your about to set this word known.')
       .textContent('Are you sure?')
@@ -143,10 +145,10 @@ learnWordsApp.controller('learnPageController', ['$scope', '$location', '$http',
       .cancel('No');
 
     $mdDialog.show(confirm).then(function () {
-      var userWordID = actList[actIndex].userWordID;
+      var userWordID = actWord.userWordID;
       setBusy(true, 'Updating word...');
       if (userWordID == null) {
-        $http.post('/learnWords/userWords/' + actList[actIndex].wordID).then(function (response) {
+        $http.post('/learnWords/userWords/' + actWord.wordID).then(function (response) {
           words.splice(words.map(function (word) { return word.userWordID }).indexOf(userWordID), 1);
           setBusy(false);
           if (words.length == 0) {
@@ -220,11 +222,21 @@ learnWordsApp.controller('learnPageController', ['$scope', '$location', '$http',
   }
 
   $scope.reviseWord = function () {
+    var actWord = actList[actIndex];
+    if (actWord.state > 5) {
+      knownWordsForUpdate.push(actWord);
+    }
+
     actIndex = (actIndex + 1) % actList.length;
     fillContent();
   };
 
   $scope.skipWord = function () {
+    var actWord = actList[actIndex];
+    if (actWord.state > 5) {
+      knownWordsForUpdate.push(actWord);
+    }
+
     updateProgressBar();
     actList.splice(actIndex, 1);
     rndSide.splice(actIndex, 1);
