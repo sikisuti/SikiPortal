@@ -60,7 +60,7 @@ router.post('/:wordID', function (req, res) {
         if (err) { res.sendStatus(503); }
         else {
           var insertUserWordQuery = connection.query('INSERT INTO userWords SET ?',
-            { userID: req.userId, wordID: req.params.wordID, state: 7 }, function (err, insertUwResult) {
+            { userID: req.userId, wordID: req.params.wordID, state: 6 }, function (err, insertUwResult) {
               if (err) {
                 connection.rollback(function () {
                   console.log(insertUserWordQuery.sql); console.log(err); connection.release(); res.sendStatus(503); return;
@@ -94,7 +94,7 @@ router.put('/:id', function (req, res) {
         if (err) { res.sendStatus(503); }
         else {
           var updateUserWordQuery = connection.query('UPDATE userWords SET state = ? WHERE id = ?',
-            [7, parseInt(req.params.id)], function (err, updateUwResult) {
+            [6, parseInt(req.params.id)], function (err, updateUwResult) {
               if (err) {
                 connection.rollback(function () {
                   console.log(updateUserWordQuery.sql); console.log(err); connection.release(); res.sendStatus(503);

@@ -149,19 +149,26 @@ learnWordsApp.controller('learnPageController', ['$scope', '$location', '$http',
         $http.post('/learnWords/userWords/' + actList[actIndex].wordID).then(function (response) {
           words.splice(words.map(function (word) { return word.userWordID }).indexOf(userWordID), 1);
           setBusy(false);
+          if (words.length == 0) {
+            sendData();
+          }
+
           callback(true);
         }, function (err) { console.log(err); });
       } else {
         $http.put('/learnWords/userWords/' + userWordID).then(function (response) {
           words.splice(words.map(function (word) { return word.userWordID }).indexOf(userWordID), 1);
           setBusy(false);
+          if (words.length == 0) {
+            sendData();
+          }
+
           callback(true);
         }, function (err) { console.log(err); });
       }
     }, function () {
       callback(false);
     });
-
   }
 
   var sendData = function () {
@@ -171,7 +178,7 @@ learnWordsApp.controller('learnPageController', ['$scope', '$location', '$http',
         'Content-Type': 'application/json'
       }
     }
-    //console.log('post: ' + data);
+
     setBusy(true, 'Updating words...');
     $http.post('/learnWords/userWords', data, config).then(function (res) {
       setBusy(false);
