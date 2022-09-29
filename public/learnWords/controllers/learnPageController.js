@@ -31,6 +31,10 @@ learnWordsApp.controller('learnPageController', ['$scope', '$location', '$http',
 
   setBusy(true, "Loading words to learn...")
   $http.get('/learnWords/words').then(function (response) {
+    /*if (!response.data || response.data.length == 0) {
+      $location.path('/');
+      return;
+    }*/
     words = response.data;
     setBusy(true, "Loading known words...")
     $http.get('/learnWords/words/known').then(function (knownResponse) {
@@ -122,7 +126,7 @@ learnWordsApp.controller('learnPageController', ['$scope', '$location', '$http',
   }
 
   $scope.roundEnded = function () {
-    return round > 9;
+    return round > 9 || !words || words.length == 0;
   };
 
   $scope.sendData = function () {
