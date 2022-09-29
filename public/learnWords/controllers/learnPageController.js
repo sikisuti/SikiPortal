@@ -8,6 +8,7 @@ learnWordsApp.controller('learnPageController', ['$scope', '$location', '$http',
 
   var words;
   var knownWords;
+  var knownWordsForUpdate = [];
 
   $scope.progressBarWidth = "0%";
   $scope.autoVoice = false;
@@ -53,7 +54,6 @@ learnWordsApp.controller('learnPageController', ['$scope', '$location', '$http',
   }
 
   function playCachedAudio() {
-    //var filename = "learnWords/audio/" + actList[actIndex].foreignWord.replace(" ", "_") + ".mp3";
     var indexOfActSound = indexOfSound(actList[actIndex].audioFile);
     if (indexOfActSound < 0) {
       sounds[sounds.length] = new Howl({ src: [actList[actIndex].audioFile], autoplay: true });
@@ -73,6 +73,10 @@ learnWordsApp.controller('learnPageController', ['$scope', '$location', '$http',
   }
 
   function getWords(callback) {
+    if (round == 10) {
+      sendData();
+    }
+
     var tempList = new Array();
     rndSide = new Array();
     for (var i = 0; i < words.length; i++) {
@@ -81,42 +85,31 @@ learnWordsApp.controller('learnPageController', ['$scope', '$location', '$http',
 
     tempList = shuffle(tempList);
     actIndex = 0;
-    if (round == 10) {
-      sendData();
+
+    if (knownWords && knownWords.length > 0) {
+      var kw = knownWords.pop();
+      tempList[tempList.length] = kw;
+      knownWordsForUpdate.push(kw);
     }
 
     if (round < 4) {
-      if (knownWords && knownWords.length > 0) {
-        tempList[tempList.length] = knownWords.pop();
-      }
-
       for (var i = 0; i < tempList.length; i++) {
         rndSide[i] = 0;
       }
-
-      callback(tempList);
     } else if (round < 7) {
-      if (knownWords && knownWords.length > 0) {
-        tempList[tempList.length] = knownWords.pop();
-      }
-      
       for (var i = 0; i < tempList.length; i++) {
         rndSide[i] = 1;
       }
-      
-      callback(tempList);
-    } else {
-      if (knownWords && knownWords.length > 0) {
-        tempList[tempList.length] = knownWords.pop();
-      }
-      
+    } else {      
       var wordCount = tempList.length;
       for (var i = 0; i < words.length; i++) {
         tempList.push(tempList[i]);
       }
 
       if (knownWords && knownWords.length > 0) {
-        tempList[tempList.length] = knownWords.pop();
+        var kw = knownWords.pop();
+        tempList[tempList.length] = kw;
+        knownWordsForUpdate.push(kw);
       }
 
       rndSide = new Array();
@@ -125,11 +118,11 @@ learnWordsApp.controller('learnPageController', ['$scope', '$location', '$http',
       }
       
       for (var i = 0; i < wordCount; i++) {
-        rndSide[i + words.length] = Math.abs(rndSide[i] - 1);
+        rndSide[i + wordCount] = Math.abs(rndSide[i] - 1);
       }
-
-      callback(tempList);
     }
+
+    callback(tempList);
   }
 
   $scope.roundEnded = function () {
@@ -172,7 +165,7 @@ learnWordsApp.controller('learnPageController', ['$scope', '$location', '$http',
   }
 
   var sendData = function () {
-    var data = JSON.stringify(words);
+    var data = JSON.stringify(words.concat(knownWordsForUpdate));
     var config = {
       headers: {
         'Content-Type': 'application/json'

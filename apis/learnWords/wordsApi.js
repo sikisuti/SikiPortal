@@ -69,8 +69,8 @@ router.get('/known', function (req, res) {
       'SELECT w.id AS wordID, w.native, w.foreignWord, w.exampleSentence, w.pronunciation, w.levelID, w.lexicalCategory, w.definition, uw.state, uw.id AS userWordID, uw.userID, w.audioFile ' +
       'FROM words w ' +
       'JOIN userWords uw ON w.id = uw.wordID ' +
-      'WHERE uw.userID = ' + req.userId + ' AND uw.state = 6 ' +
-      'ORDER BY RAND() ' +
+      'WHERE uw.userID = ' + req.userId + ' AND uw.state > 5 ' +
+      'ORDER BY uw.state ASC, RAND() ' +
       'LIMIT 12', function (err, knownWords) {
         if (err) { console.log(err); res.send(err); return; }
 

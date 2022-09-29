@@ -15,9 +15,7 @@ router.post('/', function (req, res) {
     if (req.body[i].userWordID == null) {
       wordsToInsert.push([req.userId, req.body[i].wordID, 2]);
     } else {
-      if (req.body[i].state < 6) {
-        wordsToUpdate.push([req.body[i].state + 1, req.userId, req.body[i].wordID]);
-      }
+      wordsToUpdate.push([req.body[i].state + 1, req.userId, req.body[i].wordID]);
     }
   }
 
