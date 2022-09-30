@@ -32,7 +32,7 @@ router.get('/byLevel', function(req, res){
       'FROM userWords uw ' +
       'JOIN words w ON uw.wordID = w.id ' +
       'JOIN levels l ON w.levelID = l.id ' +
-      'WHERE uw.userID = ' + req.userId + ' and w.levelID = ' + req.query.levelID, function(err, result, fields){
+      'WHERE uw.state > 6 AND uw.userID = ' + req.userId + ' AND w.levelID = ' + req.query.levelID, function(err, result, fields){
       if (err) { console.log(err); res.send(err); return; }
 
       connection.release();
