@@ -1,4 +1,11 @@
 <div layout="column" layout-align="end" flex>
+  <div layout="row" flex="10" layout-margin>
+    <div layout="column" ng-repeat="statByLevel in statisticsByLevel" flex>
+      <div layout="row" layout-align="center">{{statByLevel.levelName}}</div>
+      <div layout="row" style="font-size: 0.8em;" layout-align="center">{{statByLevel.count}}</div>
+      <div layout="row" style="font-size: 0.8em;" layout-align="center">{{statByLevel.percent}}%</div>
+    </div>
+  </div>
   <md-button class="md-raised" style="font-size: 2em; padding: 20px;" ng-click="onLearn()">Learn</md-button>
   <md-button class="md-raised" style="font-size: 2em; padding: 20px;" ng-click="onTest()">Test</md-button>
   <md-button class="md-raised md-primary" style="font-size: 2em; padding: 20px;" ng-click="onNew()">New</md-button>

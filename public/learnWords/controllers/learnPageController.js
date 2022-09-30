@@ -151,9 +151,9 @@ learnWordsApp.controller('learnPageController', ['$scope', '$location', '$http',
     $mdDialog.show(confirm).then(function () {
       var userWordID = actWord.userWordID;
       setBusy(true, 'Updating word...');
-      if (userWordID == null) {
+      if (!userWordID) {
         $http.post('/learnWords/userWords/' + actWord.wordID).then(function (response) {
-          words.splice(words.map(function (word) { return word.userWordID }).indexOf(userWordID), 1);
+          words.splice(words.map(function (word) { return word.wordID }).indexOf(actWord.wordID), 1);
           setBusy(false);
           if (words.length == 0) {
             sendData();
