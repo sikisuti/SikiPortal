@@ -172,10 +172,14 @@ var getSettings = function (connection, userId, res, callback) {
 
 var getWordsFromExistingSession = function (connection, userId, callback) {
   connection.query(
-    'SELECT w.id AS wordID, w.native, w.foreignWord, w.exampleSentence, w.pronunciation, w.levelID, w.lexicalCategory, w.definition, uw.state, uw.id AS userWordID, uw.userID, w.audioFile ' +
+    'SELECT * ' +
     'FROM sessionwords sw ' +
-    'JOIN words w ON sw.wordID = w.id ' +
-    'JOIN userWords uw ON uw.wordID = w.id ' +
+    'LEFT JOIN ( ' +
+	  'SELECT w.id AS wordID, w.native, w.foreignWord, w.exampleSentence, w.pronunciation, w.levelID, w.lexicalCategory, w.definition, uw.state, uw.id AS userWordID, uw.userID, w.audioFile ' +
+    'FROM userWords uw ' +
+    'JOIN words w ON uw.wordID = w.id ' +
+    'WHERE uw.userID = ' + userId +
+    ') iw ON sw.wordID = iw.wordID ' +
     'WHERE sw.userID = ' + userId, function (err, sessionResult) {
       if (err) { console.log(err); res.send(err); return; }
 
