@@ -28,7 +28,7 @@ router.get('/', function (req, res) {
   });
 });
 
-router.get('/:foreignWord', function(req, res) {
+router.get('/byForeign/:foreignWord', function(req, res) {
   res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
   pool.getConnection(function (err, connection) {
     if (err) { console.log(err); return; }
@@ -172,9 +172,10 @@ var getSettings = function (connection, userId, res, callback) {
 
 var getWordsFromExistingSession = function (connection, userId, callback) {
   connection.query(
-    'SELECT w.id AS wordID, w.native, w.foreignWord, w.exampleSentence, w.pronunciation, w.levelID, w.lexicalCategory, w.definition, w.audioFile ' +
+    'SELECT w.id AS wordID, w.native, w.foreignWord, w.exampleSentence, w.pronunciation, w.levelID, w.lexicalCategory, w.definition, uw.state, uw.id AS userWordID, uw.userID, w.audioFile ' +
     'FROM sessionwords sw ' +
     'JOIN words w ON sw.wordID = w.id ' +
+    'JOIN userWords uw ON uw.wordID = w.id ' +
     'WHERE sw.userID = ' + userId, function (err, sessionResult) {
       if (err) { console.log(err); res.send(err); return; }
 
@@ -235,7 +236,7 @@ var getWordsFromNewSession = function (connection, userId, newWordSuggestion, ca
       wordsResult = [];
     }
 
-    callback(wordsResult, connection);
+    callback(wordsResult);
   });
 };
 

@@ -42,7 +42,7 @@ learnWordsApp.controller('newWordController', ['$scope', '$location', '$http', f
     audio = undefined;
 
     startProcess('Search existing...');
-    $http.get('/learnWords/words/' + foreignWord.replace(' ', '_'))
+    $http.get('/learnWords/words/byForeign/' + foreignWord.replace(' ', '_'))
       .then(function(response){
         $scope.existingWords = response.data;
         endProcess('Search definition...');
