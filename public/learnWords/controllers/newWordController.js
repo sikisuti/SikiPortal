@@ -22,27 +22,29 @@ learnWordsApp.controller('newWordController', ['$scope', '$location', '$http', f
     }
   };
 
-  $scope.newWord = {
-    foreignWord: "",
-    native: "",
-    definition: "",
-    exampleSentence: "",
-    lexicalCategory: "",
-    pronunciation: "",
-    audioFile: ""
-  };
+  $scope.newWord = {};
 
-  $scope.setNative = function(newNative) {
-        $scope.newWord.native = newNative;
-    };
-
-  $scope.search = function(word) {
+  /*$scope.search = function(word) {
     audio = undefined;
 
     startProcess('Search definition...');
     $http.get('/learnWords/dictionary/search?word=' + word.replace(' ', '_'))
       .then(function(response){
         $scope.oxfords = response.data;
+        endProcess('Search definition...');
+      }, function(err){
+        console.log(err);
+        endProcess('Search definition...');
+      });
+  };*/
+
+  $scope.searchExistings = function(foreignWord) {
+    audio = undefined;
+
+    startProcess('Search existing...');
+    $http.get('/learnWords/words/' + foreignWord.replace(' ', '_'))
+      .then(function(response){
+        $scope.existingWords = response.data;
         endProcess('Search definition...');
       }, function(err){
         console.log(err);
@@ -58,8 +60,14 @@ learnWordsApp.controller('newWordController', ['$scope', '$location', '$http', f
     $scope.newWord.audioFile = item.audioFile;
   };
 
+  $scope.selectExisting = function(existingWord) {
+    $scope.newWord.id = existingWord.id;
+    $scope.newWord.native = existingWord.native;
+    $scope.newWord.audioFile = existingWord.audioFile;
+  };
+
   $scope.submit = function() {
-    if ($scope.newWord.native == "" || $scope.newWord.foreignWord == "" || ($scope.oxfords != undefined && $scope.oxfords.length > 0 && $scope.newWord.definition == "")) {return;}
+    if ($scope.newWord.native == "" || $scope.newWord.foreignWord == "") {return;}
 
     $scope.newWord.levelID = 1;
     if (!$scope.newWord.audioFile) { $scope.newWord.audioFile = 'n/a'; }

@@ -28,13 +28,16 @@ router.get('/', function (req, res) {
   });
 });
 
-var getSettings = function (connection, userId, res, callback) {
-  connection.query("SELECT * FROM userSettings WHERE userID = " + userId, function (err, userSettings) {
-    if (err) { console.log(err); res.send(err); return; }
+router.get('/:foreignWord', function(req, res) {
+  res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+  pool.getConnection(function (err, connection) {
+    if (err) { console.log(err); return; }
 
-    callback(userSettings[0]);
+    getWordsByForeign(connection, req.params.foreignWord, function(existingWords){
+      closeConnectionAndResponse(connection, res, existingWords);
+    });
   });
-};
+});
 
 router.post('/', function (req, res) {
   pool.getConnection(function (err, connection) {
@@ -159,6 +162,14 @@ var insertUserWord = function (connection, req, res, newId, callback) {
   );
 };
 
+var getSettings = function (connection, userId, res, callback) {
+  connection.query("SELECT * FROM userSettings WHERE userID = " + userId, function (err, userSettings) {
+    if (err) { console.log(err); res.send(err); return; }
+
+    callback(userSettings[0]);
+  });
+};
+
 var getWordsFromExistingSession = function (connection, userId, callback) {
   connection.query(
     'SELECT w.id AS wordID, w.native, w.foreignWord, w.exampleSentence, w.pronunciation, w.levelID, w.lexicalCategory, w.definition, w.audioFile ' +
@@ -225,8 +236,18 @@ var getWordsFromNewSession = function (connection, userId, newWordSuggestion, ca
     }
 
     callback(wordsResult, connection);
-  }
-  );
+  });
+};
+
+var getWordsByForeign = function(connection, foreignWord, callback) {
+  connection.query(
+    'SELECT * ' +
+    'FROM words ' +
+    'WHERE foreignWord like "%' + foreignWord + '%"', function(err, existingWords) {
+      if (err) { console.log(err); res.send(err); return; }
+
+      callback(existingWords);
+    });
 };
 
 /**
