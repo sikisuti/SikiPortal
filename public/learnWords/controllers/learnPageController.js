@@ -129,13 +129,17 @@ learnWordsApp.controller('learnPageController', ['$scope', '$location', '$http',
     return round > 9 || !words || words.length == 0;
   };
 
+  $scope.isNew = function() {
+    return !$scope.word.userWordID
+  }
+
   $scope.sendData = function () {
     sendData();
   }
 
   $scope.setKnown = function (callback) {
     var actWord = actList[actIndex];
-    if (actWord.state > 5) {
+    if (!$scope.isNew()) {
       callback();
       return;
     }

@@ -32,8 +32,8 @@
 
   <section ng-hide="roundEnded()" class="card-container">
     <div id="card" ng-class="{flipped: isFlipped}">
-      <figure class="front" ng-class="{knownWord: word.state > 5}"><span class="word" ng-bind="word.native"></figure>
-      <figure class="back" ng-class="{knownWord: word.state > 5}"><span class="word" ng-bind="word.foreignWord"></figure>
+      <figure class="front" ng-class="{knownWord: word.state > 5, newWord: isNew()}"><span class="word" ng-bind="word.native"></figure>
+      <figure class="back" ng-class="{knownWord: word.state > 5, newWord: isNew()}"><span class="word" ng-bind="word.foreignWord"></figure>
     </div>
   </section>
 

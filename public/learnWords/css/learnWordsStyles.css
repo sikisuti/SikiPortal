@@ -25,6 +25,10 @@ body {
   border: 4px solid green;
 }
 
+.newWord {
+  border: 4px solid slateblue;
+}
+
 .md-button {
   min-width: 0px;
   min-height: 0px;
