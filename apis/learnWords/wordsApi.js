@@ -179,7 +179,7 @@ var getWordsFromExistingSession = function (connection, userId, callback) {
     'FROM words w ' +
     'LEFT JOIN ( ' +
 		'SELECT * ' +
-    'FROM userwords ' +
+    'FROM userWords ' +
     'WHERE userID = ' + userId +
     ') uw ON w.id = uw.wordID ' +
     ') iw ON sw.wordID = iw.wordID ' +
