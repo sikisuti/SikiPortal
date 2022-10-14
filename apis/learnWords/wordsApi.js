@@ -212,7 +212,7 @@ var getWordsFromNewSession = function (connection, userId, newWordSuggestion, ca
     ') ' +
     ') ' +
     ') ' +
-    'ORDER BY uwInner.state DESC, w.levelID ASC ' +
+    'ORDER BY uwInner.state ASC, w.levelID ASC ' +
     'LIMIT ' + getRandomInt(7, 9);
   var queryWithNewWords =
     'SELECT w.id AS wordID, w.native, w.foreignWord, w.exampleSentence, w.pronunciation, w.levelID, w.lexicalCategory, w.definition, uwInner.state, uwInner.id AS userWordID, uwInner.userID, w.audioFile ' +
