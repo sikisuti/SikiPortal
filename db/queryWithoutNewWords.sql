@@ -1,4 +1,6 @@
-(SELECT w.id AS wordID, w.native, w.foreignWord, w.exampleSentence, w.pronunciation, w.levelID, w.lexicalCategory, w.definition, uwInner.state, uwInner.id AS userWordID, uwInner.userID, w.audioFile 
+SELECT DISTINCT * 
+FROM
+((SELECT w.id AS wordID, w.native, w.foreignWord, w.exampleSentence, w.pronunciation, w.levelID, w.lexicalCategory, w.definition, uwInner.state, uwInner.id AS userWordID, uwInner.userID, w.audioFile 
 FROM words w 
 JOIN ( 
   SELECT * 
@@ -41,6 +43,6 @@ WHERE w.id NOT IN (
 	  ) 
   ) 
 ) 
-ORDER BY uwInner.state ASC, w.levelID ASC) 
+ORDER BY uwInner.state ASC, w.levelID ASC)) AS t 
 
 LIMIT {limit};
