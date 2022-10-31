@@ -5,6 +5,8 @@
 
   "db_user": "***",
   "db_password": "G*****.1",
+
+  "rootDir": "/home/pi/SikiPortal",
   
   "port": 80
 }

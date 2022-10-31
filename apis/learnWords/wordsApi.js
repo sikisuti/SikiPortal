@@ -8,6 +8,11 @@ router.use(auth.authorize());
 var connections = require('../../db/connections');
 var pool = connections.getWordsPool();
 
+var path = require('path');
+var nconf = require('nconf');
+nconf.argv().env().file({ file: path.normalize(path.join(__dirname, '../../config.json')) });
+var rootDir = nconf.get('rootDir');
+
 router.get('/', function (req, res) {
   res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
   pool.getConnection(function (err, connection) {
@@ -194,8 +199,8 @@ var getWordsFromExistingSession = function (connection, userId, callback) {
 
 var getWordsFromNewSession = function (connection, userId, newWordSuggestion, callback) {
   var query = newWordSuggestion ? 
-  fs.readFileSync('db/queryWithNewWords.sql') :
-  fs.readFileSync('db/queryWithoutNewWords.sql');
+  fs.readFileSync(rootDir + '/db/queryWithNewWords.sql') :
+  fs.readFileSync(rootDir + '/db/queryWithoutNewWords.sql');
   query = query.toString().replace(/\{userId\}/g, userId).replace(/\{limit\}/g, getRandomInt(7, 9));
   console.log(query);
 
