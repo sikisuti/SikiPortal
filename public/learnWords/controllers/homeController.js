@@ -37,6 +37,10 @@ learnWordsApp.controller('homeController', ['$scope', '$http', '$location', func
             $scope.statisticsByLevel.push(statByLevel);
             getLevelStatistics(6, function (statByLevel) {
               $scope.statisticsByLevel.push(statByLevel);
+              getLevelStatistics(7, function (statByLevel) {
+                statByLevel.levelName = 'M';
+                $scope.statisticsByLevel.push(statByLevel);
+              });
             });
           });
         });
