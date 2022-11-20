@@ -61,15 +61,19 @@ learnWordsApp.controller('newWordController', ['$scope', '$location', '$http', f
   };
 
   $scope.selectExisting = function(existingWord) {
-    $scope.newWord.id = existingWord.id;
-    $scope.newWord.native = existingWord.native;
-    $scope.newWord.audioFile = existingWord.audioFile;
+    if ($scope.newWord.id) {
+      $scope.newWord.id = undefined;
+    } else {
+      $scope.newWord.id = existingWord.id;
+      $scope.newWord.native = existingWord.native;
+      $scope.newWord.audioFile = existingWord.audioFile;
+    }
   };
 
   $scope.submit = function() {
     if ($scope.newWord.native == "" || $scope.newWord.foreignWord == "") {return;}
 
-    $scope.newWord.levelID = 1;
+    $scope.newWord.levelID = 7;
     if (!$scope.newWord.audioFile) { $scope.newWord.audioFile = 'n/a'; }
     startProcess('Saving word...');
     $http.post('/learnWords/words', $scope.newWord).then(function(response){

@@ -7,7 +7,7 @@
     <button id="newWordSearch" ng-click="searchExistings(newWord.foreignWord)"></button>
   </div>
   <div layout="row">
-    <input type="text" ng-model="newWord.native">
+    <input type="text" ng-model="newWord.native" style="color: black;" ng-disabled="newWord.id">
     <md-button id="newWordSubmit" ng-click="submit()" flex="20" class="md-raised"
       ng-disabled="(!newWord.native || !newWord.foreignWord)">Add</md-button>
   </div>
