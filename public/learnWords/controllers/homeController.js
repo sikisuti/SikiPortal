@@ -9,6 +9,7 @@ learnWordsApp.controller('homeController', ['$scope', '$http', '$location', func
       $scope.statistics.push({
         state: result.data[i].state,
         count: result.data[i].count,
+        learnable: result.data[i].learnable,
         percent: Math.round((result.data[i].count / (max == 0 ? 1 : max)) * 20) * 5
       });
     }
