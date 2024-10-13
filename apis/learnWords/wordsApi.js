@@ -21,7 +21,7 @@ router.get('/', function (req, res) {
     getWordsFromExistingSession(connection, req.userId, function (sessionWords) {
       if (sessionWords.length == 0) {
         getSettings(connection, req.userId, res, function (userSettings) {
-          getWordsFromNewSession(connection, req.userId, userSettings.newWordSuggestion, function (wordsResult) {
+          getWordsFromNewSession(connection, req.userId, userSettings, function (wordsResult) {
             storeSession(req.userId, wordsResult, connection, function () {
               closeConnectionAndResponse(connection, res, wordsResult);
             })
@@ -197,24 +197,61 @@ var getWordsFromExistingSession = function (connection, userId, callback) {
   );
 };
 
-var getWordsFromNewSession = function (connection, userId, newWordSuggestion, callback) {
-  var query = newWordSuggestion ? 
-  fs.readFileSync(rootDir + '/db/queryWithNewWords.sql') :
-  fs.readFileSync(rootDir + '/db/queryWithoutNewWords.sql');
-  query = query.toString().replace(/\{userId\}/g, userId).replace(/\{limit\}/g, getRandomInt(7, 9));
-  console.log(query);
-
+var getWordsFromNewSession = function (connection, userId, userSettings, callback) {
+  if (userSettings.newWordSuggestion) {
+    fs.readFileSync(rootDir + '/db/queryWithNewWords.sql');
+    query = query.toString().replace(/\{userId\}/g, userId).replace(/\{limit\}/g, getRandomInt(7, 9));
+    console.log(query);
   
-  connection.query(query, function (err, wordsResult) {
+    connection.query(query, function (err, wordsResult) {
+      if (err) { console.log(err); res.send(err); return; }
+  
+      if (wordsResult.length < 5) {
+        wordsResult = [];
+      }
+  
+      callback(wordsResult);
+    });
+  } else {
+    getLowStateWords(connection, userId, userSettings, function(lowStateWords){
+      getHighStateWords(connection, userId, userSettings, function(highStateWords){
+        var wordsResult = lowStateWords.concat(highStateWords);
+        var noOfNewWords = userSettings.noOfNewWords ? userSettings.noOfNewWords : 5;
+        var minBulkSize = userSettings.minBulkSize ? userSettings.minBulkSize : noOfNewWords;
+
+        if (wordsResult.length < minBulkSize) {
+          wordsResult = [];
+        }
+
+        callback(wordsResult);
+      });
+    });
+  }
+};
+
+var getLowStateWords = function(connection, userId, userSettings, callback) {
+  var queryLowStateWords = fs.readFileSync(rootDir + '/db/queryLowStateWords.sql');
+  var noOfNewWords = userSettings.noOfNewWords ? userSettings.noOfNewWords : 5;
+  query = queryLowStateWords.toString().replace(/\{userId\}/g, userId).replace(/\{noOfNewWords\}/g, noOfNewWords);
+  connection.query(query, function(err, wordsResult) {
     if (err) { console.log(err); res.send(err); return; }
 
-    if (wordsResult.length < 5) {
-      wordsResult = [];
-    }
+    callback(wordsResult);
+  })
+}
+
+var getHighStateWords = function(connection, userId, userSettings, callback) {
+  var queryHighStateWords = fs.readFileSync(rootDir + '/db/queryHighStateWords.sql');
+  var noOfNewWords = userSettings.noOfNewWords ? userSettings.noOfNewWords : 5;
+  var maxBulkSize = userSettings.maxBulkSize ? userSettings.maxBulkSize : noOfNewWords + 4;
+  var limit = getRandomInt(maxBulkSize - 2, maxBulkSize) - noOfNewWords;
+  query = queryHighStateWords.toString().replace(/\{userId\}/g, userId).replace(/\{limit\}/g, limit);
+  connection.query(query, function(err, wordsResult) {
+    if (err) { console.log(err); res.send(err); return; }
 
     callback(wordsResult);
-  });
-};
+  })
+}
 
 var getWordsByForeign = function(connection, foreignWord, callback) {
   connection.query(
