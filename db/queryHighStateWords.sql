@@ -16,6 +16,6 @@ WHERE w.id NOT IN (
       (uw.state = 5 and uw.lastLearned > DATE_ADD(CURDATE(), INTERVAL -30 DAY))
 	  ) 
   ) 
-) 
+) AND w.id NOT IN ({excludeIds})
 ORDER BY uwInner.state DESC, w.levelID ASC
 LIMIT {limit};

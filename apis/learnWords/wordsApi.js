@@ -214,7 +214,9 @@ var getWordsFromNewSession = function (connection, userId, userSettings, callbac
     });
   } else {
     getLowStateWords(connection, userId, userSettings, function(lowStateWords){
-      getHighStateWords(connection, userId, userSettings, function(highStateWords){
+      var newWordIds = lowStateWords.map((word) => word.wordID);
+      newWordIds = newWordIds ? newWordIds : 0;
+      getHighStateWords(connection, userId, userSettings, newWordIds, function(highStateWords){
         var wordsResult = lowStateWords.concat(highStateWords);
         var noOfNewWords = userSettings.noOfNewWords ? userSettings.noOfNewWords : 5;
         var minBulkSize = userSettings.minBulkSize ? userSettings.minBulkSize : noOfNewWords;
@@ -233,6 +235,8 @@ var getLowStateWords = function(connection, userId, userSettings, callback) {
   var queryLowStateWords = fs.readFileSync(rootDir + '/db/queryLowStateWords.sql');
   var noOfNewWords = userSettings.noOfNewWords ? userSettings.noOfNewWords : 5;
   query = queryLowStateWords.toString().replace(/\{userId\}/g, userId).replace(/\{noOfNewWords\}/g, noOfNewWords);
+  console.log(query);
+
   connection.query(query, function(err, wordsResult) {
     if (err) { console.log(err); res.send(err); return; }
 
@@ -240,12 +244,14 @@ var getLowStateWords = function(connection, userId, userSettings, callback) {
   })
 }
 
-var getHighStateWords = function(connection, userId, userSettings, callback) {
+var getHighStateWords = function(connection, userId, userSettings, excludeIds, callback) {
   var queryHighStateWords = fs.readFileSync(rootDir + '/db/queryHighStateWords.sql');
   var noOfNewWords = userSettings.noOfNewWords ? userSettings.noOfNewWords : 5;
   var maxBulkSize = userSettings.maxBulkSize ? userSettings.maxBulkSize : noOfNewWords + 4;
   var limit = getRandomInt(maxBulkSize - 2, maxBulkSize) - noOfNewWords;
-  query = queryHighStateWords.toString().replace(/\{userId\}/g, userId).replace(/\{limit\}/g, limit);
+  query = queryHighStateWords.toString().replace(/\{userId\}/g, userId).replace(/\{limit\}/g, limit).replace(/\{excludeIds\}/g, excludeIds);
+  console.log(query);
+  
   connection.query(query, function(err, wordsResult) {
     if (err) { console.log(err); res.send(err); return; }
 
